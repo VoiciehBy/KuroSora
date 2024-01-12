@@ -1,33 +1,40 @@
 <div class="content" role="main">
-  <div class="container-fluid text-center text-bg-secondary" style="height: 720px;">
+  <div class="container-fluid text-center text-bg-secondary min-vh-100 d-flex flex-column" style="height: 720px;">
     <div class="row">
       <div class="col-3 text-bg-primary">
         <div class="container">
+          
           <div class="row">
+            Users:
+          </div>
+          <div class="row list-group">
             <div *ngFor="let user of users;" (click)="selectUser(user.username)">
-              <button id="userSelectButton" class="btn btn-dark badge fs-6" type="button">
+              <button id="userSelectButton" class="fs-6 list-group-item list-group-item-action list-group-item-dark"
+                type="button">
                 {{user.username}}
               </button>
             </div>
           </div>
-          <div>
+
+          <div class="d-flex flex-column">
             <button id="activeRecipient" class="btn btn-danger badge fs-6" type="button">
               Active Recipient: {{activeRecipient}}
             </button>
           </div>
+        
+          <div class="d-flex flex-column">
+            <button id="activeUser" class="btn btn-success badge fs-6" type="button">
+              Active User: {{activeUser}}
+            </button>
+          </div>
+
         </div>
       </div>
       <div class="col-9 text-bg-info">
         <div class="row">
           <div class="col-5 badge text-bg-danger">
             <p class="text-left text-wrap">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum
-              dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-              deserunt mollit anim id est laborum.
+              {{messages[0]}}
             </p>
           </div>
         </div>
@@ -48,13 +55,7 @@
         <div class="row">
           <div class="col-5 badge text-bg-danger">
             <p class="text-left text-wrap">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum
-              dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-              deserunt mollit anim id est laborum. <br>
+              {{messages[1]}} <br>
             </p>
           </div>
         </div>
@@ -62,11 +63,6 @@
           <div class="col-12">.</div>
         </div>
         <div class="row text-bg-dark">
-          <div class="col">
-            <button id="activeUser" class="btn btn-success badge fs-6" type="button">
-              Active User: {{activeUser}}
-            </button>
-          </div>
           <div id="inputMessageForm" class="col input-group">
             <span id="inputMessageAddon" class="input-group-text">
               <textarea id="inputMessage" type="text" placeholder="Podaj treść wiadomości..."

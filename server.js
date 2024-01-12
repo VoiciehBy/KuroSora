@@ -11,14 +11,16 @@ const httpServer = http.createServer();
 
 
 httpServer.on("request", (req, res) => {
-    console.log(req.method, req.url)
-    const url = new URL(req.url, `http:${req.headers.host}`)
+
+    const request_url = new URL(req.url, `http:${req.headers.host}`)
     res.setHeader("Content-Type", "application/json")
 
     const request_method = req.method
-    const pathname = url.pathname;
-    const queryString = url.search;
+    const pathname = request_url.pathname;
+    const queryString = request_url.search;
     const searchParams = new URLSearchParams(queryString);
+
+    console.log(request_method, request_url)
 
     switch (request_method) {
         case "GET":
@@ -32,7 +34,11 @@ httpServer.on("request", (req, res) => {
                 res.end(`{"Ok": "Ok"}`);*/
             }
             else if (pathname == "/users") {
-                console.log(searchParams);
+                db.getUsers().then(result => {
+                    console.log(result)
+                })
+            }
+            else if (pathname == "/user") {
                 if (searchParams.has("username")) {
                     let username = searchParams.get("username");
 
@@ -47,6 +53,32 @@ httpServer.on("request", (req, res) => {
                             res.end(a)
                         }
                     })
+                }
+            }
+            else if (pathname == "/user_messages") {
+                if (searchParams.has("sender") && searchParams.has("recipient")) {
+                    let sender = searchParams.get("sender");
+                    let recipient = searchParams.get("recipient");
+
+                    db.getMessage(sender, recipient).then(result => {
+                        if (result.length == 0) {
+                            console.error(`User '${sender}' not found...\n`)
+                            res.end(`{"txt": "error"}`)
+                        }
+                        else {
+                            let a = JSON.stringify(result);
+                            console.log(`Got ${recipient} messages...`)
+                            /*
+                            for (i = 0; i < result.length; i++) {
+                                console.log(result[i].content)
+                            }
+                            */
+                            res.end(a)
+                        }
+                    })
+                }
+                else {
+                    res.end(`{"txt": "error"}`)
                 }
             }
             break;

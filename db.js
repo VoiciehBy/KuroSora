@@ -20,6 +20,20 @@ function doQuery(query = "", timeout = 100) {
     })
 }
 
+function getMessagePromise(sender, recipient) {
+    return new Promise((resolve, reject) => {
+        doQuery(`SELECT id FROM Users WHERE username='${sender}'`).then(sender_id => {
+            doQuery(`SELECT id FROM Users WHERE username='${recipient}'`).then(recipient_id => {
+                resolve(doQuery(`SELECT content FROM Messages WHERE sender_id = ${sender_id[0].id} AND recipient_id=${recipient_id[0].id}`))
+            })
+        })
+    }).catch((err) => {
+        console.error(err)
+        console.error("Cannot get message :( ...")
+        reject(err)
+    })
+}
+
 module.exports = {
     getUsers: () => doQuery("SELECT * FROM Users"),
     getUser: (username) => doQuery(`SELECT * FROM USERS WHERE username='${username}'`),
@@ -30,5 +44,6 @@ module.exports = {
                 doQuery(`INSERT INTO Messages (sender_id, recipient_id, content, m_date) VALUES(${sender_id[0].id},${recipient_id[0].id},'${content}','${m_date}');`)
             })
         })
-    }
+    },
+    getMessage: (sender, recipient) => getMessagePromise(sender,recipient)
 }

@@ -3,13 +3,13 @@
     <div class="row">
       <div class="col-3 text-bg-primary">
         <div class="container">
-          
+
           <div class="row">
             Users:
           </div>
           <div class="row list-group">
-            <div *ngFor="let user of users;" (click)="selectUser(user.username)">
-              <button id="userSelectButton" class="fs-6 list-group-item list-group-item-action list-group-item-dark"
+            <div *ngFor="let user of users;" (click)="selectRecipient(user.username)">
+              <button id="recipientSelectButton" class="fs-6 list-group-item list-group-item-action list-group-item-dark"
                 type="button">
                 {{user.username}}
               </button>
@@ -21,43 +21,44 @@
               Active Recipient: {{activeRecipient}}
             </button>
           </div>
-        
+
           <div class="d-flex flex-column">
             <button id="activeUser" class="btn btn-success badge fs-6" type="button">
               Active User: {{activeUser}}
             </button>
           </div>
 
+          <div class="d-flex flex-column">
+            <div class="dropdown">
+              <button id="changeUserButton" class="btn btn-success badge fs-6 dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Change User
+              </button>
+              <ul class="dropdown-menu">
+                <li *ngFor="let user of users;"><a class="dropdown-item" (click)="selectUser(user.username)">{{user.username}}</a></li>
+              </ul>
+            </div>
+
+          </div>
+
         </div>
       </div>
       <div class="col-9 text-bg-info">
-        <div class="row">
-          <div class="col-5 badge text-bg-danger">
+        <div *ngFor="let msg of messages;" class="row">
+          <div class="col-1"></div>
+          <div *ngIf="msg.sender_id == activeUser;" class="col-5 badge text-bg-danger">
             <p class="text-left text-wrap">
-              {{messages[0]}}
+              {{msg.content}}
             </p>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-7"></div>
-          <div class="col-5 badge text-bg-warning">
-            <p class="text-right text-wrap">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum
-              dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-              deserunt mollit anim id est laborum.
-            </p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-5 badge text-bg-danger">
-            <p class="text-left text-wrap">
-              {{messages[1]}} <br>
-            </p>
-          </div>
+          <div class="col-6"></div>
+          <div *ngIf="msg.sender_id != activeUser">
+            <div class="col-5 badge text-bg-warning">
+              <p class="text-right text-wrap">
+                {{msg.content.slice(0,msg.content.length-1)}}
+              </p>
+            </div>
+          </div> <br>
         </div>
         <div class="row">
           <div class="col-12">.</div>

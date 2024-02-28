@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 
 import { user } from 'src/user';
 import { Observable } from 'rxjs';
+import { messageC } from 'src/message';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,7 @@ export class AppComponent implements OnInit {
   activeRecipient: string;
   message: string;
 
-  messages: string[] = [];
+  messages: messageC[] = [];
 
   users: user[];
 
@@ -28,15 +29,11 @@ export class AppComponent implements OnInit {
     this.activeRecipient = "Testovy1";
     this.message = "";
     this.users = [new user("Wielki Elektronik")];
-    this.updateUsers();
-    console.log("Inited, xdd....")
 
-    this.getMessages().subscribe(data => {
-      for (let i = 0; i < data.length; i++)
-        this.messages.push(JSON.stringify(data[i].content))
-    },
-      err =>
-        console.error(`Error: ${err}`))
+    this.updateUsers();
+    this.updateMessages();
+
+    console.log("Inited, xdd....")
   }
 
   getUser(username = "Testovy1"): Observable<any> {
@@ -59,10 +56,22 @@ export class AppComponent implements OnInit {
         console.error(`Error: ${err}`))
   }
 
-  selectUser(username: string): void {
+  selectRecipient(username: string): void {
     for (let i = 0; i < this.users.length; i++)
       if (this.users[i].username == username)
         this.activeRecipient = this.users[i].username;
+
+    this.messages = []
+    this.updateMessages();
+  }
+
+  selectUser(username: string): void {
+    for (let i = 0; i < this.users.length; i++)
+      if (this.users[i].username == username)
+        this.activeUser = this.users[i].username;
+
+    this.messages = []
+    this.updateMessages();
   }
 
   sendMessage(): Observable<any> {
@@ -76,6 +85,38 @@ export class AppComponent implements OnInit {
 
   getMessages(sender = "Testovy", recipient = "Testovy1"): Observable<any> {
     return this.http.get(`${this.host}/user_messages?sender=${sender}&recipient=${recipient}`)
+  }
+
+  updateMessages() {
+    this.messages = []
+
+    this.getMessages(this.activeUser, this.activeRecipient).subscribe(data => {
+      for (let i = 0; i < data.length; i++) {
+        let content = JSON.stringify(data[i].content);
+        content = content.slice(1, content.length - 1);
+        let m_date = JSON.stringify(data[i].m_date)
+
+        let m = new messageC(this.activeUser, this.activeRecipient, content, m_date);
+        this.messages.push(m)
+      }
+    },
+      err =>
+        console.error(`Error: ${err}`))
+
+    this.getMessages(this.activeRecipient, this.activeUser).subscribe(data => {
+      for (let i = 0; i < data.length; i++) {
+        let content = JSON.stringify(data[i].content);
+        content = content.slice(1, content.length - 1);
+        let m_date = JSON.stringify(data[i].m_date)
+
+        let m = new messageC(this.activeRecipient, this.activeUser, content, m_date);
+        this.messages.push(m)
+      }
+    },
+      err =>
+        console.error(`Error: ${err}`))
+
+    this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
   }
 
   onSendButtonClick(): void {

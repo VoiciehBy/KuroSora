@@ -11,6 +11,7 @@ CREATE TABLE Users(
 
 INSERT INTO Users VALUES(1,'test','test','Testovy');
 INSERT INTO Users VALUES(2,'test1','test1','Testovy1');
+INSERT INTO Users VALUES(3,'abrozy','qwerty','PanKleks');
 
 DROP TABLE Users
 CASCADE CONSTRAINTS;

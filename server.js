@@ -1,17 +1,12 @@
 const http = require("http");
-const path = require("path");
-const { readFile } = require("fs");
-
 const db = require("./db")
 
 const hostname = "127.0.0.1";
 const port = 3000;
-
 const httpServer = http.createServer();
 
 
 httpServer.on("request", (req, res) => {
-
     const request_url = new URL(req.url, `http:${req.headers.host}`)
     res.setHeader("Content-Type", "application/json")
 
@@ -25,13 +20,9 @@ httpServer.on("request", (req, res) => {
     switch (request_method) {
         case "GET":
             if (pathname == "/") {
-                readFile(path.join(__dirname, "frontend/src/index.html"), "utf-8", (err, result) => {
-                    console.log(result);
-                    res.setHeader("Content-Type", "text/html");
-                    res.end(result);
-                })
-                /*console.log(`Ok`);
-                res.end(`{"Ok": "Ok"}`);*/
+                console.log(`Ok`);
+                res.setHeader("Content-Type", "application/json");
+                res.end(`{"Ok": "Ok"}`);
             }
             else if (pathname == "/users") {
                 db.getUsers().then(result => {
@@ -48,9 +39,9 @@ httpServer.on("request", (req, res) => {
                             res.end(`{"txt": "error"}`)
                         }
                         else {
-                            let a = JSON.stringify(result[0]);
+                            let userStr = JSON.stringify(result[0]);
                             console.log(`User '${username}' exists, that is true...\n`)
-                            res.end(a)
+                            res.end(userStr)
                         }
                     })
                 }
@@ -66,14 +57,10 @@ httpServer.on("request", (req, res) => {
                             res.end(`{"txt": "error"}`)
                         }
                         else {
-                            let a = JSON.stringify(result);
-                            console.log(`Got ${recipient} messages...`)
-                            /*
-                            for (i = 0; i < result.length; i++) {
-                                console.log(result[i].content)
-                            }
-                            */
-                            res.end(a)
+                            let resultString = JSON.stringify(result);
+                            let numberOfMessages = result.length;
+                            console.log(`${recipient} got ${numberOfMessages} messages...`)
+                            res.end(resultString)
                         }
                     })
                 }
@@ -85,12 +72,13 @@ httpServer.on("request", (req, res) => {
         case "PUT":
             if (pathname == "/message") {
                 req.on("data", (data) => {
-                    obj = JSON.parse(data)
-                    console.log(obj)
-                    db.addMessage(obj.sender, obj.recipient, obj.content, "CURRENT_DATE()")
-                    console.log(`User ${obj.recipient} got message...`)
-                    res.write(`{"res": "User ${obj.recipient} got message..."}`)
-                    res.end(`User ${obj.recipient} got message...`)
+                    let msgObj = JSON.parse(data)                 
+                    let current_date = new Date().toISOString().slice(0,19).replace('T', ' ');    
+                    
+                    db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date);
+                    console.log(`${msgObj.sender} sent message to ${msgObj.recipient}...`)
+                    res.write(`{"res": "${msgObj.sender} sent message to ${msgObj.recipient}..."`)
+                    res.end(`"${msgObj.sender} sent message to ${msgObj.recipient}..."`)
                 })
             }
             /*else if (pathname == "/register_new_user") {

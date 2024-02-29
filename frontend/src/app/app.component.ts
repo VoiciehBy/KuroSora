@@ -28,7 +28,8 @@ export class AppComponent implements OnInit {
     this.activeUser = "Testovy";
     this.activeRecipient = "Testovy1";
     this.message = "";
-    this.users = [new user("Wielki Elektronik")];
+    //this.users = [new user("Wielki Elektronik")];
+    this.users = [];
 
     this.updateUsers();
     this.updateMessages();
@@ -40,18 +41,20 @@ export class AppComponent implements OnInit {
     return this.http.get(`${this.host}/user?username=${username}`)
   }
 
+  getUsers(): Observable<any> {
+    return this.http.get(`${this.host}/users`)
+  }
+
   updateUsers(): void {
-    this.getUser().subscribe(
+    this.getUsers().subscribe(
       data => {
-        let u: user = new user(data.username);
-        this.users.push(u)
+        this.users = [];
+        for (let i = 0; i < data.length; i++) {
+          let u: user = new user(data[i].username);
+          if (u.username != this.activeUser)
+            this.users.push(u)
+        }
       },
-      err =>
-        console.error(`Error: ${err}`))
-    this.getUser("PanKleks").subscribe(data => {
-      let u: user = new user(data.username);
-      this.users.push(u)
-    },
       err =>
         console.error(`Error: ${err}`))
   }
@@ -70,7 +73,7 @@ export class AppComponent implements OnInit {
       if (this.users[i].username == username)
         this.activeUser = this.users[i].username;
 
-    this.messages = []
+    this.updateUsers();
     this.updateMessages();
   }
 
@@ -98,6 +101,7 @@ export class AppComponent implements OnInit {
 
         let m = new messageC(this.activeUser, this.activeRecipient, content, m_date);
         this.messages.push(m)
+        this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
       }
     },
       err =>
@@ -108,15 +112,16 @@ export class AppComponent implements OnInit {
         let content = JSON.stringify(data[i].content);
         content = content.slice(1, content.length - 1);
         let m_date = JSON.stringify(data[i].m_date)
-
+        
         let m = new messageC(this.activeRecipient, this.activeUser, content, m_date);
         this.messages.push(m)
+        this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
       }
     },
       err =>
         console.error(`Error: ${err}`))
 
-    this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
+    this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
   }
 
   onSendButtonClick(): void {

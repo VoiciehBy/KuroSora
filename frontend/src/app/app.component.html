@@ -48,14 +48,14 @@
           <div class="col-1"></div>
           <div *ngIf="msg.sender_id == activeUser;" class="col-5 badge text-bg-danger">
             <p class="text-left text-wrap">
-              {{msg.content}}
+              {{msg.content.replace('"', '')}}
             </p>
           </div>
           <div class="col-6"></div>
           <div *ngIf="msg.sender_id != activeUser">
             <div class="col-5 badge text-bg-warning">
               <p class="text-right text-wrap">
-                {{msg.content.slice(0,msg.content.length-1)}}
+                {{msg.content.replace('"', '')}}
               </p>
             </div>
           </div> <br>

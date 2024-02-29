@@ -15,7 +15,7 @@ httpServer.on("request", (req, res) => {
     const queryString = request_url.search;
     const searchParams = new URLSearchParams(queryString);
 
-    console.log(request_method, request_url)
+    //console.log(request_method, request_url)
 
     switch (request_method) {
         case "GET":
@@ -26,7 +26,14 @@ httpServer.on("request", (req, res) => {
             }
             else if (pathname == "/users") {
                 db.getUsers().then(result => {
-                    console.log(result)
+                    if (result.length == 0) {
+                        console.error("Users not found...\n")
+                        res.end(`{"error": "Users not found...\n"}`)
+                    }
+                    else {
+                        let usersStr = JSON.stringify(result);
+                        res.end(usersStr)
+                    }
                 })
             }
             else if (pathname == "/user") {
@@ -36,11 +43,11 @@ httpServer.on("request", (req, res) => {
                     db.getUser(username).then(result => {
                         if (result.length == 0) {
                             console.error(`User '${username}' not found...\n`)
-                            res.end(`{"txt": "error"}`)
+                            res.end(`{"error": "User '${username}' not found...\n"}`)
                         }
                         else {
                             let userStr = JSON.stringify(result[0]);
-                            console.log(`User '${username}' exists, that is true...\n`)
+                            console.log(`User '${username}' found...`)
                             res.end(userStr)
                         }
                     })
@@ -53,13 +60,13 @@ httpServer.on("request", (req, res) => {
 
                     db.getMessage(sender, recipient).then(result => {
                         if (result.length == 0) {
-                            console.error(`User '${sender}' not found...\n`)
-                            res.end(`{"txt": "error"}`)
+                            console.error(`'${sender}' got no messages from '${recipient}..'`)
+                            res.end(`{"info": "'${sender}' got no messages from '${recipient}..'"}`)
                         }
                         else {
                             let resultString = JSON.stringify(result);
                             let numberOfMessages = result.length;
-                            console.log(`${recipient} got ${numberOfMessages} messages...`)
+                            console.log(`'${recipient}' got ${numberOfMessages} messages from '${sender}...'`)
                             res.end(resultString)
                         }
                     })
@@ -72,19 +79,27 @@ httpServer.on("request", (req, res) => {
         case "PUT":
             if (pathname == "/message") {
                 req.on("data", (data) => {
-                    let msgObj = JSON.parse(data)                 
-                    let current_date = new Date().toISOString().slice(0,19).replace('T', ' ');    
-                    
+                    let msgObj = JSON.parse(data)
+                    let current_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
                     db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date);
                     console.log(`${msgObj.sender} sent message to ${msgObj.recipient}...`)
-                    res.write(`{"res": "${msgObj.sender} sent message to ${msgObj.recipient}..."`)
-                    res.end(`"${msgObj.sender} sent message to ${msgObj.recipient}..."`)
+                    res.end(`{"res": "${msgObj.sender} sent message to ${msgObj.recipient}..."}`)
                 })
             }
-            /*else if (pathname == "/register_new_user") {
-                console.log("yet to be implemented...")
-                res.end("yet to be implemented...\n but Gut")
-            }*/
+            else if (pathname == "/register_new_user") {
+                if (searchParams.has("username") && searchParams.has("login")) {
+                    let username = searchParams.get("username");
+                    let login = searchParams.get("username");
+
+                    db.addUser(login, "qwerty", username);
+                    console.log(`User '${username}' was registered successfully...`)
+                    res.end(`{"res": "User '${username}' was registered successfully..."}`)
+                }
+                else {
+                    res.end(`{"error": "User '${username}' registration process failed..."}`)
+                }
+            }
             break;
     }
 })

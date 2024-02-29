@@ -1,5 +1,5 @@
 CREATE TABLE Users(
-    id DECIMAL(20,0),
+    id int AUTO_INCREMENT,
     login VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
@@ -9,17 +9,17 @@ CREATE TABLE Users(
 );
 
 
-INSERT INTO Users VALUES(1,'test','test','Testovy');
-INSERT INTO Users VALUES(2,'test1','test1','Testovy1');
-INSERT INTO Users VALUES(3,'abrozy','qwerty','PanKleks');
+INSERT INTO Users (login, password, username) VALUES('test','test','Testovy');
+INSERT INTO Users (login, password, username) VALUES('test1','test1','Testovy1');
+INSERT INTO Users (login, password, username) VALUES('abrozy','qwerty','PanKleks');
 
 DROP TABLE Users
 CASCADE CONSTRAINTS;
 
 CREATE TABLE Messages(
     id int AUTO_INCREMENT,
-    sender_id DECIMAL(20,0),
-    recipient_id DECIMAL(20,0),
+    sender_id int,
+    recipient_id int,
     content VARCHAR(255),
     m_date DATETIME(0),
     CONSTRAINT messages_pk PRIMARY KEY(id),

@@ -24,7 +24,7 @@ function getMessagePromise(sender, recipient) {
     return new Promise((resolve, reject) => {
         doQuery(`SELECT id FROM Users WHERE username='${sender}'`).then(sender_id => {
             doQuery(`SELECT id FROM Users WHERE username='${recipient}'`).then(recipient_id => {
-                resolve(doQuery(`SELECT content FROM Messages WHERE sender_id = ${sender_id[0].id} AND recipient_id=${recipient_id[0].id}`))
+                resolve(doQuery(`SELECT * FROM Messages WHERE sender_id = ${sender_id[0].id} AND recipient_id=${recipient_id[0].id}`))
             })
         })
     }).catch((err) => {
@@ -37,7 +37,7 @@ function getMessagePromise(sender, recipient) {
 module.exports = {
     getUsers: () => doQuery("SELECT * FROM Users"),
     getUser: (username) => doQuery(`SELECT * FROM USERS WHERE username='${username}'`),
-    addUser: (id, login, password, username) => doQuery(`INSERT INTO Users VALUES(${id},'${login}','${password}','${username}');`),
+    addUser: (login, password, username) => doQuery(`INSERT INTO Users (login, password, username) VALUES('${login}','${password}','${username}');`),
     addMessage: (sender, recipient, content, m_date) => {
         doQuery(`SELECT id FROM Users WHERE username='${sender}'`).then(sender_id => {
             doQuery(`SELECT id FROM Users WHERE username='${recipient}'`).then(recipient_id => {

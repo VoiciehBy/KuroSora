@@ -10,8 +10,10 @@ const createWindow = () => {
             preload: path.join(__dirname, "preload.js"),
         }
     })
+    let p = path.join(__dirname, "frontend/dist/frontend/index.html")
+    window.loadURL(p)
 
-    window.loadURL(path.join(__dirname, "frontend/dist/frontend/index.html"))
+    window.webContents.on("did-fail-load", () => window.loadURL(p))
 }
 
 app.whenReady().then(() => {

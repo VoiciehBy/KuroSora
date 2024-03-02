@@ -1,9 +1,7 @@
 const http = require("http");
-
 const db = require("./db")
+const config = require("./config")
 
-const hostname = "127.0.0.1";
-const port = 3000;
 const httpServer = http.createServer();
 
 httpServer.on("request", (req, res) => {
@@ -14,7 +12,6 @@ httpServer.on("request", (req, res) => {
     const searchParams = new URLSearchParams(queryString);
 
     //console.log(request_method, request_url)
-
     res.setHeader("Content-Type", "application/json");
 
     switch (request_method) {
@@ -29,10 +26,8 @@ httpServer.on("request", (req, res) => {
                         console.error("Users not found...\n")
                         res.end(`{"error": "Users not found...\n"}`)
                     }
-                    else {
-                        let usersStr = JSON.stringify(result);
-                        res.end(usersStr)
-                    }
+                    else
+                        res.end(JSON.stringify(result))
                 })
             }
             else if (pathname == "/user") {
@@ -45,9 +40,8 @@ httpServer.on("request", (req, res) => {
                             res.end(`{"error": "User '${username}' not found...\n"}`)
                         }
                         else {
-                            let userStr = JSON.stringify(result[0]);
                             console.log(`User '${username}' found...`)
-                            res.end(userStr)
+                            res.end(JSON.stringify(result[0]))
                         }
                     })
                 }
@@ -63,16 +57,14 @@ httpServer.on("request", (req, res) => {
                             res.end(`{"info": "'${sender}' got no messages from '${recipient}'..."}`)
                         }
                         else {
-                            let resultString = JSON.stringify(result);
-                            let numberOfMessages = result.length;
-                            console.log(`'${recipient}' got ${numberOfMessages} messages from '${sender}'...`)
-                            res.end(resultString)
+                            let n = result.length;
+                            console.log(`'${recipient}' got ${n} messages from '${sender}'...`)
+                            res.end(JSON.stringify(result));
                         }
                     })
                 }
-                else {
-                    res.end(`{"txt": "error"}`)
-                }
+                else
+                    res.end(`{"error": "Search parameters error..."}`)
             }
             break;
         case "PUT":
@@ -103,6 +95,6 @@ httpServer.on("request", (req, res) => {
     }
 })
 
-httpServer.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
+httpServer.listen(() => {
+    console.log(`Server running at http://${config.hostname}:${config.port}/`);
 });

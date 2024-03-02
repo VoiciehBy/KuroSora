@@ -9,8 +9,8 @@
           </div>
           <div class="row list-group">
             <div *ngFor="let user of users;" (click)="selectRecipient(user.username)">
-              <button id="recipientSelectButton" class="fs-6 list-group-item list-group-item-action list-group-item-dark"
-                type="button">
+              <button id="recipientSelectButton"
+                class="fs-6 list-group-item list-group-item-action list-group-item-dark" type="button">
                 {{user.username}}
               </button>
             </div>
@@ -30,12 +30,14 @@
 
           <div class="d-flex flex-column">
             <div class="dropdown">
-              <button id="changeUserButton" class="btn btn-success badge fs-6 dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
+              <button id="changeUserButton" class="btn btn-success badge fs-6 dropdown-toggle" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 Change User
               </button>
               <ul class="dropdown-menu">
-                <li *ngFor="let user of users;"><a class="dropdown-item" (click)="selectUser(user.username)">{{user.username}}</a></li>
+                <li *ngFor="let user of users;">
+                  <a class="dropdown-item" (click)="selectUser(user.username)">{{user.username}}</a>
+                </li>
               </ul>
             </div>
 
@@ -44,22 +46,26 @@
         </div>
       </div>
       <div class="col-9 text-bg-info">
+
         <div *ngFor="let msg of messages;" class="row">
-          <div class="col-1"></div>
-          <div *ngIf="msg.sender_id == activeUser;" class="col-5 badge text-bg-danger">
-            <p class="text-left text-wrap">
-              {{msg.content.replace('"', '')}}
-            </p>
-          </div>
-          <div class="col-6"></div>
-          <div *ngIf="msg.sender_id != activeUser">
-            <div class="col-5 badge text-bg-warning">
-              <p class="text-right text-wrap">
-                {{msg.content.replace('"', '')}}
+          <div class="col-2"></div>
+          <div *ngIf="msg.sender_id == activeUser;" class="row">
+            <div class="col-5 badge text-bg-danger">
+              <p class="text-left text-wrap">
+                {{msg.sender_id}}: {{msg.content}}
               </p>
             </div>
-          </div> <br>
+          </div>
+          <div class="row">
+            <div class="col-7"></div>
+            <div *ngIf="msg.sender_id != activeUser" class="col-5 badge text-bg-warning">
+              <p class="text-right text-wrap">
+                {{msg.sender_id}}: {{msg.content}}
+              </p>
+            </div>
+          </div>
         </div>
+
         <div class="row">
           <div class="col-12">.</div>
         </div>

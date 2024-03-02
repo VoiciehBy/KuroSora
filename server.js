@@ -1,15 +1,13 @@
 const http = require("http");
+
 const db = require("./db")
 
 const hostname = "127.0.0.1";
 const port = 3000;
 const httpServer = http.createServer();
 
-
 httpServer.on("request", (req, res) => {
     const request_url = new URL(req.url, `http:${req.headers.host}`)
-    res.setHeader("Content-Type", "application/json")
-
     const request_method = req.method
     const pathname = request_url.pathname;
     const queryString = request_url.search;
@@ -17,11 +15,12 @@ httpServer.on("request", (req, res) => {
 
     //console.log(request_method, request_url)
 
+    res.setHeader("Content-Type", "application/json");
+
     switch (request_method) {
         case "GET":
             if (pathname == "/") {
                 console.log(`Ok`);
-                res.setHeader("Content-Type", "application/json");
                 res.end(`{"Ok": "Ok"}`);
             }
             else if (pathname == "/users") {
@@ -60,13 +59,13 @@ httpServer.on("request", (req, res) => {
 
                     db.getMessage(sender, recipient).then(result => {
                         if (result.length == 0) {
-                            console.error(`'${sender}' got no messages from '${recipient}..'`)
-                            res.end(`{"info": "'${sender}' got no messages from '${recipient}..'"}`)
+                            console.error(`'${sender}' got no messages from '${recipient}'...`)
+                            res.end(`{"info": "'${sender}' got no messages from '${recipient}'..."}`)
                         }
                         else {
                             let resultString = JSON.stringify(result);
                             let numberOfMessages = result.length;
-                            console.log(`'${recipient}' got ${numberOfMessages} messages from '${sender}...'`)
+                            console.log(`'${recipient}' got ${numberOfMessages} messages from '${sender}'...`)
                             res.end(resultString)
                         }
                     })
@@ -83,8 +82,8 @@ httpServer.on("request", (req, res) => {
                     let current_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
                     db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date);
-                    console.log(`${msgObj.sender} sent message to ${msgObj.recipient}...`)
-                    res.end(`{"res": "${msgObj.sender} sent message to ${msgObj.recipient}..."}`)
+                    console.log(`'${msgObj.sender}' sent message to '${msgObj.recipient}'...`)
+                    res.end(`{"res": "'${msgObj.sender}' sent message to '${msgObj.recipient}'..."}`)
                 })
             }
             else if (pathname == "/register_new_user") {
@@ -104,11 +103,6 @@ httpServer.on("request", (req, res) => {
     }
 })
 
-
-module.exports = {
-    initHttpServer: () => {
-        httpServer.listen(port, hostname, () => {
-            console.log(`Server running at http://${hostname}:${port}/`);
-        });
-    }
-}
+httpServer.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
+});

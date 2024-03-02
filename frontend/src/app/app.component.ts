@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
   message: string;
 
   messages: messageC[] = [];
-
   users: user[];
 
   constructor(private http: HttpClient) { }
@@ -27,14 +26,16 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.activeUser = "Testovy";
     this.activeRecipient = "Testovy1";
-    this.message = "";
-    //this.users = [new user("Wielki Elektronik")];
+    this.message = ""; //this.users = [new user("Wielki Elektronik")];
     this.users = [];
 
     this.updateUsers();
     this.updateMessages();
 
     console.log("Inited, xdd....")
+    setInterval(() => {
+      this.updateMessages();
+    }, 10000)
   }
 
   getUser(username = "Testovy1"): Observable<any> {
@@ -95,8 +96,7 @@ export class AppComponent implements OnInit {
 
     this.getMessages(this.activeUser, this.activeRecipient).subscribe(data => {
       for (let i = 0; i < data.length; i++) {
-        let content = JSON.stringify(data[i].content);
-        content = content.slice(1, content.length - 1);
+        let content = JSON.stringify(data[i].content).replace('"', '').replace('"', '');
         let m_date = JSON.stringify(data[i].m_date)
 
         let m = new messageC(this.activeUser, this.activeRecipient, content, m_date);
@@ -109,10 +109,9 @@ export class AppComponent implements OnInit {
 
     this.getMessages(this.activeRecipient, this.activeUser).subscribe(data => {
       for (let i = 0; i < data.length; i++) {
-        let content = JSON.stringify(data[i].content);
-        content = content.slice(1, content.length - 1);
+        let content = JSON.stringify(data[i].content).replace('"', '').replace('"', '');
         let m_date = JSON.stringify(data[i].m_date)
-        
+
         let m = new messageC(this.activeRecipient, this.activeUser, content, m_date);
         this.messages.push(m)
         this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
@@ -126,7 +125,8 @@ export class AppComponent implements OnInit {
 
   onSendButtonClick(): void {
     this.sendMessage().subscribe(data => {
-      console.log(data)
+      console.log(data.res)
+      this.updateMessages();
     },
       err =>
         console.error(`Error: ${err}`))

@@ -95,6 +95,6 @@ httpServer.on("request", (req, res) => {
     }
 })
 
-httpServer.listen(() => {
+httpServer.listen(config.port, config.hostname, () => {
     console.log(`Server running at http://${config.hostname}:${config.port}/`);
 });

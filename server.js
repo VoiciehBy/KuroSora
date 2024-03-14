@@ -45,12 +45,27 @@ httpServer.on("request", (req, res) => {
                         }
                     })
                 }
+                else if (searchParams.has("login")) {
+                    let login = searchParams.get("login");
+
+                    db.getUser_1(login).then(result => {
+                        if (result.length == 0) {
+                            console.error(`User '${login}' with login not found...\n`)
+                            res.end(`{"error": "User '${login}' with login not found...\n"}`)
+                        }
+                        else {
+                            console.log(`User '${login}' with login was found...\n`)
+                            res.end(JSON.stringify(result[0]))
+                        }
+                    })
+                }
             }
             else if (pathname == "/user_messages") {
                 if (searchParams.has("sender") && searchParams.has("recipient")) {
                     let sender = searchParams.get("sender");
                     let recipient = searchParams.get("recipient");
-
+                    if (sender == '' || recipient == '')
+                        return
                     db.getMessage(sender, recipient).then(result => {
                         if (result.length == 0) {
                             console.error(`'${sender}' got no messages from '${recipient}'...`)

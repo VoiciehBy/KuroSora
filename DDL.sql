@@ -1,3 +1,5 @@
+CREATE DATABASE dev;
+
 CREATE TABLE Users(
     id int AUTO_INCREMENT,
     login VARCHAR(255) NOT NULL,
@@ -26,6 +28,8 @@ CREATE TABLE Messages(
     CONSTRAINT messages_sender_id_users_id_fk FOREIGN KEY(sender_id) REFERENCES Users(id),
     CONSTRAINT messages_recipient_id_users_id_fk FOREIGN KEY(recipient_id) REFERENCES Users(id)
 );
+
+ALTER TABLE messages AUTO_INCREMENT = 1;
 
 DROP TABLE Messages
 CASCADE CONSTRAINTS;

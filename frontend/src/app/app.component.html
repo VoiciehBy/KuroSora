@@ -8,83 +8,31 @@
             Users:
           </div>
           <div class="row list-group">
-            <div *ngFor="let user of users;" (click)="selectRecipient(user.username)">
-              <button id="recipientSelectButton"
-                class="fs-6 list-group-item list-group-item-action list-group-item-dark" type="button">
-                {{user.username}}
-              </button>
+            <app-friend-list (selectRecipientEvent)="selectRecipient($event)"></app-friend-list>
+          </div>
+
+          <div class="d-flex flex-column">
+            <a class="btn btn-success badge fs-6" (click)="onLoginButtonClick();">Login</a>
+            <div>
+              <app-login-dialog (selectUserEvent)="getSelectUserEvent($event);"></app-login-dialog>
             </div>
           </div>
 
           <div class="d-flex flex-column">
-            <button id="activeRecipient" class="btn btn-danger badge fs-6" type="button">
-              Active Recipient: {{activeRecipient}}
+            <button id="activeUser" class="btn btn-error badge fs-6" type="button">
+              <span class="text-wrap">Active Recipient: {{activeRecipient}}</span>
             </button>
-          </div>
-
-          <div class="d-flex flex-column">
             <button id="activeUser" class="btn btn-success badge fs-6" type="button">
-              Active User: {{activeUser}}
+              <span class="text-wrap">Active User: {{activeUser}}</span>
             </button>
-          </div>
-
-          <div class="d-flex flex-column">
-            <div class="dropdown">
-              <button id="changeUserButton" class="btn btn-success badge fs-6 dropdown-toggle" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                Change User
-              </button>
-              <ul class="dropdown-menu">
-                <li *ngFor="let user of users;">
-                  <a class="dropdown-item" (click)="selectUser(user.username)">{{user.username}}</a>
-                </li>
-              </ul>
-            </div>
-
           </div>
 
         </div>
       </div>
       <div class="col-9 text-bg-info">
-
-        <div *ngFor="let msg of messages;" class="row">
-          <div class="col-2"></div>
-          <div *ngIf="msg.sender_id == activeUser;" class="row">
-            <div class="col-5 badge text-bg-danger">
-              <p class="text-left text-wrap">
-                {{msg.sender_id}}: {{msg.content}}
-              </p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-7"></div>
-            <div *ngIf="msg.sender_id != activeUser" class="col-5 badge text-bg-warning">
-              <p class="text-right text-wrap">
-                {{msg.sender_id}}: {{msg.content}}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-12">.</div>
-        </div>
-        <div class="row text-bg-dark">
-          <div id="inputMessageForm" class="col input-group">
-            <span id="inputMessageAddon" class="input-group-text">
-              <textarea id="inputMessage" type="text" placeholder="Podaj treść wiadomości..."
-                aria-label="Input Text Addon" aria-describedby="inputMessageAddon" [(ngModel)]="message">
-                {{message}}
-                </textarea>
-              <div (click)="onSendButtonClick();">
-                <button class="btn btn-success badge fs-6" type="button" value="Send">
-                  <img src="../../node_modules/bootstrap-icons/icons/send.svg">
-                </button>
-              </div>
-            </span>
-          </div>
-        </div>
+        <app-message-panel [activeUser]="activeUser" [activeRecipient]="activeRecipient"></app-message-panel>
       </div>
+
     </div>
   </div>
 </div>

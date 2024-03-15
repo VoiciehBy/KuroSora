@@ -8,10 +8,11 @@ import { Observable } from 'rxjs';
 import { ActiveUserService } from 'src/services/activeuser.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
-export class AppComponent implements OnInit {
+export class HomeComponent implements OnInit{
   title: string = 'frontend';
   host: string = "http://localhost:3000";
   activeUser: string = 'Testovy';

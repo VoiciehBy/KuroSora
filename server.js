@@ -94,7 +94,7 @@ httpServer.on("request", (req, res) => {
                 })
             }
             else if (pathname == "/register_new_user") {
-                if (searchParams.has("login") && searchParams.has("username") ) {
+                if (searchParams.has("login") && searchParams.has("username")) {
                     let username = searchParams.get("username");
                     let login = searchParams.get("login");
 

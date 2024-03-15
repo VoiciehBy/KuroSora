@@ -1,12 +1,12 @@
 <div *ngFor="let friend of friends;" (click)="selectRecipient(friend.username)">
     <div *ngIf="friend.username == activeRecipient">
-        <button id="recipientSelectButton" class="fs-6 list-group-item list-group-item-action list-group-item-error"
+        <button id="recipientSelectButton" class="fs-6 list-group-item list-group-item-action list-group-item-danger"
             type="button">
             {{friend.username}}
         </button>
     </div>
     <div *ngIf="friend.username != activeRecipient">
-        <button id="recipientSelectButton" class="fs-6 list-group-item list-group-item-action list-group-item-dark"
+        <button id="recipientSelectButton" class="fs-6 list-group-item list-group-item-action list-group-item-light"
             type="button">
             {{friend.username}}
         </button>

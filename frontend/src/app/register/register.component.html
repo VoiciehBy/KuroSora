@@ -1,0 +1,32 @@
+<div class="modal fade" id="RegisterModal" tabindex="-1" aria-labelledby="RegisterModalLabel" aria-hidden="true">
+    <div class="row modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title text-dark fs-5" id="RegisterModalLabel">
+                    Create New User
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <input type="text" placeholder="Login" aria-label="Login Field Addon"
+                                aria-describedby="loginFieldAddon" [(ngModel)]="login">
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <input type="text" placeholder="Username" aria-label="Username Field Addon"
+                                aria-describedby="usernameFieldAddon" [(ngModel)]="username">
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="signUp();">Sign
+                    up</button>
+            </div>
+        </div>
+    </div>
+</div>

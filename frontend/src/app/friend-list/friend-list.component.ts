@@ -14,13 +14,15 @@ export class FriendListComponent implements OnInit {
   host: string = "http://localhost:3000";
   activeUser: string;
   activeRecipient: string;
-  friends: user[];
+  friends: user[] = [];
 
   isMsgNeedToBeUpdated: boolean;
 
   @Output() selectRecipientEvent = new EventEmitter<string>();
 
-  constructor(private http: HttpClient, private msg: MessageUpdateService, private aUU: ActiveUserService) { }
+  constructor(private http: HttpClient,
+    private msg: MessageUpdateService,
+    private aUU: ActiveUserService) { }
 
   ngOnInit(): void {
     this.updateFriendList();
@@ -42,12 +44,13 @@ export class FriendListComponent implements OnInit {
         this.friends = [];
         for (let i = 0; i < data.length; i++) {
           let u: user = new user(data[i].username);
-          if (u.username != "Testovy" && u.username != "Testovy1")
+          if (u.username != "Testovy" && u.username != "Testovy1"
+            && u.username != this.activeUser)
             this.friends.push(u)
         }
       },
       error: (err) => console.error(`Error: ${err} `),
-      complete: () => console.log("Users update completed, :D .")
+      complete: () => console.log("Friend list updated, :D")
     })
   }
 
@@ -58,6 +61,7 @@ export class FriendListComponent implements OnInit {
     this.updateFriendList();
 
     this.selectRecipientEvent.emit(this.activeRecipient);
+    this.updateFriendList();
     this.msg.setUpdate(true);
   }
 }

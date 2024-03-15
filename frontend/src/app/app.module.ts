@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { LoginDialogComponent } from './login-dialog/login-dialog.component';
+import { LoginComponent } from './login/login.component';
 import { FriendListComponent } from './friend-list/friend-list.component';
 import { MessagePanelComponent } from './message-panel/message-panel.component';
 
@@ -13,15 +13,18 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router'
 import { MessageUpdateService } from 'src/services/msgupdate.service';
 import { ActiveUserService } from 'src/services/activeuser.service';
-import { RegistrationComponent } from './registration/registration.component';
+import { RegisterComponent } from './register/register.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginDialogComponent,
+    LoginComponent,
     FriendListComponent,
     MessagePanelComponent,
-    RegistrationComponent
+    RegisterComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +33,8 @@ import { RegistrationComponent } from './registration/registration.component';
     HttpClientModule,
     CommonModule,
     RouterOutlet,
-    RouterLink
+    RouterLink,
+    BrowserAnimationsModule
   ],
   providers: [MessageUpdateService, ActiveUserService],
   bootstrap: [AppComponent]

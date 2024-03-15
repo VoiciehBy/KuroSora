@@ -6,10 +6,10 @@ import { ActiveUserService } from 'src/services/activeuser.service';
 
 @Component({
   selector: 'app-login-dialog',
-  templateUrl: './login-dialog.component.html',
-  styleUrls: ['./login-dialog.component.css'],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
 })
-export class LoginDialogComponent implements OnInit {
+export class LoginComponent implements OnInit {
   host: string = "http://localhost:3000";
   login: string;
   password: string;
@@ -28,14 +28,14 @@ export class LoginDialogComponent implements OnInit {
 
   signIn(): void {
     this.getUser(this.login).subscribe({
-        next: (data) => {
-          this.login = data.login
-          this.aUU.setActiveUser(data.username)
-          this.router.navigate([""]);
-        },
-        error: (err) =>
-          console.error(`Error: ${err}`),
-        complete: () => console.log("Signing in completed, :D .")
-      })
+      next: (data) => {
+        this.login = data.login
+        this.aUU.setActiveUser(data.username)
+        this.router.navigate([""]);
+      },
+      error: (err) =>
+        console.error(`Error: ${err}`),
+      complete: () => console.log("Signing in completed, :D")
+    })
   }
 }

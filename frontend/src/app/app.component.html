@@ -1,45 +1,39 @@
 <div class="content" role="main">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand">KuroSora</a>
+    </div>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar"
+      aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="topNavbar" class="collapse navbar-collapse">
+      <ul class="navbar-nav gap-2 ms-auto">
+        <li class="nav-item active">
+          <a class="btn btn-success badge fs-6" routerLink="/">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="btn btn-danger badge fs-6" (click)="onLoginButtonClick();" data-bs-toggle="modal"
+            data-bs-target="#LoginModal">Login</a>
+        </li>
+        <li class="nav-item active">
+          <a class="btn btn-warning badge fs-6" (click)="onRegisterButtonClick();" data-bs-toggle="modal"
+            data-bs-target="#RegisterModal">Register</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
   <div class="container-fluid text-center text-bg-secondary min-vh-100 d-flex flex-column" style="height: 720px;">
     <div class="row">
-      <div class="col-3 text-bg-primary">
-        <div class="container">
-
-          <div class="row">
-            Users:
-          </div>
-          <div class="row list-group">
-            <app-friend-list (selectRecipientEvent)="selectRecipient($event)"></app-friend-list>
-          </div>
-
-          <div class="d-flex flex-column">
-            <a class="btn btn-success badge fs-6" (click)="onLoginButtonClick();" routerLink="login-dialog">Login</a>
-            <a class="btn btn-warning badge fs-6" (click)="onRegisterButtonClick();" routerLink="registration">Register</a>
-            <router-outlet></router-outlet>
-          </div>
-
-          <div class="d-flex flex-column">
-            <button id="activeUser" class="btn btn-error badge fs-6" type="button">
-              <span class="text-wrap">Active Recipient: {{activeRecipient}}</span>
-            </button>
-            <button id="activeUser" class="btn btn-success badge fs-6" type="button">
-              <span class="text-wrap">Active User: {{activeUser}}</span>
-            </button>
-          </div>
-
-        </div>
-      </div>
-      <div class="col-9 text-bg-info">
-        <app-message-panel [activeUser]="activeUser" [activeRecipient]="activeRecipient"></app-message-panel>
-      </div>
-
+      <router-outlet></router-outlet>
     </div>
   </div>
-</div>
 
-<footer>
-  <p>
-    NodeJs Version: <span id="node-version"></span>;
-    Chromium Version: <span id="chrome-version"></span>;
-    Electron Version: <span id="electron-version"></span>;
-  </p>
-</footer>
+  <footer>
+    <p>
+      NodeJs Version: <span id="node-version"></span>;
+      Chromium Version: <span id="chrome-version"></span>;
+      Electron Version: <span id="electron-version"></span>;
+    </p>
+  </footer>

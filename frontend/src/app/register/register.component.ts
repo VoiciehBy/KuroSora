@@ -6,10 +6,10 @@ import { ActiveUserService } from 'src/services/activeuser.service';
 
 @Component({
   selector: 'app-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.css']
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
-export class RegistrationComponent implements OnInit {
+export class RegisterComponent implements OnInit {
   host: string = "http://localhost:3000";
   login: string;
   username: string;

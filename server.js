@@ -54,7 +54,7 @@ httpServer.on("request", (req, res) => {
                             res.end(`{"error": "User '${login}' with login not found...\n"}`)
                         }
                         else {
-                            console.log(`User '${login}' with login was found...\n`)
+                            console.log(`User with '${login}' found...\n`)
                             res.end(JSON.stringify(result[0]))
                         }
                     })
@@ -94,9 +94,9 @@ httpServer.on("request", (req, res) => {
                 })
             }
             else if (pathname == "/register_new_user") {
-                if (searchParams.has("username") && searchParams.has("login")) {
+                if (searchParams.has("login") && searchParams.has("username") ) {
                     let username = searchParams.get("username");
-                    let login = searchParams.get("username");
+                    let login = searchParams.get("login");
 
                     db.addUser(login, "qwerty", username);
                     console.log(`User '${username}' was registered successfully...`)

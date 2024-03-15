@@ -55,4 +55,8 @@ export class AppComponent implements OnInit {
   onLoginButtonClick(): void {
     this.router.navigate(["login-dialog"], {});
   }
+
+  onRegisterButtonClick(): void {
+    this.router.navigate(["registration"], {});
+  }
 }

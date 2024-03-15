@@ -13,13 +13,15 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router'
 import { MessageUpdateService } from 'src/services/msgupdate.service';
 import { ActiveUserService } from 'src/services/activeuser.service';
+import { RegistrationComponent } from './registration/registration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginDialogComponent,
     FriendListComponent,
-    MessagePanelComponent
+    MessagePanelComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,

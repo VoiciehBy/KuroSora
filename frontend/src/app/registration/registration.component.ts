@@ -5,14 +5,14 @@ import { Observable } from 'rxjs';
 import { ActiveUserService } from 'src/services/activeuser.service';
 
 @Component({
-  selector: 'app-login-dialog',
-  templateUrl: './login-dialog.component.html',
-  styleUrls: ['./login-dialog.component.css'],
+  selector: 'app-registration',
+  templateUrl: './registration.component.html',
+  styleUrls: ['./registration.component.css']
 })
-export class LoginDialogComponent implements OnInit {
+export class RegistrationComponent implements OnInit {
   host: string = "http://localhost:3000";
   login: string;
-  password: string;
+  username: string;
 
   activeUser: string;
 
@@ -26,16 +26,17 @@ export class LoginDialogComponent implements OnInit {
     return this.http.get(`${this.host}/user?login=${login}`)
   }
 
-  signIn(): void {
-    this.getUser(this.login).subscribe({
-        next: (data) => {
-          this.login = data.login
-          this.aUU.setActiveUser(data.username)
-          this.router.navigate([""]);
-        },
-        error: (err) =>
-          console.error(`Error: ${err}`),
-        complete: () => console.log("Signing in completed, :D .")
-      })
+  addUser(login: string, username: string): Observable<any> {
+    return this.http.put(`${this.host}/register_new_user?login=${login}&username=${username}`, {});
+  }
+
+  signUp(): void {
+    this.addUser(this.login, this.username).subscribe({
+      next: () => {
+        this.router.navigate([""]);
+      },
+      error: (err) => console.error(`Error: ${err}`),
+      complete: () => console.log("Signing up completed, :D .")
+    })
   }
 }

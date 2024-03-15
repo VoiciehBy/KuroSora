@@ -1,8 +1,9 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { user } from "../../user";
 import { HttpClient } from '@angular/common/http';
-import { MessageUpdateService } from 'src/msgUpdate.service';
+import { MessageUpdateService } from 'src/services/msgupdate.service';
 import { Observable } from 'rxjs';
+import { ActiveUserService } from 'src/services/activeuser.service';
 
 @Component({
   selector: 'app-friend-list',
@@ -11,22 +12,23 @@ import { Observable } from 'rxjs';
 })
 export class FriendListComponent implements OnInit {
   host: string = "http://localhost:3000";
-  activeUser: string = "";
-  activeRecipient: string = "";
-  users: user[];
+  activeUser: string;
+  activeRecipient: string;
+  friends: user[];
 
   isMsgNeedToBeUpdated: boolean;
 
   @Output() selectRecipientEvent = new EventEmitter<string>();
 
-  constructor(private http: HttpClient, private msgUpdate: MessageUpdateService) { }
+  constructor(private http: HttpClient, private msg: MessageUpdateService, private aUU: ActiveUserService) { }
 
   ngOnInit(): void {
-    this.updateUsers();
-    this.msgUpdate.currentState.subscribe(b => this.isMsgNeedToBeUpdated = b);
+    this.updateFriendList();
+    this.msg.currentState.subscribe(b => this.isMsgNeedToBeUpdated = b);
+    this.aUU.currentState.subscribe(username => this.activeUser = username);
   }
 
-  getUser(username : string): Observable<any> {
+  getUser(username: string): Observable<any> {
     return this.http.get(`${this.host}/user?username=${username}`)
   }
 
@@ -34,26 +36,28 @@ export class FriendListComponent implements OnInit {
     return this.http.get(`${this.host}/users`)
   }
 
-  updateUsers(): void {
-    this.getUsers().subscribe(
-      data => {
-        this.users = [];
+  updateFriendList(): void {
+    this.getUsers().subscribe({
+      next: (data) => {
+        this.friends = [];
         for (let i = 0; i < data.length; i++) {
           let u: user = new user(data[i].username);
-          this.users.push(u)
+          if (u.username != "Testovy" && u.username != "Testovy1")
+            this.friends.push(u)
         }
       },
-      err =>
-        console.error(`Error: ${err}`))
+      error: (err) => console.error(`Error: ${err} `),
+      complete: () => console.log("Users update completed, :D .")
+    })
   }
 
   selectRecipient(username: string): void {
-    for (let i = 0; i < this.users.length; i++)
-      if (this.users[i].username == username)
-        this.activeRecipient = this.users[i].username;
-    this.updateUsers();
+    for (let i = 0; i < this.friends.length; i++)
+      if (this.friends[i].username == username)
+        this.activeRecipient = this.friends[i].username;
+    this.updateFriendList();
 
     this.selectRecipientEvent.emit(this.activeRecipient);
-    this.msgUpdate.setUpdate(true);
+    this.msg.setUpdate(true);
   }
 }

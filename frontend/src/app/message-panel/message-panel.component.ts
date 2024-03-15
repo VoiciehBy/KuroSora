@@ -2,7 +2,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { messageC } from 'src/message';
 import { HttpClient } from '@angular/common/http';
-import { MessageUpdateService } from 'src/msgUpdate.service';
+import { MessageUpdateService } from 'src/services/msgupdate.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -50,43 +50,52 @@ export class MessagePanelComponent implements OnInit {
 
     this.messages = []
 
-    this.getMessages(this.activeUser, this.activeRecipient).subscribe(data => {
-      for (let i = 0; i < data.length; i++) {
-        let content = JSON.stringify(data[i].content).replace('"', '').replace('"', '');
-        let m_date = JSON.stringify(data[i].m_date)
+    this.getMessages(this.activeUser, this.activeRecipient).subscribe({
+      next: (data) => {
+        for (let i = 0; i < data.length; i++) {
+          let content = JSON.stringify(data[i].content).replace('"', '').replace('"', '');
+          let m_date = JSON.stringify(data[i].m_date)
 
-        let m = new messageC(this.activeUser, this.activeRecipient, content, m_date);
-        this.messages.push(m)
-        this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
-      }
-    },
-      err =>
-        console.error(`Error: ${err}`))
+          let m = new messageC(this.activeUser, this.activeRecipient, content, m_date);
+          this.messages.push(m)
+          this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
+        }
+      },
+      error: (err) =>
+        console.error(`Error: ${err} `),
+      complete: () => console.log(`Getting messages from ${this.activeUser} to ${this.activeRecipient}...`)
+    })
 
-    this.getMessages(this.activeRecipient, this.activeUser).subscribe(data => {
-      for (let i = 0; i < data.length; i++) {
-        let content = JSON.stringify(data[i].content).replace('"', '').replace('"', '');
-        let m_date = JSON.stringify(data[i].m_date)
+    this.getMessages(this.activeRecipient, this.activeUser).subscribe({
+      next: (data) => {
+        for (let i = 0; i < data.length; i++) {
+          let content = JSON.stringify(data[i].content).replace('"', '').replace('"', '');
+          let m_date = JSON.stringify(data[i].m_date)
 
-        let m = new messageC(this.activeRecipient, this.activeUser, content, m_date);
-        this.messages.push(m)
-        this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
-      }
-    },
-      err =>
-        console.error(`Error: ${err}`))
+          let m = new messageC(this.activeRecipient, this.activeUser, content, m_date);
+          this.messages.push(m)
+          this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
+        }
+      },
+      error: (err) =>
+        console.error(`Error: ${err} `),
+      complete: () => console.log(`Getting messages from ${this.activeRecipient} to ${this.activeUser}...`)
+    })
 
     this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
     this.msgUpdate.setUpdate(false);
   }
 
   onSendButtonClick(): void {
-    this.sendMessage().subscribe(data => {
-      console.log(data.res)
-      this.msgUpdate.setUpdate(true);
-      this.updateMessages();
-    },
-      err =>
-        console.error(`Error: ${err}`))
+    this.sendMessage().subscribe({
+      next: (data) => {
+        console.log(data.res)
+        this.msgUpdate.setUpdate(true);
+        this.updateMessages();
+      },
+      error: (err) =>
+        console.error(`Error: ${err} `),
+      complete: () => console.log("Message send completed...")
+    })
   }
 }

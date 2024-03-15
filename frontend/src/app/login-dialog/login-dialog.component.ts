@@ -1,34 +1,42 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Observable } from 'rxjs';
+import { ActiveUserService } from 'src/services/activeuser.service';
 
 @Component({
   selector: 'app-login-dialog',
   templateUrl: './login-dialog.component.html',
   styleUrls: ['./login-dialog.component.css'],
 })
-export class LoginDialogComponent {
+export class LoginDialogComponent implements OnInit {
   host: string = "http://localhost:3000";
   login: string;
   password: string;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  activeUser: string;
 
-  @Output() selectUserEvent = new EventEmitter<string>();
+  constructor(private http: HttpClient, private router: Router, private aUU: ActiveUserService) { }
 
-  getUser(login = "test1"): Observable<any> {
+  ngOnInit(): void {
+    this.aUU.currentState.subscribe(username => this.activeUser = username);
+  }
+
+  getUser(login: string): Observable<any> {
     return this.http.get(`${this.host}/user?login=${login}`)
   }
 
   signIn(): void {
-    this.router.navigate([""]);
     this.getUser(this.login).subscribe(
-      data => {
-        this.login = data.login
-        this.selectUserEvent.emit(data.username)
-      },
-      err =>
-        console.error(`Error: ${err}`))
+      {
+        next: (data) => {
+          this.login = data.login
+          this.aUU.setActiveUser(data.username)
+          this.router.navigate([""]);
+        },
+        error: (err) =>
+          console.error(`Error: ${err}`),
+        complete: () => console.log("Signing in completed, :D .")
+      })
   }
 }

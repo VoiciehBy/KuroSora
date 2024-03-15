@@ -3,12 +3,12 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable()
 export class MessageUpdateService{
-    private msgStateObserver = new BehaviorSubject<boolean>(true);
-    currentState : Observable<boolean> = this.msgStateObserver.asObservable();
+    private subject = new BehaviorSubject<boolean>(true);
+    currentState : Observable<boolean> = this.subject.asObservable();
 
     constructor() {}
 
     setUpdate(b : boolean){
-        this.msgStateObserver.next(b);
+        this.subject.next(b);
     }
 }

@@ -12,10 +12,8 @@
           </div>
 
           <div class="d-flex flex-column">
-            <a class="btn btn-success badge fs-6" (click)="onLoginButtonClick();">Login</a>
-            <div>
-              <app-login-dialog (selectUserEvent)="getSelectUserEvent($event);"></app-login-dialog>
-            </div>
+            <a class="btn btn-success badge fs-6" (click)="onLoginButtonClick();" routerLink="login-dialog">Login</a>
+            <router-outlet></router-outlet>
           </div>
 
           <div class="d-flex flex-column">

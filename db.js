@@ -40,7 +40,7 @@ function getMessagePromise(sender, recipient) {
 module.exports = {
     getUsers: () => doQuery("SELECT * FROM Users"),
     getUser: (username) => doQuery(`SELECT * FROM USERS WHERE username='${username}'`),
-    getUser_1: (login) => doQuery(`SELECT * FROM USERS WHERE login='${login}'`),
+    getUser_1: (login, password) => doQuery(`SELECT * FROM USERS WHERE login='${login}' AND password='${password}'`),
     addUser: (login, password, username) => doQuery(`INSERT INTO Users (login, password, username) VALUES('${login}','${password}','${username}');`),
     addMessage: (sender, recipient, content, m_date) => {
         doQuery(`SELECT id FROM Users WHERE username='${sender}'`).then(sender_id => {

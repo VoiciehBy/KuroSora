@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Observable } from 'rxjs';
 import { ActiveUserService } from 'src/services/activeuser.service';
+import { HmacSHA512} from 'crypto-js';
 
 @Component({
   selector: 'app-login-dialog',
@@ -22,12 +23,13 @@ export class LoginComponent implements OnInit {
     this.aUU.currentState.subscribe(username => this.activeUser = username);
   }
 
-  getUser(login: string): Observable<any> {
-    return this.http.get(`${this.host}/user?login=${login}`)
+  getUser(login: string, password : string): Observable<any> {
+    return this.http.get(`${this.host}/user?login=${login}&password=${password}`)
   }
 
   signIn(): void {
-    this.getUser(this.login).subscribe({
+    let hash = HmacSHA512("sha512",this.password).toString()
+    this.getUser(this.login, hash).subscribe({
       next: (data) => {
         this.login = data.login
         this.aUU.setActiveUser(data.username)

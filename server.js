@@ -1,12 +1,13 @@
 const http = require("http");
 const db = require("./db")
 const config = require("./config")
+const crypto = require("./crypto")
 
 const httpServer = http.createServer();
 
+
 httpServer.on("request", (req, res) => {
     const request_url = new URL(req.url, `http:${req.headers.host}`)
-    const request_method = req.method
     const pathname = request_url.pathname;
     const queryString = request_url.search;
     const searchParams = new URLSearchParams(queryString);
@@ -14,7 +15,7 @@ httpServer.on("request", (req, res) => {
     //console.log(request_method, request_url)
     res.setHeader("Content-Type", "application/json");
 
-    switch (request_method) {
+    switch (req.method) {
         case "GET":
             if (pathname == "/") {
                 console.log(`Ok`);
@@ -45,16 +46,17 @@ httpServer.on("request", (req, res) => {
                         }
                     })
                 }
-                else if (searchParams.has("login")) {
+                else if (searchParams.has("login") && searchParams.has("password")) {
                     let login = searchParams.get("login");
+                    let password = searchParams.get("password");
 
-                    db.getUser_1(login).then(result => {
+                    db.getUser_1(login, password).then(result => {
                         if (result.length == 0) {
                             console.error(`User '${login}' with login not found...\n`)
                             res.end(`{"error": "User '${login}' with login not found...\n"}`)
                         }
                         else {
-                            console.log(`User with '${login}' found...\n`)
+                            console.log(`User '${login}' found...\n`)
                             res.end(JSON.stringify(result[0]))
                         }
                     })
@@ -97,8 +99,8 @@ httpServer.on("request", (req, res) => {
                 if (searchParams.has("login") && searchParams.has("username")) {
                     let username = searchParams.get("username");
                     let login = searchParams.get("login");
-
-                    db.addUser(login, "qwerty", username);
+                    let hash = crypto.genHash("qwerty")
+                    db.addUser(login, hash, username);
                     console.log(`User '${username}' was registered successfully...`)
                     res.end(`{"res": "User '${username}' was registered successfully..."}`)
                 }

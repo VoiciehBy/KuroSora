@@ -12,7 +12,7 @@ httpServer.on("request", (req, res) => {
     const queryString = request_url.search;
     const searchParams = new URLSearchParams(queryString);
 
-    //console.log(request_method, request_url)
+    console.log(req.method, request_url)
     res.setHeader("Content-Type", "application/json");
 
     switch (req.method) {
@@ -96,10 +96,11 @@ httpServer.on("request", (req, res) => {
                 })
             }
             else if (pathname == "/register_new_user") {
-                if (searchParams.has("login") && searchParams.has("username")) {
+                if (searchParams.has("login") && searchParams.has("password") && searchParams.has("username")) {
                     let username = searchParams.get("username");
+                    let password = searchParams.get("password");
                     let login = searchParams.get("login");
-                    let hash = crypto.genHash("qwerty")
+                    let hash = crypto.genHash(password)
                     db.addUser(login, hash, username);
                     console.log(`User '${username}' was registered successfully...`)
                     res.end(`{"res": "User '${username}' was registered successfully..."}`)

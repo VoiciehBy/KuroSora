@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Observable } from 'rxjs';
 import { ActiveUserService } from 'src/services/activeuser.service';
-import { HmacSHA512} from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-login-dialog',
@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
   }
 
   signIn(): void {
-    let hash = HmacSHA512("sha512",this.password).toString()
+    let hash = CryptoJS.HmacSHA512('',this.password).toString()
     this.getUser(this.login, hash).subscribe({
       next: (data) => {
         this.login = data.login

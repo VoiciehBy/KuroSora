@@ -12,11 +12,10 @@ import { ActiveUserService } from 'src/services/activeuser.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit{
+export class HomeComponent implements OnInit {
   title: string = 'frontend';
   host: string = "http://localhost:3000";
-  activeUser: string = 'Testovy';
-  activeRecipient: string = 'Testovy1';
+  activeUser: string;
   users: user[] = [];
 
   constructor(private http: HttpClient,
@@ -47,18 +46,13 @@ export class HomeComponent implements OnInit{
     })
   }
 
-  selectRecipient(username: string): void {
-    for (let i = 0; i < this.users.length; i++)
-      if (this.users[i].username == username)
-        this.activeRecipient = this.users[i].username;
-    this.updateUsers();
-  }
-
   onLoginButtonClick(): void {
     this.router.navigate(["login-dialog"], {});
+    this.updateUsers();
   }
 
   onRegisterButtonClick(): void {
     this.router.navigate(["register"], {});
+    this.updateUsers();
   }
 }

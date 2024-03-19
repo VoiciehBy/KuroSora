@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { Observable } from 'rxjs';
 import { ActiveUserService } from 'src/services/activeuser.service';
 import * as CryptoJS from 'crypto-js';
+import { MessageUpdateService } from 'src/services/msgupdate.service';
 
 @Component({
   selector: 'app-login-dialog',
@@ -16,24 +17,30 @@ export class LoginComponent implements OnInit {
   password: string;
 
   activeUser: string;
+  isMsgNeedToBeUpdated: boolean;
 
-  constructor(private http: HttpClient, private router: Router, private aUU: ActiveUserService) { }
+  constructor(private http: HttpClient,
+    private router: Router,
+    private msgUpdate: MessageUpdateService,
+    private aUU: ActiveUserService) { }
 
   ngOnInit(): void {
+    this.msgUpdate.currentState.subscribe(b => this.isMsgNeedToBeUpdated = b);
     this.aUU.currentState.subscribe(username => this.activeUser = username);
   }
 
-  getUser(login: string, password : string): Observable<any> {
+  getUser(login: string, password: string): Observable<any> {
     return this.http.get(`${this.host}/user?login=${login}&password=${password}`)
   }
 
   signIn(): void {
-    let hash = CryptoJS.HmacSHA512('',this.password).toString()
+    let hash = CryptoJS.HmacSHA512('', this.password).toString()
     this.getUser(this.login, hash).subscribe({
       next: (data) => {
         this.login = data.login
         this.aUU.setActiveUser(data.username)
         this.router.navigate([""]);
+        this.msgUpdate.setUpdate(true)
       },
       error: (err) =>
         console.error(`Error: ${err}`),

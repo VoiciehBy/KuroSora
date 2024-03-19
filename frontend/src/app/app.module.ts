@@ -16,6 +16,7 @@ import { ActiveUserService } from 'src/services/activeuser.service';
 import { RegisterComponent } from './register/register.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
+import { ActiveRecipientService } from 'src/services/activeRecipient.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import { HomeComponent } from './home/home.component';
     RouterLink,
     BrowserAnimationsModule
   ],
-  providers: [MessageUpdateService, ActiveUserService],
+  providers: [MessageUpdateService, ActiveUserService, ActiveRecipientService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

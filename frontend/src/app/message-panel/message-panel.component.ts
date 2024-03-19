@@ -4,6 +4,7 @@ import { messageC } from 'src/message';
 import { HttpClient } from '@angular/common/http';
 import { MessageUpdateService } from 'src/services/msgupdate.service';
 import { Observable } from 'rxjs';
+import { ActiveRecipientService } from 'src/services/activeRecipient.service';
 
 @Component({
   selector: 'app-message-panel',
@@ -14,20 +15,21 @@ export class MessagePanelComponent implements OnInit {
   host: string = "http://localhost:3000";
 
   @Input() activeUser: string;
-  @Input() activeRecipient: string;
+  activeRecipient: string;
 
   isMsgNeedToBeUpdated: boolean = false;
   message: string = '';
   messages: messageC[];
 
-  constructor(private http: HttpClient, private msgUpdate: MessageUpdateService) { }
+  constructor(private http: HttpClient,
+    private aR : ActiveRecipientService,
+    private msgUpdate: MessageUpdateService) { }
 
   ngOnInit(): void {
-    this.updateMessages()
-
     setInterval(() => {
       this.updateMessages();
     }, 1000)
+    this.aR.currentState.subscribe(username => this.activeRecipient = username)
     this.msgUpdate.currentState.subscribe(b => this.isMsgNeedToBeUpdated = b);
   }
 
@@ -40,7 +42,7 @@ export class MessagePanelComponent implements OnInit {
       })
   }
 
-  getMessages(sender: string = "Testovy", recipient: string = "Testovy1"): Observable<any> {
+  getMessages(sender: string, recipient: string): Observable<any> {
     return this.http.get(`${this.host}/user_messages?sender=${sender}&recipient=${recipient}`)
   }
 

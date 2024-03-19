@@ -13,7 +13,6 @@ CREATE TABLE Users(
 
 INSERT INTO Users (login, password, username) VALUES('test','test','Testovy');
 INSERT INTO Users (login, password, username) VALUES('test1','test1','Testovy1');
-INSERT INTO Users (login, password, username) VALUES('abrozy','qwerty','PanKleks');
 
 DROP TABLE Users
 CASCADE CONSTRAINTS;

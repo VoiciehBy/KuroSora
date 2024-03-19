@@ -16,7 +16,9 @@ export class RegisterComponent implements OnInit {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    console.log("Registe component inited, xdd....")
+   }
 
   addUser(login: string, username: string, password: string): Observable<any> {
     return this.http.put(`${this.host}/register_new_user?login=${login}&username=${username}&password=${password}`, {});

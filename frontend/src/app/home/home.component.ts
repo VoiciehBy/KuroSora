@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { user } from 'src/user';
-import { ActiveUserService } from 'src/services/activeuser.service';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -14,11 +13,11 @@ export class HomeComponent implements OnInit {
   activeUser: string;
 
   constructor(private router: Router,
-    private aUU: ActiveUserService) { }
+    private uS: UserService) { }
 
   ngOnInit(): void {
-    console.log("Inited home component, xdd....")
-    this.aUU.currentState.subscribe(username => this.activeUser = username);
+    console.log("Home component inited, xdd....")
+    this.uS.activeUserState.subscribe(username => this.activeUser = username);
   }
 
   onLoginButtonClick(): void {

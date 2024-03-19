@@ -3,8 +3,7 @@ import { user } from "../../user";
 import { HttpClient } from '@angular/common/http';
 import { MessageUpdateService } from 'src/services/msgupdate.service';
 import { Observable } from 'rxjs';
-import { ActiveUserService } from 'src/services/activeuser.service';
-import { ActiveRecipientService } from 'src/services/activeRecipient.service';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-friend-list',
@@ -21,14 +20,14 @@ export class FriendListComponent implements OnInit {
 
   constructor(private http: HttpClient,
     private msg: MessageUpdateService,
-    private aUU: ActiveUserService,
-    private aR: ActiveRecipientService) { }
+    private uS : UserService) { }
 
   ngOnInit(): void {
+    console.log("FriendList component inited, xD...")
     this.updateFriendList();
     this.msg.currentState.subscribe(b => this.isMsgNeedToBeUpdated = b);
-    this.aUU.currentState.subscribe(username => this.activeUser = username);
-    this.aR.currentState.subscribe(username => this.activeRecipient = username);
+    this.uS.activeUserState.subscribe(username => this.activeUser = username);
+    this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
   }
 
   getUsers(): Observable<any> {
@@ -43,8 +42,7 @@ export class FriendListComponent implements OnInit {
         this.friends = [];
         for (let i = 0; i < data.length; i++) {
           let u: user = new user(data[i].username);
-          if (u.username != "Testovy" && u.username != "Testovy1"
-            && u.username != this.activeUser)
+          if (u.username != this.activeUser)
             this.friends.push(u)
         }
       },
@@ -54,13 +52,14 @@ export class FriendListComponent implements OnInit {
   }
 
   selectRecipient(username: string): void {
+    console.log(username != this.activeRecipient)
+    console.log(`Active Recipient ${this.activeRecipient}`)
     for (let i = 0; i < this.friends.length; i++)
-      if (this.friends[i].username == username) {
-        this.activeRecipient = this.friends[i].username;
-        this.aR.setActiveRecipient(this.activeRecipient)
+      if (username != this.activeRecipient && this.friends[i].username == username) {
+        this.uS.setActiveRecipient(this.friends[i].username)
+        this.msg.setUpdate(true);
+        this.updateFriendList();
         break;
       }
-    this.updateFriendList();
-    this.msg.setUpdate(true);
   }
 }

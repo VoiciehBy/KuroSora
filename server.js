@@ -12,7 +12,7 @@ httpServer.on("request", (req, res) => {
     const queryString = request_url.search;
     const searchParams = new URLSearchParams(queryString);
 
-    console.log(req.method, request_url)
+    //console.log(req.method, request_url)
     res.setHeader("Content-Type", "application/json");
 
     switch (req.method) {
@@ -52,8 +52,8 @@ httpServer.on("request", (req, res) => {
 
                     db.getUser_1(login, password).then(result => {
                         if (result.length == 0) {
-                            console.error(`User '${login}' with login not found...\n`)
-                            res.end(`{"error": "User '${login}' with login not found...\n"}`)
+                            console.error(`User '${login}' with given credentials not found...\n`)
+                            res.end(`{"error": "User '${login}' with given credentials not found...\n"}`)
                         }
                         else {
                             console.log(`User '${login}' found...\n`)

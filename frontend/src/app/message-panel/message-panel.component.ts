@@ -4,7 +4,7 @@ import { messageC } from 'src/message';
 import { HttpClient } from '@angular/common/http';
 import { MessageUpdateService } from 'src/services/msgupdate.service';
 import { Observable } from 'rxjs';
-import { ActiveRecipientService } from 'src/services/activeRecipient.service';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-message-panel',
@@ -14,7 +14,7 @@ import { ActiveRecipientService } from 'src/services/activeRecipient.service';
 export class MessagePanelComponent implements OnInit {
   host: string = "http://localhost:3000";
 
-  @Input() activeUser: string;
+  activeUser: string;
   activeRecipient: string;
 
   isMsgNeedToBeUpdated: boolean = false;
@@ -22,15 +22,17 @@ export class MessagePanelComponent implements OnInit {
   messages: messageC[];
 
   constructor(private http: HttpClient,
-    private aR: ActiveRecipientService,
+    private uS: UserService,
     private msgUpdate: MessageUpdateService) { }
 
   ngOnInit(): void {
+    console.log("Message Panel component inited, xdd....")
+    this.uS.activeUserState.subscribe(username => this.activeUser = username)
+    this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username)
+    this.msgUpdate.currentState.subscribe(b => this.isMsgNeedToBeUpdated = b);
     setInterval(() => {
       this.updateMessages();
-    }, 1000)
-    this.aR.currentState.subscribe(username => this.activeRecipient = username)
-    this.msgUpdate.currentState.subscribe(b => this.isMsgNeedToBeUpdated = b);
+    }, 100)
   }
 
   sendMessage(): Observable<any> {
@@ -95,9 +97,10 @@ export class MessagePanelComponent implements OnInit {
         this.msgUpdate.setUpdate(true);
         this.updateMessages();
       },
-      error: (err) =>
-        console.error(`Error: ${err} `),
-      complete: () => console.log("Message send completed...")
+      error: (err) => console.error(`Error: ${err} `),
+      complete: () => {
+        console.log("Message send completed...")
+      }
     })
   }
 }

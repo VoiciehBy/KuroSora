@@ -12,11 +12,10 @@ import { HttpClientModule } from "@angular/common/http";
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router'
 import { MessageUpdateService } from 'src/services/msgupdate.service';
-import { ActiveUserService } from 'src/services/activeuser.service';
 import { RegisterComponent } from './register/register.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
-import { ActiveRecipientService } from 'src/services/activeRecipient.service';
+import { UserService } from 'src/services/user.service';
 
 @NgModule({
   declarations: [
@@ -37,7 +36,7 @@ import { ActiveRecipientService } from 'src/services/activeRecipient.service';
     RouterLink,
     BrowserAnimationsModule
   ],
-  providers: [MessageUpdateService, ActiveUserService, ActiveRecipientService],
+  providers: [MessageUpdateService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("Inited, xdd....")
-    this.router.navigate(["login"],{})
+    this.router.navigate(["login"], {})
   }
 
   onLoginButtonClick(): void {

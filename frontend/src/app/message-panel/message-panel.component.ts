@@ -22,7 +22,7 @@ export class MessagePanelComponent implements OnInit {
   messages: messageC[];
 
   constructor(private http: HttpClient,
-    private aR : ActiveRecipientService,
+    private aR: ActiveRecipientService,
     private msgUpdate: MessageUpdateService) { }
 
   ngOnInit(): void {

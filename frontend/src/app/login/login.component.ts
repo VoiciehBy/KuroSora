@@ -37,14 +37,14 @@ export class LoginComponent implements OnInit {
     let hash = CryptoJS.HmacSHA512('', this.password).toString()
     this.getUser(this.login, hash).subscribe({
       next: (data) => {
-        this.login = data.login
         this.aUU.setActiveUser(data.username)
+      },
+      error: (err) => console.error(`Error: ${err}`),
+      complete: () => {
+        console.log("Signing in completed, :D")
         this.router.navigate([""]);
         this.msgUpdate.setUpdate(true)
-      },
-      error: (err) =>
-        console.error(`Error: ${err}`),
-      complete: () => console.log("Signing in completed, :D")
+      }
     })
   }
 }

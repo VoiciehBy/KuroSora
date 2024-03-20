@@ -22,10 +22,11 @@ export class FriendListComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("FriendList component inited, xD...")
-    this.updateFriendList();
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
+    if (this.activeUser != '')
+      this.updateFriendList();
   }
 
   getUsers(): Observable<any> {
@@ -33,8 +34,6 @@ export class FriendListComponent implements OnInit {
   }
 
   updateFriendList(): void {
-    if (this.activeUser !== '')
-      return
     this.getUsers().subscribe({
       next: (data) => {
         this.friends = [];

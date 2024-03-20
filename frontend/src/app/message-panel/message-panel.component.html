@@ -1,43 +1,61 @@
-
-<div *ngFor="let msg of messages;" class="row">
-  <div class="col-2"></div>
-  <div *ngIf="msg.sender_id == activeUser;" class="row">
-    <div class="col-5 badge text-bg-danger">
-      <p class="text-left text-wrap">
-        {{msg.sender_id}}: {{msg.content}}
-      </p>
+<div *ngIf="activeUser != ''">
+  <div *ngFor="let msg of messages;" class="row">
+    <div class="col-2"></div>
+    <div *ngIf="msg.sender_id == activeUser;" class="row">
+      <div class="col-5 card text-bg-danger">
+        <div class="card-header">
+          {{msg.sender_id}}
+        </div>
+        <h6 class="card-title">
+        </h6>
+        <p class="card-text text-left text-wrap">
+          {{msg.content}}
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-7"></div>
+      <div *ngIf="msg.sender_id != activeUser" class="col-5 card text-bg-warning">
+        <div class="card-header">
+          {{msg.sender_id}}
+        </div>
+        <div class="card-title">
+        </div>
+        <p class="card-text text-right text-wrap">
+          {{msg.content}}
+        </p>
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-7"></div>
-    <div *ngIf="msg.sender_id != activeUser" class="col-5 badge text-bg-warning">
-      <p class="text-right text-wrap">
-        {{msg.sender_id}}: {{msg.content}}
-      </p>
-    </div>
-  </div>
-</div>
 
+  <!--
 <div class="row">
   <div class="col-12">.</div>
 </div>
-<div class="row text-bg-dark">
-  <div id="inputMessageForm" class="col input-group">
-    <span id="inputMessageAddon" class="input-group-text">
-      <textarea id="inputMessage" type="text" placeholder="Podaj treść wiadomości..." aria-label="Input Text Addon"
-        aria-describedby="inputMessageAddon" [(ngModel)]="message" maxlength="106">
-          {{message}}
-          </textarea>
-      <div (click)="onSendButtonClick();">
-        <button class="btn btn-success badge fs-6" type="button" value="Send">
-          <img src="../../node_modules/bootstrap-icons/icons/send.svg">
-        </button>
+-->
+  <div class="row text-bg-dark">
+    <div id="inputMessageForm" class="col input-group">
+      <div class="form-floating">
+        <textarea id="inputMessage" class="form-control" type="text" placeholder="Podaj treść wiadomości..."
+          aria-label="Input Text Addon" aria-describedby="inputMessageAddon" [(ngModel)]="message" maxlength="106">
+        {{message}}
+      </textarea>
+        <label for="inputMessage">
+          Wyślij wiadomość do {{activeRecipient}}...
+        </label>
       </div>
-      <div (click)="onUpdateButtonClick()">
-        <button class="btn btn-success badge fs-6" type="button" value="onUpdateButtonClick">
-          <img src="../../node_modules/bootstrap-icons/icons/arrow-clockwise.svg">
-        </button>
-      </div>
-    </span>
+      <span id="inputMessageAddon" class="input-group-text">
+        <div (click)="onSendButtonClick();">
+          <button class="btn btn-success badge fs-6" type="button" value="Send">
+            <img src="../../node_modules/bootstrap-icons/icons/send.svg">
+          </button>
+        </div>
+        <div (click)="onUpdateButtonClick()">
+          <button class="btn btn-success badge fs-6" type="button" value="Update">
+            <img src="../../node_modules/bootstrap-icons/icons/arrow-clockwise.svg">
+          </button>
+        </div>
+      </span>
+    </div>
   </div>
 </div>

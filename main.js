@@ -7,6 +7,7 @@ const createWindow = () => {
         height: 720,
         minWidth: 800,
         minHeight: 600,
+        icon: path.join(__dirname, "frontend/dist/frontend/assets/logo.png"),
         webPreferences: {
             nodeIntegration: true,
             preload: path.join(__dirname, "preload.js"),

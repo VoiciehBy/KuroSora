@@ -1,7 +1,10 @@
 <div class="content" role="main">
-  <nav class="navbar navbar-expand-lg">
+  <nav class="navbar navbar-expand-lg navbar-dark text-bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand">KuroSora</a>
+      <a class="navbar-brand" routerLink="/">
+        <img src="assets/logo.png" width="30" height="30" alt="KuroSora Logo">
+        KuroSora
+      </a>
     </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar"
       aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,30 +13,44 @@
     <div id="topNavbar" class="collapse navbar-collapse">
       <ul class="navbar-nav gap-2 ms-auto">
         <li class="nav-item active">
-          <a class="btn btn-success badge fs-6" routerLink="/">Home</a>
+          <a class="btn badge fs-6" (click)="onLoginButtonClick();" data-bs-toggle="modal" data-bs-target="#LoginModal">
+            Zaloguj
+          </a>
         </li>
         <li class="nav-item active">
-          <a class="btn btn-danger badge fs-6" (click)="onLoginButtonClick();" data-bs-toggle="modal"
-            data-bs-target="#LoginModal">Login</a>
-        </li>
-        <li class="nav-item active">
-          <a class="btn btn-warning badge fs-6" (click)="onRegisterButtonClick();" data-bs-toggle="modal"
-            data-bs-target="#RegisterModal">Register</a>
+          <a class="btn badge fs-6" (click)="onRegisterButtonClick();" data-bs-toggle="modal"
+            data-bs-target="#RegisterModal">
+            Rejestracja
+          </a>
         </li>
       </ul>
     </div>
   </nav>
 
-  <div class="container-fluid text-center text-bg-secondary min-vh-100 d-flex flex-column" style="height: 720px;">
+  <div class="container-fluid text-center text-bg-dark min-vh-100 d-flex flex-column">
     <div class="row">
       <router-outlet></router-outlet>
     </div>
   </div>
 
   <footer>
-    <p>
-      NodeJs Version: <span id="node-version"></span>;
-      Chromium Version: <span id="chrome-version"></span>;
-      Electron Version: <span id="electron-version"></span>;
-    </p>
+    <div class="card text-bg-dark">
+      <div class="card-header"></div>
+      <div class="card-body">
+        <p class="card-text">
+          <b>
+            NodeJs:
+          </b>
+          <span id="node-version"></span>;
+          <b>
+            Chromium:
+          </b>
+          <span id="chrome-version"></span>;
+          <b>
+            Electron:
+          </b>
+          <span id="electron-version"></span>;
+        </p>
+      </div>
+    </div>
   </footer>

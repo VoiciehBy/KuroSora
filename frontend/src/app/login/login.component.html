@@ -3,29 +3,31 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title text-dark fs-5" id="LoginModalLabel">
-                    Welcome back!11
+                    Witaj ponownie!
                 </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form class="needs-validation was-validated" novalidate>
                     <div class="input-group">
                         <span class="input-group-text">
-                            <input type="text" placeholder="Login" aria-label="Login Field Addon"
-                                aria-describedby="loginFieldAddon" [(ngModel)]="login">
+                            <input class="form-control" type="text" placeholder="Login" aria-label="Login Field Addon"
+                                aria-describedby="loginFieldAddon" [(ngModel)]="login" required>
                         </span>
                     </div>
                     <div class="input-group">
                         <span class="input-group-text">
-                            <input type="password" placeholder="Password" aria-label="Password Field Addon"
-                                aria-describedby="passwordFieldAddon" [(ngModel)]="password">
+                            <input class="form-control" type="password" placeholder="Hasło"
+                                aria-label="Password Field Addon" aria-describedby="passwordFieldAddon"
+                                [(ngModel)]="password" required>
                         </span>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="signIn();">Sign
-                    in</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="signIn();">
+                    Zaloguj się
+                </button>
             </div>
         </div>
     </div>

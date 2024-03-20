@@ -1,7 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { user } from "../../user";
 import { HttpClient } from '@angular/common/http';
-import { MessageUpdateService } from 'src/services/msgupdate.service';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 
@@ -19,15 +18,14 @@ export class FriendListComponent implements OnInit {
   isMsgNeedToBeUpdated: boolean;
 
   constructor(private http: HttpClient,
-    private msg: MessageUpdateService,
-    private uS : UserService) { }
+    private uS: UserService) { }
 
   ngOnInit(): void {
     console.log("FriendList component inited, xD...")
     this.updateFriendList();
-    this.msg.currentState.subscribe(b => this.isMsgNeedToBeUpdated = b);
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
+    this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
   }
 
   getUsers(): Observable<any> {
@@ -52,12 +50,10 @@ export class FriendListComponent implements OnInit {
   }
 
   selectRecipient(username: string): void {
-    console.log(username != this.activeRecipient)
-    console.log(`Active Recipient ${this.activeRecipient}`)
     for (let i = 0; i < this.friends.length; i++)
       if (username != this.activeRecipient && this.friends[i].username == username) {
         this.uS.setActiveRecipient(this.friends[i].username)
-        this.msg.setUpdate(true);
+        this.uS.setMsgUpdate(true);
         this.updateFriendList();
         break;
       }

@@ -1,8 +1,7 @@
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { messageC } from 'src/message';
 import { HttpClient } from '@angular/common/http';
-import { MessageUpdateService } from 'src/services/msgupdate.service';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 
@@ -22,14 +21,13 @@ export class MessagePanelComponent implements OnInit {
   messages: messageC[];
 
   constructor(private http: HttpClient,
-    private uS: UserService,
-    private msgUpdate: MessageUpdateService) { }
+    private uS: UserService) { }
 
   ngOnInit(): void {
     console.log("Message Panel component inited, xdd....")
     this.uS.activeUserState.subscribe(username => this.activeUser = username)
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username)
-    this.msgUpdate.currentState.subscribe(b => this.isMsgNeedToBeUpdated = b);
+    this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
     setInterval(() => {
       this.updateMessages();
     }, 100)
@@ -87,14 +85,14 @@ export class MessagePanelComponent implements OnInit {
     })
 
     this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
-    this.msgUpdate.setUpdate(false);
+    this.uS.setMsgUpdate(false);
   }
 
   onSendButtonClick(): void {
     this.sendMessage().subscribe({
       next: (data) => {
         console.log(data.res)
-        this.msgUpdate.setUpdate(true);
+        this.uS.setMsgUpdate(true);
         this.updateMessages();
       },
       error: (err) => console.error(`Error: ${err} `),
@@ -102,5 +100,9 @@ export class MessagePanelComponent implements OnInit {
         console.log("Message send completed...")
       }
     })
+  }
+
+  onUpdateButtonClick(): void {
+    this.uS.setMsgUpdate(true);
   }
 }

@@ -3,7 +3,6 @@ import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Observable } from 'rxjs';
 import * as CryptoJS from 'crypto-js';
-import { MessageUpdateService } from 'src/services/msgupdate.service';
 import { UserService } from 'src/services/user.service';
 
 @Component({
@@ -21,13 +20,12 @@ export class LoginComponent implements OnInit {
 
   constructor(private http: HttpClient,
     private router: Router,
-    private msgUpdate: MessageUpdateService,
-    private uS : UserService) { }
+    private uS: UserService) { }
 
   ngOnInit(): void {
     console.log("Login component inited, xdd....")
-    this.msgUpdate.currentState.subscribe(b => this.isMsgNeedToBeUpdated = b);
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
+    this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
   }
 
   getUser(login: string, password: string): Observable<any> {
@@ -44,7 +42,7 @@ export class LoginComponent implements OnInit {
       complete: () => {
         console.log("Signing in completed, :D")
         this.router.navigate([""]);
-        this.msgUpdate.setUpdate(true)
+        this.uS.setMsgUpdate(true)
       }
     })
   }

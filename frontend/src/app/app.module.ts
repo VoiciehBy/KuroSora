@@ -11,7 +11,6 @@ import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router'
-import { MessageUpdateService } from 'src/services/msgupdate.service';
 import { RegisterComponent } from './register/register.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
@@ -36,7 +35,7 @@ import { UserService } from 'src/services/user.service';
     RouterLink,
     BrowserAnimationsModule
   ],
-  providers: [MessageUpdateService, UserService],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

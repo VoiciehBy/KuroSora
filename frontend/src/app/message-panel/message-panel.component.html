@@ -1,3 +1,4 @@
+
 <div *ngFor="let msg of messages;" class="row">
   <div class="col-2"></div>
   <div *ngIf="msg.sender_id == activeUser;" class="row">
@@ -24,12 +25,17 @@
   <div id="inputMessageForm" class="col input-group">
     <span id="inputMessageAddon" class="input-group-text">
       <textarea id="inputMessage" type="text" placeholder="Podaj treść wiadomości..." aria-label="Input Text Addon"
-        aria-describedby="inputMessageAddon" [(ngModel)]="message">
+        aria-describedby="inputMessageAddon" [(ngModel)]="message" maxlength="106">
           {{message}}
           </textarea>
       <div (click)="onSendButtonClick();">
         <button class="btn btn-success badge fs-6" type="button" value="Send">
           <img src="../../node_modules/bootstrap-icons/icons/send.svg">
+        </button>
+      </div>
+      <div (click)="onUpdateButtonClick()">
+        <button class="btn btn-success badge fs-6" type="button" value="onUpdateButtonClick">
+          <img src="../../node_modules/bootstrap-icons/icons/arrow-clockwise.svg">
         </button>
       </div>
     </span>

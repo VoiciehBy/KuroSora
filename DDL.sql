@@ -14,9 +14,6 @@ CREATE TABLE Users(
 INSERT INTO Users (login, password, username) VALUES('test','test','Testovy');
 INSERT INTO Users (login, password, username) VALUES('test1','test1','Testovy1');
 
-DROP TABLE Users
-CASCADE CONSTRAINTS;
-
 CREATE TABLE Messages(
     id int AUTO_INCREMENT,
     sender_id int,
@@ -30,5 +27,11 @@ CREATE TABLE Messages(
 
 ALTER TABLE messages AUTO_INCREMENT = 1;
 
+
+/*
+DROP TABLE Users
+CASCADE CONSTRAINTS;
+
 DROP TABLE Messages
 CASCADE CONSTRAINTS;
+*/

@@ -8,8 +8,7 @@ import {
   WELCOME_BACK_STRING,
   DONT_HAVE_ACCOUNT,
   CREATE_ACCOUNT,
-  LOGIN_BTN_STRING,
-  PASSWORD_PLACEHOLDER_STRING
+  LOGIN_BTN_STRING
 } from 'src/constants';
 
 @Component({
@@ -24,8 +23,6 @@ export class LoginComponent implements OnInit {
   DONT_HAVE_ACCOUNT: string = DONT_HAVE_ACCOUNT;
   CREATE_ACCOUNT: string = CREATE_ACCOUNT;
   LOGIN_BTN_STRING: string = LOGIN_BTN_STRING;
-
-  PASSWORD_PLACEHOLDER_STRING : string = PASSWORD_PLACEHOLDER_STRING;
 
   login: string;
   password: string;

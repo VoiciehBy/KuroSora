@@ -11,7 +11,6 @@ export const DONT_HAVE_ACCOUNT : string = "Nie masz konta";
 export const CREATE_ACCOUNT = "Stwórz je";
 */
 
-/*
 export const USERS_STRING : string = "Users";
 export const WELCOME_BACK_STRING :string = "Welcome back!";
 export const LOGIN_BTN_STRING : string = "Login";
@@ -23,4 +22,3 @@ export const LOGIN_STRING : string = "Login";
 export const ALREADY_HAVE_ACCOUNT_STRING : string = "Already have account";
 export const DONT_HAVE_ACCOUNT : string = "Don't have account";
 export const CREATE_ACCOUNT = "Create account";
-*/

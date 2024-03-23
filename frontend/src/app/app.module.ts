@@ -15,6 +15,7 @@ import { RegisterComponent } from './register/register.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
 import { UserService } from 'src/services/user.service';
+import { MessageComponent } from './message/message.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { UserService } from 'src/services/user.service';
     FriendListComponent,
     MessagePanelComponent,
     RegisterComponent,
-    HomeComponent
+    HomeComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +35,7 @@ import { UserService } from 'src/services/user.service';
     CommonModule,
     RouterOutlet,
     RouterLink,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

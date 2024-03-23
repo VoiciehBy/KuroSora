@@ -8,15 +8,14 @@ import { UserService } from 'src/services/user.service';
 })
 export class AppComponent implements OnInit {
   title: string = 'frontend';
-  host: string = "http://localhost:3000";
-  
-  LOGIN_BTN_STRING : string = "Zaloguj";
-  LOGOUT_BTN_STRING : string = "Wyloguj";
-  
+
+  LOGIN_BTN_STRING: string = "Zaloguj";
+  LOGOUT_BTN_STRING: string = "Wyloguj";
+
   activeUser: string;
 
   constructor(private router: Router,
-    private uS : UserService) { }
+    private uS: UserService) { }
 
   ngOnInit(): void {
     console.log("Inited, xdd....")
@@ -28,7 +27,7 @@ export class AppComponent implements OnInit {
     this.router.navigate(["login"], {});
   }
 
-  onSignOutButtonClick(): void{
+  onSignOutButtonClick(): void {
     this.uS.setActiveUser("");
     this.router.navigate(["login"], {});
   }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
+import { HOSTNAME } from 'src/constants';
 
 @Component({
   selector: 'app-home',
@@ -7,8 +8,7 @@ import { Router } from "@angular/router";
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  title: string = 'frontend';
-  host: string = "http://localhost:3000";
+  host: string = HOSTNAME;
   activeUser: string;
 
   constructor(private router: Router) { }

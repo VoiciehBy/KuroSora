@@ -6,7 +6,8 @@ import {
   CREATE_USER_STRING,
   LOGIN_STRING,
   REGISTER_BTN_STRING,
-  ALREADY_HAVE_ACCOUNT_STRING
+  ALREADY_HAVE_ACCOUNT_STRING,
+  HOSTNAME
 } from 'src/constants';
 
 @Component({
@@ -15,13 +16,11 @@ import {
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  host: string = "http://localhost:3000";
-
+  host: string = HOSTNAME;
   CREATE_USER_STRING: string = CREATE_USER_STRING;
   REGISTER_BTN_STRING: string = REGISTER_BTN_STRING;
   LOGIN_STRING: string = LOGIN_STRING;
   ALREADY_HAVE_ACCOUNT_STRING: string = ALREADY_HAVE_ACCOUNT_STRING;
-
   login: string;
   password: string;
   username: string;

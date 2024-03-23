@@ -3,7 +3,10 @@ import { user } from "../../user";
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
-import {USERS_STRING} from "../../constants";
+import {
+  HOSTNAME,
+  USERS_STRING
+} from "../../constants";
 
 @Component({
   selector: 'app-friend-list',
@@ -11,8 +14,8 @@ import {USERS_STRING} from "../../constants";
   styleUrls: ['./friend-list.component.css']
 })
 export class FriendListComponent implements OnInit {
-  host: string = "http://localhost:3000";
-  USERS_STRING : string = USERS_STRING;
+  host: string = HOSTNAME;
+  USERS_STRING: string = USERS_STRING;
   activeUser: string = '';
   activeRecipient: string = '';
   friends: user[] = [];//this.users = [new user("Wielki Elektronik")];
@@ -23,7 +26,7 @@ export class FriendListComponent implements OnInit {
     private uS: UserService) { }
 
   ngOnInit(): void {
-    console.log("FriendList component inited, xD...")
+    console.log("Friend list component inited, xD...")
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
@@ -37,7 +40,8 @@ export class FriendListComponent implements OnInit {
 
   updateFriendList(): void {
     this.getUsers().subscribe({
-      next: (data) => {
+      next: (data: any) => {
+        console.log(typeof (data))
         this.friends = [];
         for (let i = 0; i < data.length; i++) {
           let u: user = new user(data[i].username);
@@ -45,7 +49,7 @@ export class FriendListComponent implements OnInit {
             this.friends.push(u)
         }
       },
-      error: (err) => console.error(`Error: ${err} `),
+      error: (err: any) => console.error(`Error: ${err} `),
       complete: () => console.log("Friend list updated, :D")
     })
   }

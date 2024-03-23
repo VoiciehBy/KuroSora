@@ -6,9 +6,10 @@ import * as CryptoJS from 'crypto-js';
 import { UserService } from 'src/services/user.service';
 import {
   WELCOME_BACK_STRING,
-  DONT_HAVE_ACCOUNT,
-  CREATE_ACCOUNT,
-  LOGIN_BTN_STRING
+  DONT_HAVE_ACCOUNT_STRING,
+  CREATE_ACCOUNT_STRING,
+  LOGIN_BTN_STRING,
+  HOSTNAME
 } from 'src/constants';
 
 @Component({
@@ -17,11 +18,11 @@ import {
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  host: string = "http://localhost:3000";
+  host: string = HOSTNAME;
 
   WELCOME_BACK_STRING: string = WELCOME_BACK_STRING;
-  DONT_HAVE_ACCOUNT: string = DONT_HAVE_ACCOUNT;
-  CREATE_ACCOUNT: string = CREATE_ACCOUNT;
+  DONT_HAVE_ACCOUNT_STRING: string = DONT_HAVE_ACCOUNT_STRING;
+  CREATE_ACCOUNT_STRING: string = CREATE_ACCOUNT_STRING;
   LOGIN_BTN_STRING: string = LOGIN_BTN_STRING;
 
   login: string;

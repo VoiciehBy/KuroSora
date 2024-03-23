@@ -1,40 +1,9 @@
 <div *ngIf="activeUser != ''">
   <div *ngFor="let msg of messages;" class="row">
     <div class="col-2"></div>
-    <div *ngIf="msg.sender_id == activeUser;" class="row">
-      <div class="col-5 card text-bg-danger">
-        <div class="card-header">
-          {{msg.sender_id}}
-        </div>
-        <h6 class="card-title text-start">
-          {{msg.content}}
-        </h6>
-        <p class="card-text text-wrap text-start">
-          {{msg.x}}
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-7"></div>
-      <div *ngIf="msg.sender_id != activeUser" class="col-5 card text-bg-warning">
-        <div class="card-header">
-          {{msg.sender_id}}
-        </div>
-        <div class="card-title text-end">
-          {{msg.content}}
-        </div>
-        <p class="card-text text-wrap text-end">
-          {{msg.x}}
-        </p>
-      </div>
-    </div>
+    <app-message [sender_id]="msg.sender_id" [content]="msg.content" [timeSince]="msg.timeSince"></app-message>
   </div>
 
-  <!--
-<div class="row">
-  <div class="col-12">.</div>
-</div>
--->
   <div class="row text-bg-dark">
     <div id="inputMessageForm" class="col input-group">
       <div class="form-floating">
@@ -43,7 +12,7 @@
         {{message}}
       </textarea>
         <label for="inputMessage">
-          Wyślij wiadomość do {{activeRecipient}}...
+          {{SENT_MESSAGE_TO_STRING}} {{activeRecipient}}...
         </label>
       </div>
       <span id="inputMessageAddon" class="input-group-text">

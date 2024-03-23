@@ -1,0 +1,27 @@
+<div *ngIf="sender_id == activeUser;" class="row">
+    <div class="col-5 card text-bg-danger">
+        <div class="card-header">
+            {{sender_id}}
+        </div>
+        <h6 class="card-title text-start">
+            {{content}}
+        </h6>
+        <p class="card-text text-wrap text-start">
+            {{timeSince}}
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-7"></div>
+    <div *ngIf="sender_id != activeUser" class="col-5 card text-bg-warning">
+        <div class="card-header">
+            {{sender_id}}
+        </div>
+        <div class="card-title text-end">
+            {{content}}
+        </div>
+        <p class="card-text text-wrap text-end">
+            {{timeSince}}
+        </p>
+    </div>
+</div>

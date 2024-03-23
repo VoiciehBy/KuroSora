@@ -3,6 +3,7 @@ import { user } from "../../user";
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
+import {USERS_STRING} from "../../constants";
 
 @Component({
   selector: 'app-friend-list',
@@ -11,6 +12,7 @@ import { UserService } from 'src/services/user.service';
 })
 export class FriendListComponent implements OnInit {
   host: string = "http://localhost:3000";
+  USERS_STRING : string = USERS_STRING;
   activeUser: string = '';
   activeRecipient: string = '';
   friends: user[] = [];//this.users = [new user("Wielki Elektronik")];

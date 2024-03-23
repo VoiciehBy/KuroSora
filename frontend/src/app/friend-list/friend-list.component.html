@@ -1,5 +1,5 @@
 <div *ngIf="activeUser != ''" class="row text-center">
-    Użytkownicy:
+    {{USERS_STRING}}:
 </div>
 <div *ngFor="let friend of friends;" (click)="selectRecipient(friend.username)">
     <div *ngIf="friend.username == activeRecipient">

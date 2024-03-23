@@ -28,6 +28,10 @@ export class MessagePanelComponent implements OnInit {
     this.uS.activeUserState.subscribe(username => this.activeUser = username)
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username)
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
+
+    /*setInterval(()=> {
+      this.uS.setMsgUpdate(true)
+    }, 5000)*/
     setInterval(() => {
       this.updateMessages();
     }, 100)
@@ -46,6 +50,21 @@ export class MessagePanelComponent implements OnInit {
     return this.http.get(`${this.host}/user_messages?sender=${sender}&recipient=${recipient}`)
   }
 
+  getMessageTimeSince(miliseconds: number): string {
+    let seconds = Math.trunc(miliseconds / 1000)
+    let hours = Math.trunc(seconds / 3600)
+    let minutes = Math.trunc(seconds / 60) - hours * 60
+    seconds = seconds - hours * 3600 - minutes * 60
+    let r = ``
+    if (hours != 0)
+      r += `${hours} h `
+    if (minutes != 0)
+      r += `${minutes} min `
+    if (seconds != 0)
+      r += `${ seconds } s`
+    return r
+  }
+
   updateMessages() {
     if (this.isMsgNeedToBeUpdated == false || (this.activeUser == '' && this.activeRecipient == ''))
       return;
@@ -56,9 +75,12 @@ export class MessagePanelComponent implements OnInit {
       next: (data) => {
         for (let i = 0; i < data.length; i++) {
           let content = JSON.stringify(data[i].content).replace('"', '').replace('"', '');
-          let m_date = JSON.stringify(data[i].m_date)
+          let m_date = JSON.stringify(data[i].m_date).slice(1, 20).replace('T', ' ');
+          let miliseconds = Date.now() - Date.parse(data[i].m_date)
 
-          let m = new messageC(this.activeUser, this.activeRecipient, content, m_date);
+          let x = this.getMessageTimeSince(miliseconds)
+
+          let m = new messageC(this.activeUser, this.activeRecipient, content, m_date, x);
           this.messages.push(m)
           this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
         }
@@ -72,9 +94,12 @@ export class MessagePanelComponent implements OnInit {
       next: (data) => {
         for (let i = 0; i < data.length; i++) {
           let content = JSON.stringify(data[i].content).replace('"', '').replace('"', '');
-          let m_date = JSON.stringify(data[i].m_date)
+          let m_date = JSON.stringify(data[i].m_date).slice(1, 20).replace('T', ' ');
+          let miliseconds = Date.now() - Date.parse(data[i].m_date)
 
-          let m = new messageC(this.activeRecipient, this.activeUser, content, m_date);
+          let x = this.getMessageTimeSince(miliseconds)
+
+          let m = new messageC(this.activeRecipient, this.activeUser, content, m_date, x);
           this.messages.push(m)
           this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
         }

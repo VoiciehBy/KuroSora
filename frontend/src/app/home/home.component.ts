@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -12,12 +11,10 @@ export class HomeComponent implements OnInit {
   host: string = "http://localhost:3000";
   activeUser: string;
 
-  constructor(private router: Router,
-    private uS: UserService) { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     console.log("Home component inited, xdd....")
-    this.uS.activeUserState.subscribe(username => this.activeUser = username);
   }
 
   onLoginButtonClick(): void {

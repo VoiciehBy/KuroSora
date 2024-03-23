@@ -13,14 +13,17 @@
     <div id="topNavbar" class="collapse navbar-collapse">
       <ul class="navbar-nav gap-2 ms-auto">
         <li class="nav-item active">
-          <a class="btn badge fs-6" (click)="onLoginButtonClick();" data-bs-toggle="modal" data-bs-target="#LoginModal">
-            Zaloguj
-          </a>
+          <div *ngIf="activeUser != ''" class="badge text-wrap text-bg-success">
+            <img src="../../node_modules/bootstrap-icons/icons/person-fill.svg" alt="Filled Person Icon">
+            {{activeUser}}
+          </div>
         </li>
         <li class="nav-item active">
-          <a class="btn badge fs-6" (click)="onRegisterButtonClick();" data-bs-toggle="modal"
-            data-bs-target="#RegisterModal">
-            Rejestracja
+          <a *ngIf="activeUser == ''" class="btn badge fs-6" (click)="onLoginButtonClick();">
+            {{LOGIN_BTN_STRING}}
+          </a>
+          <a *ngIf="activeUser != ''" class="btn badge fs-6" (click)="onSignOutButtonClick();">
+            {{LOGOUT_BTN_STRING}}
           </a>
         </li>
       </ul>

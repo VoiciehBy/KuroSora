@@ -4,6 +4,13 @@ import { Router } from "@angular/router";
 import { Observable } from 'rxjs';
 import * as CryptoJS from 'crypto-js';
 import { UserService } from 'src/services/user.service';
+import {
+  WELCOME_BACK_STRING,
+  DONT_HAVE_ACCOUNT,
+  CREATE_ACCOUNT,
+  LOGIN_BTN_STRING,
+  PASSWORD_PLACEHOLDER_STRING
+} from 'src/constants';
 
 @Component({
   selector: 'app-login-dialog',
@@ -12,6 +19,14 @@ import { UserService } from 'src/services/user.service';
 })
 export class LoginComponent implements OnInit {
   host: string = "http://localhost:3000";
+
+  WELCOME_BACK_STRING: string = WELCOME_BACK_STRING;
+  DONT_HAVE_ACCOUNT: string = DONT_HAVE_ACCOUNT;
+  CREATE_ACCOUNT: string = CREATE_ACCOUNT;
+  LOGIN_BTN_STRING: string = LOGIN_BTN_STRING;
+
+  PASSWORD_PLACEHOLDER_STRING : string = PASSWORD_PLACEHOLDER_STRING;
+
   login: string;
   password: string;
 

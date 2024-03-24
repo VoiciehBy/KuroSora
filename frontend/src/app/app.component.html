@@ -1,42 +1,12 @@
-<div class="content" role="main">
-  <nav class="navbar navbar-expand-lg navbar-dark text-bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" routerLink="/">
-        <img src="assets/logo.png" width="30" height="30" alt="KuroSora Logo">
-        KuroSora
-      </a>
-    </div>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar"
-      aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div id="topNavbar" class="collapse navbar-collapse">
-      <ul class="navbar-nav gap-2 ms-auto">
-        <li class="nav-item active">
-          <div *ngIf="activeUser != ''" class="badge text-wrap text-bg-success">
-            <img src="../../node_modules/bootstrap-icons/icons/person-fill.svg" alt="Filled Person Icon">
-            {{activeUser}}
-          </div>
-        </li>
-        <li class="nav-item active">
-          <a *ngIf="activeUser == ''" class="btn badge fs-6" (click)="onLoginButtonClick();">
-            {{LOGIN_BTN_STRING}}
-          </a>
-          <a *ngIf="activeUser != ''" class="btn badge fs-6" (click)="onSignOutButtonClick();">
-            {{LOGOUT_BTN_STRING}}
-          </a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-
-  <div class="container-fluid text-center text-bg-dark min-vh-100 d-flex flex-column">
-    <div class="row">
+<div class="content overflow-hidden" role="main">
+  <app-navbar></app-navbar>
+  <div class="container-fluid text-bg-dark d-flex flex-column">
+    <div class="row text-center">
       <router-outlet></router-outlet>
     </div>
   </div>
 
-  <footer>
+  <footer hidden>
     <div class="card text-bg-dark">
       <div class="card-header"></div>
       <div class="card-body">

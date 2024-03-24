@@ -1,3 +1,9 @@
 #loginContainer {
-    width: 50%;
+    margin-top : 5%;
+    width: fit-content;
+    height: 100%;
+}
+
+#signInButton {
+    margin-bottom: 5%;
 }

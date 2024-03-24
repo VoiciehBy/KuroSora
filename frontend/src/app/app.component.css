@@ -1,0 +1,10 @@
+.container-fluid{
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background-color: black;
+}
+
+#routerOutlet {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}

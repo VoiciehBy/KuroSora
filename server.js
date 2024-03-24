@@ -1,6 +1,8 @@
 const http = require("http");
 const db = require("./db")
-const config = require("./config")
+
+const config = require("./config").http
+
 const crypto = require("./crypto")
 
 const httpServer = http.createServer();

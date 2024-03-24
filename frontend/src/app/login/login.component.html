@@ -1,8 +1,8 @@
-<div class="container text-bg-secondary" id=loginContainer>
+<div class="container text-bg-light bg-gradient rounded" id=loginContainer>
     <div class="row">
-        <h1 class="fs-5">
+        <h6>
             {{WELCOME_BACK_STRING}}
-        </h1>
+        </h6>
     </div>
     <div class="row">
         <form class="needs-validation was-validated" novalidate>
@@ -18,15 +18,17 @@
                         aria-describedby="passwordFieldAddon" [(ngModel)]="password" required>
                 </span>
             </div>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="signIn();">
+            <button type="button" class="btn btn-success bg-gradient" id="signInButton" (click)="signIn();">
                 {{LOGIN_BTN_STRING}}
             </button>
         </form>
     </div>
     <div class="row justify-content-center">
-        <span class="text-bg-light">
+        <span>
             {{DONT_HAVE_ACCOUNT_STRING}}?
-            <a data-bs-dismiss="modal" routerLink="/register">{{CREATE_ACCOUNT_STRING}}.</a>
+            <a routerLink="/register">
+                {{CREATE_ACCOUNT_STRING}}.
+            </a>
         </span>
     </div>
 </div>

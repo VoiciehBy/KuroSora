@@ -1,7 +1,7 @@
-<div *ngIf="sender_id == activeUser;" class="row">
+<div *ngIf="sender_id == activeUser;" class="row" id="firstRow">
     <div class="col-5 card text-bg-danger">
         <div class="card-header">
-            {{sender_id}}
+            <!--{{sender_id}}-->
         </div>
         <h6 class="card-title text-start">
             {{content}}
@@ -11,11 +11,11 @@
         </p>
     </div>
 </div>
-<div class="row">
+<div class="row" id="secondRow">
     <div class="col-7"></div>
     <div *ngIf="sender_id != activeUser" class="col-5 card text-bg-warning">
         <div class="card-header">
-            {{sender_id}}
+            <!--{{sender_id}}-->
         </div>
         <div class="card-title text-end">
             {{content}}

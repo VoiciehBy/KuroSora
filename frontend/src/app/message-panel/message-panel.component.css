@@ -7,3 +7,13 @@
     height: auto;
     resize: none;
 }
+
+#mainRow {
+    margin-right: 10%;
+    margin-left: 10%;
+}
+
+#a {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}

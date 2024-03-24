@@ -1,17 +1,17 @@
-<div *ngIf="activeUser != ''" class="row text-center">
-    {{USERS_STRING}}:
-</div>
-<div *ngFor="let friend of friends;" (click)="selectRecipient(friend.username)">
-    <div *ngIf="friend.username == activeRecipient">
-        <button id="recipientSelectButton" class="fs-6 list-group-item list-group-item-action list-group-item-warning"
-            type="button">
-            {{friend.username}}
-        </button>
-    </div>
-    <div *ngIf="friend.username != activeRecipient">
-        <button id="recipientSelectButton" class="fs-6 list-group-item list-group-item-action list-group-item-dark"
-            type="button">
-            {{friend.username}}
-        </button>
+<div *ngIf="activeUser != ''" class="row list-group">
+    <h6 class="bg-text-dark bg-gradient rounded">
+        {{USERS_STRING}}:
+    </h6>
+    <div *ngFor="let friend of friends;" (click)="selectRecipient(friend.username)">
+        <div *ngIf="friend.username == activeRecipient; else elseBlock">
+            <a class="list-group-item list-group-item-action list-group-item-warning rounded">
+                {{friend.username}}
+            </a>
+        </div>
+        <ng-template #elseBlock>
+            <a class="list-group-item list-group-item-action list-group-item-success rounded">
+                {{friend.username}}
+            </a>
+        </ng-template>
     </div>
 </div>

@@ -1,8 +1,8 @@
-<div class="container-fluid text-bg-secondary" id="registerContainer">
+<div class="container text-bg-light bg-gradient rounded" id=registerContainer>
     <div class="row">
-        <h1 class="fs-5">
+        <h6>
             {{CREATE_USER_STRING}}
-        </h1>
+        </h6>
     </div>
     <div class="row">
         <form class="needs-validation was-validated" novalidate>
@@ -14,8 +14,9 @@
             </div>
             <div class="input-group justify-content-center">
                 <span class="input-group-text">
-                    <input class="form-control" type="password" placeholder=PASSWORD_PLACEHOLDER_STRING aria-label="Password Field Addon"
-                        aria-describedby="passwordFieldAddon" [(ngModel)]="password" required>
+                    <input class="form-control" type="password" placeholder="Hasło"
+                        aria-label="Password Field Addon" aria-describedby="passwordFieldAddon" [(ngModel)]="password"
+                        required>
                 </span>
             </div>
             <div class="input-group justify-content-center">
@@ -25,15 +26,17 @@
                         required>
                 </span>
             </div>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="signUp();">
+            <button type="button" class="btn btn-success bg-gradient" id="signUpButton" (click)="signUp();">
                 {{REGISTER_BTN_STRING}}
             </button>
         </form>
     </div>
-    <div class="row text-bg-light">
+    <div class="row justify-content-center">
         <span>
             {{ALREADY_HAVE_ACCOUNT_STRING}}?
-            <a data-bs-dismiss="modal" routerLink="/login">{{LOGIN_STRING}}.</a>
+            <a routerLink="/login">
+                {{LOGIN_STRING}}.
+            </a>
         </span>
     </div>
 </div>

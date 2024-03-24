@@ -1,3 +1,9 @@
 #registerContainer {
-    width: 50%;
+    margin-top : 5%;
+    width: fit-content;
+    height: 100%;
+}
+
+#signUpButton {
+    margin-bottom: 5%;
 }

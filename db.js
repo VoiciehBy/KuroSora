@@ -1,9 +1,10 @@
+const config = require("./config").db;
 const mysql = require("mysql2/promise");
 
 const connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "dev"
+    host: config.hostname,
+    user: config.user,
+    database: config.db_name
 }).catch((err) => {
     console.error(err)
     console.error("Database connection refused :( ...")

@@ -1,6 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
-import { messageC } from 'src/message';
+import { messageC } from 'src/messageC';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';

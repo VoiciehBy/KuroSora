@@ -16,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
 import { UserService } from 'src/services/user.service';
 import { MessageComponent } from './message/message.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { MessageComponent } from './message/message.component';
     MessagePanelComponent,
     RegisterComponent,
     HomeComponent,
-    MessageComponent
+    MessageComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

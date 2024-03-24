@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-black bg-gradient">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/">
+      <img src="assets/logo.png" width="30" height="30" alt="KuroSora Logo">
+      KuroSora
+    </a>
+  </div>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#Navbar" aria-controls="Navbar"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div id="Navbar" class="collapse navbar-collapse">
+    <ul class="navbar-nav gap-2 ms-auto">
+      <li class="nav-item active">
+        <div *ngIf="activeUser != ''" class="badge text-wrap text-bg-success">
+          <img src="../../node_modules/bootstrap-icons/icons/bell-fill.svg" width="30" height="30" alt="Bell Fill Icon">
+        </div>
+      </li>
+      <li class="nav-item active">
+        <div *ngIf="activeUser != ''" class="badge text-wrap text-bg-success">
+          <img src="../../node_modules/bootstrap-icons/icons/person-fill.svg" width="30" height="19"
+            alt="Filled Person Icon">
+          {{activeUser}}
+        </div>
+      </li>
+      <li class="nav-item active">
+        <button *ngIf="activeUser == '';else logoutBlock" class="btn badge bg-success" (click)="onLoginButtonClick();">
+          <img src="../../node_modules/bootstrap-icons/icons/pen-fill.svg" width="30" height="30" alt="Filled Pen Icon">
+        </button>
+        <ng-template #logoutBlock>
+          <button class="btn badge bg-success" (click)="onSignOutButtonClick();">
+            <img src="../../node_modules/bootstrap-icons/icons/box-arrow-right.svg" width="30" height="30"
+              alt="Box Arrow Right Icon">
+          </button>
+        </ng-template>
+      </li>
+    </ul>
+  </div>
+</nav>

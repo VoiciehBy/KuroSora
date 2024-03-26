@@ -16,9 +16,9 @@ import { DbService } from 'src/services/db.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
+
 export class LoginComponent implements OnInit {
   host: string = HOSTNAME;
-
   WELCOME_BACK_STRING: string = WELCOME_BACK_STRING;
   DONT_HAVE_ACCOUNT_STRING: string = DONT_HAVE_ACCOUNT_STRING;
   CREATE_ACCOUNT_STRING: string = CREATE_ACCOUNT_STRING;
@@ -26,7 +26,6 @@ export class LoginComponent implements OnInit {
 
   login: string;
   password: string;
-
   activeUser: string;
   isMsgNeedToBeUpdated: boolean;
 
@@ -35,23 +34,23 @@ export class LoginComponent implements OnInit {
     private uS: UserService) { }
 
   ngOnInit(): void {
-    console.log("Login component inited, xdd....")
+    console.log("Login component inited, xdd....");
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
   }
 
   signIn(): void {
-    let hash = CryptoJS.HmacSHA512('', this.password).toString()
+    let hash = CryptoJS.HmacSHA512('', this.password).toString();
     this.db.getUser(this.login, hash).subscribe({
       next: (data) => {
         if (data.length != 0)
-          this.uS.setActiveUser(JSON.stringify(data[0].username).replace('"', '').replace('"', ''))
+          this.uS.setActiveUser(JSON.stringify(data[0].username).replace('"', '').replace('"', ''));
       },
       error: (err) => console.error(`Error: ${err}`),
       complete: () => {
-        console.log("Signing in completed, :D")
+        console.log("Signing in completed, :D");
         this.router.navigate([""]);
-        this.uS.setMsgUpdate(true)
+        this.uS.setMsgUpdate(true);
       }
     })
   }

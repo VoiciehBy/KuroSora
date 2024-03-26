@@ -7,18 +7,17 @@ import { UserService } from 'src/services/user.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
-  title: string = 'frontend';
 
+export class NavbarComponent implements OnInit {
   activeUser: string;
 
   constructor(public router: Router,
     private uS: UserService) { }
 
   ngOnInit(): void {
-    console.log("Navbar component inited, xdd....")
+    console.log("Navbar component inited, xdd....");
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
-    this.router.navigate(["login"], {})
+    this.router.navigate(["login"], {});
   }
 
   onLoginButtonClick(): void {

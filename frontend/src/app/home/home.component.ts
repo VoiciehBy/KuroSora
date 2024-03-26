@@ -7,6 +7,7 @@ import { HOSTNAME } from 'src/constants';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+
 export class HomeComponent implements OnInit {
   host: string = HOSTNAME;
   activeUser: string;
@@ -14,7 +15,7 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    console.log("Home component inited, xdd....")
+    console.log("Home component inited, xdd....");
   }
 
   onLoginButtonClick(): void {

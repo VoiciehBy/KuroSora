@@ -6,6 +6,7 @@ import { UserService } from 'src/services/user.service';
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.css']
 })
+
 export class MessageComponent implements OnInit {
   @Input() sender_id: string;
   @Input() activeUser: string;
@@ -15,7 +16,7 @@ export class MessageComponent implements OnInit {
   constructor(private uS: UserService) { }
 
   ngOnInit(): void {
-    console.log("Message component inited, xdd....")
-    this.uS.activeUserState.subscribe(username => this.activeUser = username)
+    console.log("Message component inited, xdd....");
+    this.uS.activeUserState.subscribe(username => this.activeUser = username);
   }
 }

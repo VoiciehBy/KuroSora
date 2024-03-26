@@ -14,12 +14,14 @@ import { DbService } from 'src/services/db.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
+
 export class RegisterComponent implements OnInit {
   host: string = HOSTNAME;
   CREATE_USER_STRING: string = CREATE_USER_STRING;
   REGISTER_BTN_STRING: string = REGISTER_BTN_STRING;
   LOGIN_STRING: string = LOGIN_STRING;
   ALREADY_HAVE_ACCOUNT_STRING: string = ALREADY_HAVE_ACCOUNT_STRING;
+
   login: string;
   password: string;
   username: string;
@@ -27,7 +29,7 @@ export class RegisterComponent implements OnInit {
   constructor(private db: DbService, private router: Router) { }
 
   ngOnInit(): void {
-    console.log("Registe component inited, xdd....")
+    console.log("Register component inited, xdd....");
   }
 
   signUp(): void {
@@ -38,7 +40,7 @@ export class RegisterComponent implements OnInit {
       next: () => { },
       error: (err) => console.error(`Error: ${err}`),
       complete: () => {
-        console.log("Signing up completed, :D .")
+        console.log("Signing up completed, :D .");
         this.router.navigate(["login"]);
       }
     })

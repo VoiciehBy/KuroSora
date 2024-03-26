@@ -45,37 +45,40 @@ function doQuery(query = "", timeout = 1000) {
 
 function getMessagePromise(sender, recipient) {
     return new Promise((resolve, reject) => {
-        doQuery(`SELECT id FROM Users WHERE username='${sender}'`).then(sender_id => {
-            if (sender_id[0] === undefined) {
-                reject("Given sender not found...")
-                return
-            }
-            doQuery(`SELECT id FROM Users WHERE username='${recipient}'`).then(recipient_id => {
-                if (recipient_id[0] === undefined) {
-                    reject("Given recipient not found...")
+        doQuery(`SELECT id FROM Users WHERE username='${sender}'`)
+            .then(sender_id => {
+                if (sender_id[0] === undefined) {
+                    reject("Given sender not found...")
                     return
                 }
-                doQuery(`SELECT * FROM Messages WHERE sender_id = ${sender_id[0].id} AND recipient_id=${recipient_id[0].id}`).then((rows) => {
-                    resolve(rows)
-                }).catch((err) => {
-                    console.error(err)
-                    reject(err)
-                })
+                doQuery(`SELECT id FROM Users WHERE username='${recipient}'`)
+                    .then(recipient_id => {
+                        if (recipient_id[0] === undefined) {
+                            reject("Given recipient not found...")
+                            return
+                        }
+                        doQuery(`SELECT * FROM Messages WHERE sender_id = ${sender_id[0].id} AND recipient_id=${recipient_id[0].id}`)
+                            .then((rows) => {
+                                resolve(rows)
+                            }).catch((err) => {
+                                console.error(err)
+                                reject(err)
+                            })
+                    })
             })
-        })
     })
 }
 
 module.exports = {
-    test: () => doQuery(`SELECT id FROM Users WHERE id='1'`),
-    getUsers: () => doQuery("SELECT username FROM Users"),
-    getUser: (username) => doQuery(`SELECT * FROM USERS WHERE username='${username}'`),
-    getUser_1: (login, password) => doQuery(`SELECT * FROM USERS WHERE login='${login}' AND password='${password}'`),
-    addUser: (login, password, username) => doQuery(`INSERT INTO Users (login, password, username) VALUES('${login}','${password}','${username}');`),
-    addMessage: (sender, recipient, content, m_date) => {
+    test: () => doQuery(`SELECT id FROM Users WHERE id='1';`),
+    getUsers: () => doQuery("SELECT username FROM Users;"),
+    getUser: (u) => doQuery(`SELECT * FROM USERS WHERE username='${u}';`),
+    getUser_1: (l, p) => doQuery(`SELECT * FROM USERS WHERE login='${l}' AND password='${p}';`),
+    addUser: (l, p, u) => doQuery(`INSERT INTO Users (login, password, username) VALUES('${l}','${p}','${u}');`),
+    addMessage: (sender, recipient, c, d) => {
         doQuery(`SELECT id FROM Users WHERE username='${sender}'`).then(sender_id => {
             doQuery(`SELECT id FROM Users WHERE username='${recipient}'`).then(recipient_id => {
-                doQuery(`INSERT INTO Messages (sender_id, recipient_id, content, m_date) VALUES(${sender_id[0].id},${recipient_id[0].id},'${content}','${m_date}');`)
+                doQuery(`INSERT INTO Messages (sender_id, recipient_id, content, m_date) VALUES(${sender_id[0].id},${recipient_id[0].id},'${c}','${d}');`)
             })
         })
     },

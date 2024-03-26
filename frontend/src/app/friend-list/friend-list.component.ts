@@ -12,6 +12,7 @@ import { DbService } from 'src/services/db.service';
   templateUrl: './friend-list.component.html',
   styleUrls: ['./friend-list.component.css']
 })
+
 export class FriendListComponent implements OnInit {
   host: string = HOSTNAME;
   USERS_STRING: string = USERS_STRING;
@@ -40,7 +41,7 @@ export class FriendListComponent implements OnInit {
         for (let i = 0; i < data.length; i++) {
           let u: user = new user(data[i].username);
           if (u.username != this.activeUser)
-            this.friends.push(u)
+            this.friends.push(u);
         }
       },
       error: (err: any) => console.error(`Error: ${err} `),
@@ -51,7 +52,7 @@ export class FriendListComponent implements OnInit {
   selectRecipient(username: string): void {
     for (let i = 0; i < this.friends.length; i++)
       if (username != this.activeRecipient && this.friends[i].username == username) {
-        this.uS.setActiveRecipient(this.friends[i].username)
+        this.uS.setActiveRecipient(this.friends[i].username);
         this.uS.setMsgUpdate(true);
         this.updateFriendList();
         break;

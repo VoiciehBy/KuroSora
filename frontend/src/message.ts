@@ -1,4 +1,4 @@
-export class messageC {
+export class message {
     //public id: number;
     public sender_id: string;
     public recipient_id: string;

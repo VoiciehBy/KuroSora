@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
-import { Observable } from 'rxjs';
 import * as CryptoJS from 'crypto-js';
 import { UserService } from 'src/services/user.service';
 import {
@@ -11,6 +9,7 @@ import {
   LOGIN_BTN_STRING,
   HOSTNAME
 } from 'src/constants';
+import { DbService } from 'src/services/db.service';
 
 @Component({
   selector: 'app-login-dialog',
@@ -31,7 +30,7 @@ export class LoginComponent implements OnInit {
   activeUser: string;
   isMsgNeedToBeUpdated: boolean;
 
-  constructor(private http: HttpClient,
+  constructor(private db: DbService,
     private router: Router,
     private uS: UserService) { }
 
@@ -41,15 +40,12 @@ export class LoginComponent implements OnInit {
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
   }
 
-  getUser(login: string, password: string): Observable<any> {
-    return this.http.get(`${this.host}/user?login=${login}&password=${password}`)
-  }
-
   signIn(): void {
     let hash = CryptoJS.HmacSHA512('', this.password).toString()
-    this.getUser(this.login, hash).subscribe({
+    this.db.getUser(this.login, hash).subscribe({
       next: (data) => {
-        this.uS.setActiveUser(data.username)
+        if (data.length != 0)
+          this.uS.setActiveUser(JSON.stringify(data[0].username).replace('"', '').replace('"', ''))
       },
       error: (err) => console.error(`Error: ${err}`),
       complete: () => {

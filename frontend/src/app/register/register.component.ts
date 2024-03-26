@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
-import { Observable } from 'rxjs';
 import {
   CREATE_USER_STRING,
   LOGIN_STRING,
@@ -9,6 +7,7 @@ import {
   ALREADY_HAVE_ACCOUNT_STRING,
   HOSTNAME
 } from 'src/constants';
+import { DbService } from 'src/services/db.service';
 
 @Component({
   selector: 'app-registration',
@@ -25,21 +24,17 @@ export class RegisterComponent implements OnInit {
   password: string;
   username: string;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private db: DbService, private router: Router) { }
 
   ngOnInit(): void {
     console.log("Registe component inited, xdd....")
-  }
-
-  addUser(login: string, username: string, password: string): Observable<any> {
-    return this.http.put(`${this.host}/register_new_user?login=${login}&username=${username}&password=${password}`, {});
   }
 
   signUp(): void {
     if (this.login == undefined || this.login == '' || this.username == undefined)
       return
 
-    this.addUser(this.login, this.username, this.password).subscribe({
+    this.db.addUser(this.login, this.username, this.password).subscribe({
       next: () => { },
       error: (err) => console.error(`Error: ${err}`),
       complete: () => {

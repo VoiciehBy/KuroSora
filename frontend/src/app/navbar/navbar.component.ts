@@ -16,7 +16,7 @@ export class NavbarComponent implements OnInit {
     private uS: UserService) { }
 
   ngOnInit(): void {
-    console.log("Inited, xdd....")
+    console.log("Navbar component inited, xdd....")
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.router.navigate(["login"], {})
   }

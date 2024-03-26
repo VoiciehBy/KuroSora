@@ -1,115 +1,132 @@
 const http = require("http");
 const db = require("./db")
-
 const config = require("./config").http
-
 const crypto = require("./crypto")
 
 const httpServer = http.createServer();
 
-
 httpServer.on("request", (req, res) => {
     const request_url = new URL(req.url, `http:${req.headers.host}`)
     const pathname = request_url.pathname;
-    const queryString = request_url.search;
-    const searchParams = new URLSearchParams(queryString);
-
-    //console.log(req.method, request_url)
+    const params = new URLSearchParams(request_url.search);
     res.setHeader("Content-Type", "application/json");
 
     switch (req.method) {
         case "GET":
             if (pathname == "/") {
-                console.log(`Ok`);
-                res.end(`{"Ok": "Ok"}`);
+                db.test().then(() => {
+                    res.setHeader("Content-Type", "text/html");
+                    res.writeHead(200, http.STATUS_CODES[200])
+                    res.end(config.db_ok_html);
+                }).catch((err) => {
+                    //console.error(err)
+                    res.setHeader("Content-Type", "text/html");
+                    res.writeHead(503, http.STATUS_CODES[503])
+                    res.end(config.db_error_html)
+                })
             }
             else if (pathname == "/users") {
                 db.getUsers().then(result => {
-                    if (result.length == 0) {
-                        console.error("Users not found...\n")
-                        res.end(`{"error": "Users not found...\n"}`)
-                    }
-                    else
-                        res.end(JSON.stringify(result))
+                    console.log(JSON.stringify(result))
+                    res.end(JSON.stringify(result))
+                }).catch((err) => {
+                    //console.error(err)
                 })
             }
             else if (pathname == "/user") {
-                if (searchParams.has("username")) {
-                    let username = searchParams.get("username");
-
+                if (params.has("username")) {
+                    let username = params.get("username");
                     db.getUser(username).then(result => {
-                        if (result.length == 0) {
-                            console.error(`User '${username}' not found...\n`)
-                            res.end(`{"error": "User '${username}' not found...\n"}`)
+                        if (result.length != 0) {
+                            console.log(`User '${username}' found...`)
+                            res.writeHead(200, http.STATUS_CODES[200])
+                            res.end(JSON.stringify(result))
                         }
                         else {
-                            console.log(`User '${username}' found...`)
-                            res.end(JSON.stringify(result[0]))
+                            console.error(`User '${username}' not found...`)
+                            res.writeHead(404, http.STATUS_CODES[404])
+                            res.end(JSON.stringify(result))
                         }
+                    }).catch((err) => {
+                        console.error(err)
                     })
                 }
-                else if (searchParams.has("login") && searchParams.has("password")) {
-                    let login = searchParams.get("login");
-                    let password = searchParams.get("password");
-
+                else if (params.has("login") && params.has("password")) {
+                    let login = params.get("login");
+                    let password = params.get("password");
                     db.getUser_1(login, password).then(result => {
-                        if (result.length == 0) {
-                            console.error(`User '${login}' with given credentials not found...\n`)
-                            res.end(`{"error": "User '${login}' with given credentials not found...\n"}`)
+                        if (result.length != 0) {
+                            console.log(`User '${login}' found...\n`)
+                            res.writeHead(200, http.STATUS_CODES[200])
+                            res.end(JSON.stringify(result))
                         }
                         else {
-                            console.log(`User '${login}' found...\n`)
-                            res.end(JSON.stringify(result[0]))
+                            console.error(`User with given credentials not found...\n`)
+                            res.writeHead(404, http.STATUS_CODES[404])
+                            res.end(JSON.stringify(result))
                         }
+                    }).catch((err) => {
+                        console.error(err)
                     })
                 }
             }
             else if (pathname == "/user_messages") {
-                if (searchParams.has("sender") && searchParams.has("recipient")) {
-                    let sender = searchParams.get("sender");
-                    let recipient = searchParams.get("recipient");
-                    if (sender == '' || recipient == '')
+                if (params.has("sender") && params.has("recipient")) {
+                    let sender = params.get("sender");
+                    let recipient = params.get("recipient");
+                    if (sender === undefined || recipient === undefined)
                         return
                     db.getMessage(sender, recipient).then(result => {
-                        if (result.length == 0) {
-                            console.error(`'${sender}' got no messages from '${recipient}'...`)
-                            res.end(`{"info": "'${sender}' got no messages from '${recipient}'..."}`)
-                        }
-                        else {
-                            let n = result.length;
-                            console.log(`'${recipient}' got ${n} messages from '${sender}'...`)
-                            res.end(JSON.stringify(result));
-                        }
+                        if (result.length != 0)
+                            console.log(`'${recipient}' got ${result.length} messages from '${sender}'...`)
+                        else
+                            console.log(`'${sender}' got no messages from '${recipient}'...`)
+                        res.end(JSON.stringify(result))
+                    }).catch((err) => {
+                        console.error(err)
+                        console.error("Messages not found :( ...")
+                        res.writeHead(404, http.STATUS_CODES[404])
+                        res.end(`{"error": "${err}"}`)
                     })
                 }
-                else
-                    res.end(`{"error": "Search parameters error..."}`)
+            }
+            else {
+                console.error("Bad request...")
+                res.writeHead(400, http.STATUS_CODES[400])
+                res.end(`{"error": "Bad request 400"}`)
             }
             break;
         case "PUT":
-            if (pathname == "/message") {
+            if (pathname == "/new_message") {
                 req.on("data", (data) => {
                     let msgObj = JSON.parse(data)
                     let current_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-                    db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date);
-                    console.log(`'${msgObj.sender}' sent message to '${msgObj.recipient}'...`)
-                    res.end(`{"res": "'${msgObj.sender}' sent message to '${msgObj.recipient}'..."}`)
+                    db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date)
+                    console.log(`${msgObj.sender}' sent message to '${msgObj.recipient}...`)
+                    res.writeHead(201, http.STATUS_CODES[201])
+                    res.end(`{"info":}:"'${msgObj.sender}' sent message to '${msgObj.recipient}'..."`)
                 })
             }
-            else if (pathname == "/register_new_user") {
-                if (searchParams.has("login") && searchParams.has("password") && searchParams.has("username")) {
-                    let username = searchParams.get("username");
-                    let password = searchParams.get("password");
-                    let login = searchParams.get("login");
-                    let hash = crypto.genHash(password)
-                    db.addUser(login, hash, username);
-                    console.log(`User '${username}' was registered successfully...`)
-                    res.end(`{"res": "User '${username}' was registered successfully..."}`)
+            else if (pathname == "/new_user") {
+                if (params.has("login") && params.has("password") && params.has("username")) {
+                    let username = params.get("username");
+                    let login = params.get("login");
+                    let hash = crypto.genHash(params.get("password"))
+                    db.addUser(login, hash, username).then(() => {
+                        console.log(`User '${username}' was registered successfully...`)
+                        res.writeHead(201, http.STATUS_CODES[201])
+                        res.end(`{"res": "User '${username}' was registered successfully..."}`)
+                    }).catch((err) => {
+                        console.error(err);
+                        console.error(`User '${username}' registration failed...`);
+                        res.end(err)
+                    });
                 }
-                else {
-                    res.end(`{"error": "User '${username}' registration process failed..."}`)
-                }
+            }
+            else {
+                console.error("Bad request...")
+                res.writeHead(400, http.STATUS_CODES[400])
+                res.end(`{"error": "Bad request 400"}`)
             }
             break;
     }
@@ -117,4 +134,17 @@ httpServer.on("request", (req, res) => {
 
 httpServer.listen(config.port, config.hostname, () => {
     console.log(`Server running at http://${config.hostname}:${config.port}/`);
+    http.get(`http://${config.hostname}:${config.port}/`, (res) => {
+        switch (res.statusCode) {
+            case 200:
+                console.log("DB: Ok", res.statusCode)
+                break;
+            case 503:
+                console.error("DB unavailable...", res.statusCode)
+                break;
+            default:
+                console.log('?', res.statusCode)
+                break;
+        }
+    })
 });

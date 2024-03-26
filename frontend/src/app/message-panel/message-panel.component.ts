@@ -1,10 +1,10 @@
 
 import { Component, OnInit } from '@angular/core';
 import { messageC } from 'src/messageC';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 import { HOSTNAME, SENT_MESSAGE_TO_STRING } from 'src/constants';
+import { DbService } from 'src/services/db.service';
 
 @Component({
   selector: 'app-message-panel',
@@ -20,7 +20,7 @@ export class MessagePanelComponent implements OnInit {
   message: string = '';
   messages: messageC[];
 
-  constructor(private http: HttpClient,
+  constructor(private db: DbService,
     private uS: UserService) { }
 
   ngOnInit(): void {
@@ -30,33 +30,26 @@ export class MessagePanelComponent implements OnInit {
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
 
     setInterval(() => {
+      this.updateMessages();
+    }, 1000)
+
+    setInterval(() => {
       this.uS.setMsgUpdate(true)
     }, 5000)
-    setInterval(() => {
-      this.updateMessages();
-    }, 100)
   }
 
   sendMessage(): Observable<any> {
-    return this.http.put(`${this.host}/message`,
-      {
-        "sender": this.activeUser,
-        "recipient": this.activeRecipient,
-        "content": this.message
-      })
-  }
-
-  getMessages(sender: string, recipient: string): Observable<any> {
-    return this.http.get(`${this.host}/user_messages?sender=${sender}&recipient=${recipient}`)
+    return this.db.sendMessage(this.activeUser, this.activeRecipient, this.message)
   }
 
   updateMessages() {
-    if (this.isMsgNeedToBeUpdated == false || (this.activeUser == '' && this.activeRecipient == ''))
+    if (this.isMsgNeedToBeUpdated == false ||
+      (this.activeUser == '' || this.activeRecipient == ''))
       return;
 
     this.messages = []
 
-    this.getMessages(this.activeUser, this.activeRecipient).subscribe({
+    this.db.getMessages(this.activeUser, this.activeRecipient).subscribe({
       next: (data) => {
         for (let i = 0; i < data.length; i++) {
           let content = data[i].content.replace('"', '').replace('"', '')
@@ -69,7 +62,7 @@ export class MessagePanelComponent implements OnInit {
       complete: () => console.log(`Getting messages from ${this.activeUser} to ${this.activeRecipient}...`)
     })
 
-    this.getMessages(this.activeRecipient, this.activeUser).subscribe({
+    this.db.getMessages(this.activeRecipient, this.activeUser).subscribe({
       next: (data) => {
         for (let i = 0; i < data.length; i++) {
           let content = data[i].content.replace('"', '').replace('"', '');

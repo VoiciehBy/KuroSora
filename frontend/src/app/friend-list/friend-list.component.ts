@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { user } from "../../user";
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 import {
   HOSTNAME,
   USERS_STRING
 } from "../../constants";
+import { DbService } from 'src/services/db.service';
 
 @Component({
   selector: 'app-friend-list',
@@ -22,7 +21,7 @@ export class FriendListComponent implements OnInit {
 
   isMsgNeedToBeUpdated: boolean;
 
-  constructor(private http: HttpClient,
+  constructor(private db: DbService,
     private uS: UserService) { }
 
   ngOnInit(): void {
@@ -34,14 +33,9 @@ export class FriendListComponent implements OnInit {
       this.updateFriendList();
   }
 
-  getUsers(): Observable<any> {
-    return this.http.get(`${this.host}/users`)
-  }
-
   updateFriendList(): void {
-    this.getUsers().subscribe({
+    this.db.getUsers().subscribe({
       next: (data: any) => {
-        console.log(typeof (data))
         this.friends = [];
         for (let i = 0; i < data.length; i++) {
           let u: user = new user(data[i].username);

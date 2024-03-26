@@ -17,6 +17,7 @@ import { HomeComponent } from './home/home.component';
 import { UserService } from 'src/services/user.service';
 import { MessageComponent } from './message/message.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { DbService } from 'src/services/db.service';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     RouterLink,
     BrowserAnimationsModule,
   ],
-  providers: [UserService],
+  providers: [UserService, DbService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,8 +1,13 @@
 <div class="container text-bg-light bg-gradient rounded" id=loginContainer>
+    <div *ngIf="errorTxt != ''" class="row badge text-bg-danger bg-gradient">
+        <h5>
+            {{errorTxt}}
+        </h5>
+    </div>
     <div class="row">
-        <h6>
+        <h5 class="title">
             {{WELCOME_BACK_STRING}}
-        </h6>
+        </h5>
     </div>
     <div class="row">
         <form class="needs-validation was-validated" novalidate>

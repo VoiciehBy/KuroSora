@@ -3,11 +3,12 @@ import { Router } from "@angular/router";
 import * as CryptoJS from 'crypto-js';
 import { UserService } from 'src/services/user.service';
 import {
+  HOSTNAME,
   WELCOME_BACK_STRING,
   DONT_HAVE_ACCOUNT_STRING,
   CREATE_ACCOUNT_STRING,
   LOGIN_BTN_STRING,
-  HOSTNAME
+  BAD_CREDENTIALS_STRING
 } from 'src/constants';
 import { DbService } from 'src/services/db.service';
 
@@ -23,19 +24,20 @@ export class LoginComponent implements OnInit {
   DONT_HAVE_ACCOUNT_STRING: string = DONT_HAVE_ACCOUNT_STRING;
   CREATE_ACCOUNT_STRING: string = CREATE_ACCOUNT_STRING;
   LOGIN_BTN_STRING: string = LOGIN_BTN_STRING;
+  BAD_CREDENTIALS_STRING: string = BAD_CREDENTIALS_STRING;
 
   login: string;
   password: string;
-  activeUser: string;
   isMsgNeedToBeUpdated: boolean;
 
-  constructor(private db: DbService,
-    private router: Router,
-    private uS: UserService) { }
+  errorTxt: string = ''
+
+  constructor(private uS: UserService,
+    private db: DbService,
+    private router: Router) { }
 
   ngOnInit(): void {
     console.log("Login component inited, xdd....");
-    this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
   }
 
@@ -46,7 +48,11 @@ export class LoginComponent implements OnInit {
         if (data.length != 0)
           this.uS.setActiveUser(JSON.stringify(data[0].username).replace('"', '').replace('"', ''));
       },
-      error: (err) => console.error(`Error: ${err}`),
+      error: (err) => {
+        console.error(`Error: ${err}`)
+        this.errorTxt = this.BAD_CREDENTIALS_STRING
+        setTimeout(() => { this.errorTxt = '' }, 3000)
+      },
       complete: () => {
         console.log("Signing in completed, :D");
         this.router.navigate([""]);

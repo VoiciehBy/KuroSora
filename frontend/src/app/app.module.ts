@@ -18,6 +18,7 @@ import { UserService } from 'src/services/user.service';
 import { MessageComponent } from './message/message.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { DbService } from 'src/services/db.service';
+import { MsgSendComponent } from './msg-send/msg-send.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { DbService } from 'src/services/db.service';
     RegisterComponent,
     HomeComponent,
     MessageComponent,
-    NavbarComponent
+    NavbarComponent,
+    MsgSendComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +40,7 @@ import { DbService } from 'src/services/db.service';
     CommonModule,
     RouterOutlet,
     RouterLink,
-    BrowserAnimationsModule,
+    BrowserAnimationsModule
   ],
   providers: [UserService, DbService],
   bootstrap: [AppComponent]

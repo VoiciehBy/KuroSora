@@ -1,33 +1,10 @@
-<div *ngIf="activeUser != ''" id="a">
-  <div *ngFor="let msg of messages;" class="row" id="mainRow">
+<div *ngIf="activeUser != ''">
+  <div *ngFor="let msg of messages;" class="row">
     <div class="col-2"></div>
     <app-message [sender_id]="msg.sender_id" [content]="msg.content" [timeSince]="msg.timeSince"></app-message>
   </div>
 
   <div class="row text-bg-dark" data-bs-theme="dark">
-    <div id="inputMessageForm" class="col input-group">
-      <div class="form-floating">
-        <textarea id="inputMessage" class="form-control" type="text" placeholder="Podaj treść wiadomości..."
-          aria-label="Input Text Addon" aria-describedby="inputMessageAddon" [(ngModel)]="msgTxt" maxlength="106">
-        {{msgTxt}}
-      </textarea>
-        <label for="inputMessage">
-          {{SENT_MESSAGE_TO_STRING}} {{activeRecipient}}...
-        </label>
-      </div>
-      <span id="inputMessageAddon" class="input-group-text">
-        <div (click)="onSendButtonClick();">
-          <button class="btn btn-success badge rounded-pill" type="button" value="Send">
-            <img src="../../node_modules/bootstrap-icons/icons/send.svg" width="30" height="30" alt="Send Icon">
-          </button>
-        </div>
-        <div (click)="onUpdateButtonClick()">
-          <button class="btn btn-success badge rounded-pill" type="button" value="Update">
-            <img src="../../node_modules/bootstrap-icons/icons/arrow-clockwise.svg" width="30" height="30"
-              alt="Arrow Clockwise Icon">
-          </button>
-        </div>
-      </span>
-    </div>
+    <app-msg-send></app-msg-send>
   </div>
 </div>

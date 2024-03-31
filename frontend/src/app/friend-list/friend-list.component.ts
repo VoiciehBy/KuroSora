@@ -22,16 +22,18 @@ export class FriendListComponent implements OnInit {
 
   isMsgNeedToBeUpdated: boolean;
 
-  constructor(private db: DbService,
-    private uS: UserService) { }
+  constructor(private uS: UserService,
+    private db: DbService) { }
 
   ngOnInit(): void {
     console.log("Friend list component inited, xD...")
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
-    this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
+
     if (this.activeUser != '')
       this.updateFriendList();
+
+    this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
   }
 
   updateFriendList(): void {

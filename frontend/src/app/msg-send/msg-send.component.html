@@ -1,0 +1,18 @@
+<div id="inputMessageForm" class="col input-group">
+    <div class="form-floating">
+        <textarea id="inputMessage" class="form-control" type="text" placeholder="Podaj treść wiadomości..."
+            aria-label="Input Text Addon" aria-describedby="inputMessageAddon" [(ngModel)]="msgTxt" maxlength="106">
+      {{msgTxt}}
+    </textarea>
+        <label for="inputMessage">
+            {{SENT_MESSAGE_TO_STRING}} {{activeRecipient}}...
+        </label>
+    </div>
+    <span id="inputMessageAddon" class="input-group-text">
+        <div (click)="onSendButtonClick();">
+            <button class="btn btn-success badge rounded-pill" type="button" value="Send">
+                <img src="../../node_modules/bootstrap-icons/icons/send.svg" width="30" height="30" alt="Send Icon">
+            </button>
+        </div>
+    </span>
+</div>

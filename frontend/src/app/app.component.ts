@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
   constructor(public router: Router) { }
 
   ngOnInit(): void {
-    console.log("Inited, xdd....");
+    console.log("App component inited, xdd....");
     this.router.navigate(["login"], {});
   }
 }

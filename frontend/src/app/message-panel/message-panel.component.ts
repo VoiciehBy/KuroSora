@@ -1,9 +1,6 @@
-
 import { Component, OnInit } from '@angular/core';
 import { message } from 'src/message';
-import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
-import { HOSTNAME, SENT_MESSAGE_TO_STRING } from 'src/constants';
 import { DbService } from 'src/services/db.service';
 
 @Component({
@@ -13,31 +10,44 @@ import { DbService } from 'src/services/db.service';
 })
 
 export class MessagePanelComponent implements OnInit {
-  host: string = HOSTNAME;
-  SENT_MESSAGE_TO_STRING: string = SENT_MESSAGE_TO_STRING;
-
   activeUser: string;
   activeRecipient: string;
-
-  isMsgNeedToBeUpdated: boolean = false;
   msgTxt: string = '';
+  isMsgNeedToBeUpdated: boolean = false;
+  messages: message[] = [];
+  tmp: message[] = [];
 
-  messages: message[];
-
-  constructor(private db: DbService,
-    private uS: UserService) { }
+  constructor(private uS: UserService,
+    private db: DbService) { }
 
   ngOnInit(): void {
     console.log("Message Panel component inited, xdd....");
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
-    setInterval(() => this.updateMessages(), 1000);
-    setInterval(() => this.uS.setMsgUpdate(true), 5000);
+    this.messages = []
+
+    setInterval(() => {
+      this.updateMessages()
+      this.uS.setMsgUpdate(true)
+    }, 3500);
   }
 
-  sendMessage(): Observable<any> {
-    return this.db.sendMessage(this.activeUser, this.activeRecipient, this.msgTxt);
+  addMessagesToTmp(A: string, B: string) {
+    this.db.getMessages(A, B).subscribe({
+      next: (data) => {
+        for (let i = 0; i < data.length; i++) {
+          let content = data[i].content.replace('"', '').replace('"', '');
+          let m = new message(data[i].id, A, B, content, data[i].m_date);
+          this.tmp.push(m);
+        }
+      },
+      error: (err) => console.error(`Error: ${err} `),
+      complete: () => {
+        console.log(`Getting messages from ${A} to ${B}...`)
+        this.tmp = this.tmp.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
+      }
+    })
   }
 
   updateMessages() {
@@ -45,51 +55,28 @@ export class MessagePanelComponent implements OnInit {
       (this.activeUser == '' || this.activeRecipient == ''))
       return;
 
-    this.messages = [];
+    this.addMessagesToTmp(this.activeUser, this.activeRecipient)
+    this.addMessagesToTmp(this.activeRecipient, this.activeUser)
+    this.tmp = this.tmp.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
 
-    this.db.getMessages(this.activeUser, this.activeRecipient).subscribe({
-      next: (data) => {
-        for (let i = 0; i < data.length; i++) {
-          let content = data[i].content.replace('"', '').replace('"', '');
-          let m = new message(this.activeUser, this.activeRecipient, content, data[i].m_date);
-          this.messages.push(m);
-          this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
-        }
-      },
-      error: (err) => console.error(`Error: ${err} `),
-      complete: () => console.log(`Getting messages from ${this.activeUser} to ${this.activeRecipient}...`)
-    })
+    for (let i = 0; i < this.tmp.length; i++)
+      if (message.includes(this.tmp[i].id, this.messages) === false)
+        this.messages.push(this.tmp[i])
+    this.tmp = []
 
-    this.db.getMessages(this.activeRecipient, this.activeUser).subscribe({
-      next: (data) => {
-        for (let i = 0; i < data.length; i++) {
-          let content = data[i].content.replace('"', '').replace('"', '');
-          let m = new message(this.activeRecipient, this.activeUser, content, data[i].m_date);
-          this.messages.push(m);
-          this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
-        }
-      },
-      error: (err) => console.error(`Error: ${err} `),
-      complete: () => console.log(`Getting messages from ${this.activeRecipient} to ${this.activeUser}...`)
-    })
+    for (let m of this.messages)
+      m.timeSince = message.updateTimeSince(m.m_date)
 
-    this.messages = this.messages.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
+    this.tmp = structuredClone(this.messages)
+    this.messages = []
+
+    for (let m of this.tmp)
+      if (
+        (m.sender_id === this.activeUser && m.recipient_id === this.activeRecipient)
+        ||
+        (m.sender_id === this.activeRecipient && m.recipient_id === this.activeUser)
+      )
+        this.messages.push(m)
     this.uS.setMsgUpdate(false);
-  }
-
-  onSendButtonClick(): void {
-    this.sendMessage().subscribe({
-      next: (data) => console.log(data.res),
-      error: (err) => console.error(`Error: ${err} `),
-      complete: () => {
-        console.log("Message send completed...");
-        this.uS.setMsgUpdate(true);
-        this.updateMessages();
-      }
-    })
-  }
-
-  onUpdateButtonClick(): void {
-    this.uS.setMsgUpdate(true);
   }
 }

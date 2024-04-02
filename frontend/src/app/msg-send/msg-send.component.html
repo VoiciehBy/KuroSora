@@ -1,7 +1,7 @@
-<div id="inputMessageForm" class="col input-group">
+<div class="input-group">
     <div class="form-floating">
         <textarea id="inputMessage" class="form-control" type="text" placeholder="Podaj treść wiadomości..."
-            aria-label="Input Text Addon" aria-describedby="inputMessageAddon" [(ngModel)]="msgTxt" maxlength="106">
+            aria-label="Input Text Addon" aria-describedby="inputMessageAddon" [(ngModel)]="msgTxt" maxlength="255">
       {{msgTxt}}
     </textarea>
         <label for="inputMessage">

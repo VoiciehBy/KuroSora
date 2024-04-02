@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { message } from 'src/message';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 import { SENT_MESSAGE_TO_STRING } from 'src/constants';
@@ -36,12 +35,7 @@ export class MsgSendComponent implements OnInit {
       error: (err) => console.error(`Error: ${err} `),
       complete: () => {
         console.log("Message send completed...");
-        this.uS.setMsgUpdate(true);
       }
     })
-  }
-
-  onUpdateButtonClick(): void {
-    this.uS.setMsgUpdate(true);
   }
 }

@@ -38,7 +38,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("Login component inited, xdd....");
-    this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
   }
 
   signIn(): void {
@@ -56,7 +55,6 @@ export class LoginComponent implements OnInit {
       complete: () => {
         console.log("Signing in completed, :D");
         this.router.navigate([""]);
-        this.uS.setMsgUpdate(true);
       }
     })
   }

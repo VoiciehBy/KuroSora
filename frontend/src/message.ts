@@ -1,10 +1,11 @@
 export class message {
     public id: number;
-    public sender_id: string;
-    public recipient_id: string;
+    public sender: string;
+    public recipient: string;
     public content: string;
     public m_date: string;
     public timeSince: string;
+    public olderThan8Hours : boolean;
 
     static getMessageTimeSince(miliseconds: number): string {
         let s = Math.trunc(miliseconds / 1000)
@@ -20,13 +21,13 @@ export class message {
     }
 
     public constructor(id: number,
-        sender_id: string,
-        recipient_id: string,
+        sender: string,
+        recipient: string,
         content: string,
         m_date: string) {
         this.id = id;
-        this.sender_id = sender_id;
-        this.recipient_id = recipient_id;
+        this.sender = sender;
+        this.recipient = recipient;
         this.content = content
         this.m_date = m_date
         let miliseconds = Date.now() - Date.parse(m_date)
@@ -39,7 +40,10 @@ export class message {
 
     public static updateTimeSince(m_date: string): string {
         let miliseconds = Date.now() - Date.parse(m_date)
-        return message.getMessageTimeSince(miliseconds)
+        if (miliseconds > 28800000)
+            return m_date.slice(0,10)
+        else
+            return message.getMessageTimeSince(miliseconds)
     }
 
     public static includes(x: number, a: message[]): boolean {

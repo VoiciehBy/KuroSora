@@ -12,20 +12,21 @@ import {
   animations: [trigger("fade", [
     transition(":enter", [
       style({ opacity: 0 }),
-      animate(1500, style({ opacity: 1 }))
+      animate(3000, style({ opacity: 1 }))
     ]),
     transition(":leave", [
       style({ opacity: 1 }),
-      animate(500, style({ opacity: 0 }))
+      animate(3000, style({ opacity: 0 }))
     ])
   ])]
 })
 
 export class MessageComponent implements OnInit {
-  @Input() sender_id: string;
+  @Input() sender: string;
   @Input() activeUser: string;
   @Input() content: string;
   @Input() timeSince: string;
+  @Input() olderThan8Hours: boolean;
 
   constructor(private uS: UserService) { }
 

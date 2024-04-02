@@ -1,1 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+.formContainer {
+    margin-top: 5%;
+    width: fit-content;
+    height: 90%;
+}
+
+.submitButton {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.title {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.scrollBox {
+    height: 600px;
+    overflow: hidden;
+}
+
+.scrollBoxContent {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+}

@@ -17,6 +17,8 @@ export class MessagePanelComponent implements OnInit {
   messages: message[] = [];
   tmp: message[] = [];
 
+  showSpinner: boolean = false;
+
   constructor(private uS: UserService,
     private db: DbService) { }
 
@@ -28,9 +30,13 @@ export class MessagePanelComponent implements OnInit {
     this.messages = []
 
     setInterval(() => {
-      this.updateMessages()
       this.uS.setMsgUpdate(true)
-    }, 3500);
+      this.showSpinner = true;
+    }, 1500);
+
+    setInterval(() => {
+      this.updateMessages()
+    }, 1000);
   }
 
   addMessagesToTmp(A: string, B: string) {
@@ -52,9 +58,12 @@ export class MessagePanelComponent implements OnInit {
 
   updateMessages() {
     if (this.isMsgNeedToBeUpdated == false ||
-      (this.activeUser == '' || this.activeRecipient == ''))
+      (this.activeUser == '' || this.activeRecipient == '')) {
+      this.showSpinner = false;
       return;
+    }
 
+    this.showSpinner = true;
     this.addMessagesToTmp(this.activeUser, this.activeRecipient)
     this.addMessagesToTmp(this.activeRecipient, this.activeUser)
     this.tmp = this.tmp.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
@@ -64,19 +73,23 @@ export class MessagePanelComponent implements OnInit {
         this.messages.push(this.tmp[i])
     this.tmp = []
 
-    for (let m of this.messages)
+    for (let m of this.messages) {
       m.timeSince = message.updateTimeSince(m.m_date)
+      if(m.timeSince == m.m_date.slice(0,10))
+        m.olderThan8Hours = true;
+    }
 
     this.tmp = structuredClone(this.messages)
     this.messages = []
 
     for (let m of this.tmp)
       if (
-        (m.sender_id === this.activeUser && m.recipient_id === this.activeRecipient)
+        (m.sender === this.activeUser && m.recipient === this.activeRecipient)
         ||
-        (m.sender_id === this.activeRecipient && m.recipient_id === this.activeUser)
+        (m.sender === this.activeRecipient && m.recipient === this.activeUser)
       )
         this.messages.push(m)
+    this.showSpinner = false;
     this.uS.setMsgUpdate(false);
   }
 }

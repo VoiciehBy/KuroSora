@@ -1,4 +1,4 @@
-<div class="container text-bg-light bg-gradient rounded" id=loginContainer>
+<div class="container text-bg-light bg-gradient rounded formContainer">
     <div *ngIf="errorTxt != ''" class="row badge text-bg-danger bg-gradient">
         <h5>
             {{errorTxt}}
@@ -23,7 +23,7 @@
                         aria-describedby="passwordFieldAddon" [(ngModel)]="password" required>
                 </span>
             </div>
-            <button type="button" class="btn btn-success bg-gradient" id="signInButton" (click)="signIn();">
+            <button type="button" class="btn btn-success bg-gradient submitButton" (click)="signIn();">
                 {{LOGIN_BTN_STRING}}
             </button>
         </form>

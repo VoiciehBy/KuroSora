@@ -1,10 +1,13 @@
-<div *ngIf="activeUser != ''">
-  <div *ngFor="let msg of messages;" class="row">
-    <div class="col-2"></div>
-    <app-message [sender_id]="msg.sender_id" [content]="msg.content" [timeSince]="msg.timeSince"></app-message>
+<div *ngFor="let msg of messages;" class="row">
+  <app-message [sender]="msg.sender" [content]="msg.content" [timeSince]="msg.timeSince"
+    [olderThan8Hours]="msg.olderThan8Hours">
+  </app-message>
+</div>
+<div class="row">
+  <div *ngIf="showSpinner === true" class="spinner-border" role="status">
+    <span></span>
   </div>
-
-  <div class="row text-bg-dark" data-bs-theme="dark">
-    <app-msg-send></app-msg-send>
-  </div>
+</div>
+<div class="row text-bg-dark" data-bs-theme="dark">
+  <app-msg-send></app-msg-send>
 </div>

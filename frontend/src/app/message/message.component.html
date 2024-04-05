@@ -1,16 +1,15 @@
 <div *ngIf="sender == activeUser;" class="row" id="firstRow">
-    <div class="col-4 card text-bg-danger">
-        <div class="card-header"></div>
+    <div class="col-4 card text-wrap messageReceived">
         <h6 class="card-title text-start">
             {{content}}
         </h6>
         <div *ngIf="olderThan8Hours === true;else elseBlock">
-            <p class="card-text text-wrap text-start">
+            <p class="card-text text-start">
                 {{timeSince}}
             </p>
         </div>
         <ng-template #elseBlock>
-            <p class="card-text text-wrap text-start" @fade>
+            <p class="card-text text-start" @fade>
                 {{timeSince}}
             </p>
         </ng-template>
@@ -20,18 +19,17 @@
 </div>
 <div class="row" id="secondRow">
     <div class="col-6"></div>
-    <div *ngIf="sender != activeUser" class="col-4 card text-bg-warning">
-        <div class="card-header"></div>
+    <div *ngIf="sender != activeUser" class="col-4 card text-wrap messageSent">
         <div class="card-title text-end">
             {{content}}
         </div>
         <div *ngIf="olderThan8Hours === true;else elseBlock">
-            <p class="card-text text-wrap text-start">
+            <p class="card-text text-start">
                 {{timeSince}}
             </p>
         </div>
         <ng-template #elseBlock>
-            <p class="card-text text-wrap text-start" @fade>
+            <p class="card-text text-start" @fade>
                 {{timeSince}}
             </p>
         </ng-template>

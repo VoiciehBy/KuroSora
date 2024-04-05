@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 export class DbService {
   host: string = HOSTNAME;
   constructor(private http: HttpClient) { }
-
+  
   getUser(login: string, password: string): Observable<any> {
     return this.http.get(`${this.host}/user?login=${login}&password=${password}`)
   }

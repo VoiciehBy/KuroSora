@@ -112,15 +112,23 @@ httpServer.on("request", (req, res) => {
                     let username = params.get("username");
                     let login = params.get("login");
                     let hash = crypto.genHash(params.get("password"))
-                    db.addUser(login, hash, username).then(() => {
-                        console.log(`User '${username}' was registered successfully...`)
-                        res.writeHead(201, http.STATUS_CODES[201])
-                        res.end(`{"res": "User '${username}' was registered successfully..."}`)
-                    }).catch((err) => {
-                        console.error(err);
-                        console.error(`User '${username}' registration failed...`);
-                        res.end(err)
-                    });
+                    db.getUser(login, hash, username).then((result) => {
+                        if (result === [])
+                            db.addUser(login, hash, username).then(() => {
+                                console.log(`User '${username}' was registered successfully...`);
+                                res.writeHead(201, http.STATUS_CODES[201]);
+                                res.end(`{"res": "User '${username}' was registered successfully..."}`);
+                            }).catch((err) => {
+                                console.error(err);
+                                console.error(`User '${username}' registration failed...`);
+                                res.end(err);
+                            });
+                        else {
+                            console.error(`User '${username}' registration failed...`);
+                            res.writeHead(400, http.STATUS_CODES[400]);
+                            res.end(`{"res": "User '${username}' registration failed..."}`);
+                        }
+                    })
                 }
             }
             else {

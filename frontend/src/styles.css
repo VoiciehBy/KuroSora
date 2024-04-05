@@ -25,3 +25,13 @@
     overflow-y: auto;
     height: 100%;
 }
+
+.messageReceived {
+    color: black;
+    background-color: lightgreen;
+}
+
+.messageSent {
+    color: white;
+    background-color: forestgreen;
+}

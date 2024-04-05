@@ -36,13 +36,9 @@ export class RegisterComponent implements OnInit {
     if (this.login == undefined || this.login == '' || this.username == undefined)
       return
 
-    //allows duplicate entries
-
     this.db.addUser(this.login, this.username, this.password).subscribe({
       next: () => { },
-      error: (err) => {
-        console.error(`Error: ${err}`)
-      },
+      error: (err) => console.error(`Error: ${err}`),
       complete: () => {
         console.log("Signing up completed, :D .");
         this.router.navigate(["login"]);

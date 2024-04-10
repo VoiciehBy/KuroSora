@@ -5,7 +5,8 @@ import {
   LOGIN_STRING,
   REGISTER_BTN_STRING,
   ALREADY_HAVE_ACCOUNT_STRING,
-  HOSTNAME
+  HOSTNAME,
+  BAD_REGISTRATION_FORM_STRING
 } from 'src/constants';
 import { DbService } from 'src/services/db.service';
 
@@ -24,7 +25,11 @@ export class RegisterComponent implements OnInit {
 
   login: string;
   password: string;
+  password_1: string;
   username: string;
+  email: string;
+
+  errorTxt: string = ''
 
   constructor(private db: DbService, private router: Router) { }
 
@@ -32,9 +37,36 @@ export class RegisterComponent implements OnInit {
     console.log("Register component inited, xdd....");
   }
 
+  emailValid(): boolean {
+    return this.email != undefined && this.email.includes('@');
+  }
+
+  isLoginValid(): boolean {
+    return this.login != undefined
+  }
+
+  isUsernameValid(): boolean {
+    return this.username != undefined
+  }
+
+  isPasswordValid(): boolean {
+    return this.password != undefined && this.password_1 != undefined;
+  }
+
+  isTwoPasswordsMatch(): boolean {
+    return this.password === this.password_1;
+  }
+
   signUp(): void {
-    if (this.login == undefined || this.login == '' || this.username == undefined)
+    if (!this.isTwoPasswordsMatch()
+      || !this.isLoginValid()
+      || !this.isUsernameValid()
+      || !this.emailValid()
+      || !this.isPasswordValid()) {
+      this.errorTxt = BAD_REGISTRATION_FORM_STRING
+      setTimeout(() => { this.errorTxt = '' }, 3000)
       return
+    }
 
     this.db.addUser(this.login, this.username, this.password).subscribe({
       next: () => { },

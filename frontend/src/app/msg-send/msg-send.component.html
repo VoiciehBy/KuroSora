@@ -1,14 +1,36 @@
 <div class="input-group">
     <div class="form-floating">
         <textarea id="inputMessage" class="form-control" type="text" placeholder="Podaj treść wiadomości..."
-            aria-label="Input Text Addon" aria-describedby="inputMessageAddon" [(ngModel)]="msgTxt" maxlength="255">
+            aria-label="Input Text Addon" aria-describedby="inputMessage" [(ngModel)]="msgTxt" maxlength="255">
       {{msgTxt}}
     </textarea>
         <label for="inputMessage">
             {{SENT_MESSAGE_TO_STRING}} {{activeRecipient}}...
         </label>
     </div>
-    <span id="inputMessageAddon" class="input-group-text">
+    <span class="input-group-text">
+        <div>
+            <button class="btn btn-success badge rounded-pill" type="button" value="Emoji" data-bs-toggle="modal"
+                data-bs-target="#emojiModal">
+                <img src="../../node_modules/bootstrap-icons/icons/emoji-smile-fill.svg" width="30" height="30"
+                    alt="Emoji Smile Icon">
+            </button>
+        </div>
+        <div class="modal fade" id="emojiModal" tabIndex="-1" aria-labelledby="Emoji Modal">
+            <div class="modal-dialog" style="width:fit-content;height:fit-content;">
+                <div class="modal-content">
+                    <div class="text-end">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-wrap">
+                        <emoji-mart emoji="+1" set="twitter" [sheetSize]=32 [emojiSize]=32
+                            (emojiClick)="addEmoji($event)"></emoji-mart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </span>
+    <span class="input-group-text">
         <div (click)="onSendButtonClick();">
             <button class="btn btn-success badge rounded-pill" type="button" value="Send">
                 <img src="../../node_modules/bootstrap-icons/icons/send.svg" width="30" height="30" alt="Send Icon">

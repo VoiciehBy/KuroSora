@@ -16,7 +16,7 @@
 }
 
 .scrollBox {
-    height: 600px;
+    height: 400pt;
     overflow: hidden;
 }
 
@@ -34,4 +34,9 @@
 .messageSent {
     color: white;
     background-color: forestgreen;
+}
+
+.errorTxt {
+    margin-top:1%;
+    justify-content: center;
 }

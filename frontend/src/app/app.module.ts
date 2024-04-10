@@ -19,6 +19,7 @@ import { MessageComponent } from './message/message.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { DbService } from 'src/services/db.service';
 import { MsgSendComponent } from './msg-send/msg-send.component';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { MsgSendComponent } from './msg-send/msg-send.component';
     CommonModule,
     RouterOutlet,
     RouterLink,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    PickerComponent
   ],
   providers: [UserService, DbService],
   bootstrap: [AppComponent]

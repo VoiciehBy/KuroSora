@@ -4,10 +4,7 @@
   </app-message>
 </div>
 <div class="row">
-  <div *ngIf="showSpinner === true" class="spinner-border" role="status">
-    <span></span>
+  <div *ngIf="showSpinner === true" class="spinner-border text-success m-3" role="status">
+    <span class="visually-hidden">Loading...</span>
   </div>
-</div>
-<div class="row text-bg-dark" data-bs-theme="dark">
-  <app-msg-send></app-msg-send>
 </div>

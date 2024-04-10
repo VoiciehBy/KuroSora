@@ -29,6 +29,10 @@ export class MsgSendComponent implements OnInit {
     return this.db.sendMessage(this.activeUser, this.activeRecipient, this.msgTxt);
   }
 
+  addEmoji(x: any): void {
+    this.msgTxt += x.emoji.native;
+  }
+
   onSendButtonClick(): void {
     this.sendMessage().subscribe({
       next: (data) => console.log(data.res),
@@ -37,5 +41,6 @@ export class MsgSendComponent implements OnInit {
         console.log("Message send completed...");
       }
     })
+    this.msgTxt = '';
   }
 }

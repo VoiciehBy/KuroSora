@@ -3,6 +3,8 @@ const db = require("./db")
 const config = require("./config").http
 const crypto = require("./crypto")
 
+const mail = require("./mail")
+
 const httpServer = http.createServer();
 
 httpServer.on("request", (req, res) => {
@@ -112,11 +114,12 @@ httpServer.on("request", (req, res) => {
                     let username = params.get("username");
                     let login = params.get("login");
                     let hash = crypto.genHash(params.get("password"))
-                    db.getUser(login, hash, username).then((result) => {
-                        if (result === [])
+                    db.getUser(username).then((result) => {
+                        if (JSON.stringify(result) === JSON.stringify([]))
                             db.addUser(login, hash, username).then(() => {
                                 console.log(`User '${username}' was registered successfully...`);
                                 res.writeHead(201, http.STATUS_CODES[201]);
+                                mail.sendAuthMail("laurel57@ethereal.email", '12345')
                                 res.end(`{"res": "User '${username}' was registered successfully..."}`);
                             }).catch((err) => {
                                 console.error(err);
@@ -124,7 +127,7 @@ httpServer.on("request", (req, res) => {
                                 res.end(err);
                             });
                         else {
-                            console.error(`User '${username}' registration failed...`);
+                            console.error(`User '${username}' a registration failed...`);
                             res.writeHead(400, http.STATUS_CODES[400]);
                             res.end(`{"res": "User '${username}' registration failed..."}`);
                         }

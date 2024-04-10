@@ -12,6 +12,7 @@ export const DONT_HAVE_ACCOUNT_STRING : string = "Nie masz konta";
 export const CREATE_ACCOUNT_STRING = "Stwórz je";
 export const SENT_MESSAGE_TO_STRING = "Wyślij wiadomość do ";
 export const BAD_CREDENTIALS_STRING = "Złe dane logowania, xD...";
+export const BAD_REGISTRATION_FORM_STRING = "Wprowadzono niepoprawne dane, xD...";
 
 /*
 export const USERS_STRING : string = "Users";
@@ -27,4 +28,5 @@ export const DONT_HAVE_ACCOUNT_STRING : string = "Don't have account";
 export const CREATE_ACCOUNT_STRING = "Create account";
 export const SENT_MESSAGE_TO_STRING = "Sent message to ";
 export const BAD_CREDENTIALS_STRING = "Bad credentials, xD...";
+export const BAD_REGISTRATION_FORM_STRING = "Provided data is invalid, xD...";
 */

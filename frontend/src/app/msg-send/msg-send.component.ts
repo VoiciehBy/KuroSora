@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
-import { SENT_MESSAGE_TO_STRING } from 'src/constants';
+import {
+  SENT_MESSAGE_TO_STRING,
+  ACCOUNT_IS_NOT_ACTIVATED
+} from 'src/constants';
 import { DbService } from 'src/services/db.service';
 
 @Component({
@@ -12,9 +15,13 @@ import { DbService } from 'src/services/db.service';
 
 export class MsgSendComponent implements OnInit {
   SENT_MESSAGE_TO_STRING: string = SENT_MESSAGE_TO_STRING;
+  ACCOUNT_IS_NOT_ACTIVE: string = ACCOUNT_IS_NOT_ACTIVATED;
   activeUser: string;
   activeRecipient: string;
   msgTxt: string = '';
+  errorTxt: string = ''
+
+  isUserActivated: boolean = false;
 
   constructor(private uS: UserService,
     private db: DbService) { }
@@ -23,6 +30,7 @@ export class MsgSendComponent implements OnInit {
     console.log("Message Panel component inited, xdd....");
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
+    this.isUserActivated = false;
   }
 
   sendMessage(): Observable<any> {
@@ -34,13 +42,27 @@ export class MsgSendComponent implements OnInit {
   }
 
   onSendButtonClick(): void {
-    this.sendMessage().subscribe({
-      next: (data) => console.log(data.res),
+    this.db.getUser(this.activeUser).subscribe({
+      next: (data) => {
+        if (data)
+          this.isUserActivated = (data[0].activated) === 'T' ? true : false;
+      },
       error: (err) => console.error(`Error: ${err} `),
       complete: () => {
-        console.log("Message send completed...");
+        if (this.isUserActivated)
+          this.sendMessage().subscribe({
+            next: (data) => console.log(data),
+            error: (err) => console.error(`Error: ${err} `),
+            complete: () => {
+              console.log("Message send completed...");
+            }
+          })
+        else {
+          this.errorTxt = this.ACCOUNT_IS_NOT_ACTIVE;
+          setTimeout(() => { this.errorTxt = '' }, 3000)
+        }
+        this.msgTxt = '';
       }
     })
-    this.msgTxt = '';
   }
 }

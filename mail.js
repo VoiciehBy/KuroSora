@@ -29,6 +29,16 @@ async function sendActivationMail(email, code = "12345") {
     sendMail(email, "Activate your KuroSora Account", `Activation code:${code}`, `<h1>${code}</h1>`)
 }
 
+async function sendVerifcationMail(email, code = "12345") {
+    sendMail(email, "Verificate your KuroSora Account", `Verification code:${code}`, `<h1>${code}</h1>`)
+}
+
+async function sendRecoveryMail(email, code = "12345"){
+    sendMail(email, "Recovery code for your KuroSora Account", `Recovery code:${code}`, `<h1>${code}</h1>`)
+}
+
 module.exports = {
-    sendAuthMail: (e, c) => sendActivationMail(e, c)
+    sendAuthMail: (e, c) => sendActivationMail(e, c),
+    sendAuth_1Mail: (e, c) => sendVerifcationMail(e, c),
+    sendAuth_2Mail: (e, c) => sendRecoveryMail(e, c),
 }

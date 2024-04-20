@@ -73,8 +73,9 @@ module.exports = {
     test: () => doQuery(`SELECT id FROM Users WHERE id='1';`),
     getUsers: () => doQuery("SELECT username FROM Users;"),
     getUser: (u) => doQuery(`SELECT * FROM USERS WHERE username='${u}';`),
-    getUser_1: (l, p) => doQuery(`SELECT * FROM USERS WHERE login='${l}' AND password='${p}';`),
-    addUser: (l, p, u) => doQuery(`INSERT INTO Users (login, password, username) VALUES('${l}','${p}','${u}');`),
+    getUser_1: (l, p) => doQuery(`SELECT username FROM USERS WHERE login='${l}' AND password='${p}';`),
+    getCode: (u_id, t = 'T') => doQuery(`SELECT code FROM CODES WHERE user_id=${u_id} AND temporary='${t}';`),
+    addUser: (l, p, u) => doQuery(`INSERT INTO Users (login, password, username, activated) VALUES('${l}','${p}','${u}','F');`),
     addMessage: (sender, recipient, c, d) => {
         doQuery(`SELECT id FROM Users WHERE username='${sender}'`).then(sender_id => {
             doQuery(`SELECT id FROM Users WHERE username='${recipient}'`).then(recipient_id => {
@@ -82,5 +83,13 @@ module.exports = {
             })
         })
     },
-    getMessage: (sender, recipient) => getMessagePromise(sender, recipient)
+    addCode: (c, u, t = 'T') => doQuery(`SELECT id FROM USERS WHERE username='${u}';`).then((u_id) => {
+        doQuery(`INSERT INTO CODES (code, user_id,temporary) VALUES ('${c}',${u_id[0].id},'${t}');`)
+    }),
+    deleteCode: (code, t = 'T') => doQuery(`DELETE FROM CODES WHERE code=${code} AND temporary='${t}';`),
+    getMessage: (sender, recipient) => getMessagePromise(sender, recipient),
+    activateAccount: (u) => doQuery(`UPDATE USERS SET activated='T' WHERE username='${u}';`),
+    changePassword: (u, p) => doQuery(`SELECT id FROM USERS WHERE username='${u}';`).then((u_id) => {
+        doQuery(`UPDATE USERS SET password='${p}' WHERE id=${u_id[0].id};`)
+    })
 }

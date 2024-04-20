@@ -1,0 +1,24 @@
+<div class="container text-bg-light bg-gradient rounded formContainer">
+    <div *ngIf="errorTxt != ''" class="row alert alert-danger errorTxt" role="alert">
+        {{errorTxt}}
+    </div>
+    <div class="row">
+        <h5 class="title">
+            Potwierdź zmianę hasła kodem weryfikacyjnym
+        </h5>
+    </div>
+    <div class="row">
+        <form class="needs-validation was-validated" novalidate>
+            <div class="input-group justify-content-center">
+                <span class="input-group-text">
+                    <input class="form-control" type="text" placeholder="Kod weryfikacyjny"
+                        aria-label="Code Field Addon" aria-describedby="codeFieldAddon" [(ngModel)]="code" required>
+                </span>
+            </div>
+            <button type="button" class="btn btn-success bg-gradient submitButton"
+                (click)="onConfirmActivationButtonClick();">
+                Potwierdź zmianę hasła kodem weryfikacyjnym
+            </button>
+        </form>
+    </div>
+</div>

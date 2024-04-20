@@ -5,7 +5,7 @@ export class message {
     public content: string;
     public m_date: string;
     public timeSince: string;
-    public olderThan8Hours : boolean;
+    public olderThan8Hours: boolean;
 
     static getMessageTimeSince(miliseconds: number): string {
         let s = Math.trunc(miliseconds / 1000)
@@ -41,7 +41,7 @@ export class message {
     public static updateTimeSince(m_date: string): string {
         let miliseconds = Date.now() - Date.parse(m_date)
         if (miliseconds > 28800000)
-            return m_date.slice(0,10)
+            return m_date.slice(0, 10)
         else
             return message.getMessageTimeSince(miliseconds)
     }

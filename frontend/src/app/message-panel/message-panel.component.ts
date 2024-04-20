@@ -75,7 +75,7 @@ export class MessagePanelComponent implements OnInit {
 
     for (let m of this.messages) {
       m.timeSince = message.updateTimeSince(m.m_date)
-      if(m.timeSince == m.m_date.slice(0,10))
+      if (m.timeSince == m.m_date.slice(0, 10))
         m.olderThan8Hours = true;
     }
 

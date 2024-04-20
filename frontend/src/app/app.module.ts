@@ -20,6 +20,10 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { DbService } from 'src/services/db.service';
 import { MsgSendComponent } from './msg-send/msg-send.component';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { ActivationComponent } from './activation/activation.component';
+import { PassRecoveryComponent } from './pass-recovery/pass-recovery.component';
+import { PassRecovery1Component } from './pass-recovery1/pass-recovery1.component';
+import { PassRecovery2Component } from './pass-recovery2/pass-recovery2.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +35,11 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
     HomeComponent,
     MessageComponent,
     NavbarComponent,
-    MsgSendComponent
+    MsgSendComponent,
+    ActivationComponent,
+    PassRecoveryComponent,
+    PassRecovery1Component,
+    PassRecovery2Component
   ],
   imports: [
     BrowserModule,

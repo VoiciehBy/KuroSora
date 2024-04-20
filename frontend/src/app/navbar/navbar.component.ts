@@ -32,4 +32,8 @@ export class NavbarComponent implements OnInit {
   onRegisterButtonClick(): void {
     this.router.navigate(["register"], {});
   }
+
+  onActivationButtonClick(): void {
+    this.router.navigate(["activate"],{});
+  }
 }

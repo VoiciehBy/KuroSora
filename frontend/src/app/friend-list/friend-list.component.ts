@@ -19,8 +19,7 @@ export class FriendListComponent implements OnInit {
   activeUser: string = '';
   activeRecipient: string = '';
   friends: user[] = [];//this.users = [new user("Wielki Elektronik")];
-
-  isMsgNeedToBeUpdated: boolean;
+  isMsgNeedToBeUpdated: boolean = false;
 
   constructor(private uS: UserService,
     private db: DbService) { }
@@ -57,7 +56,7 @@ export class FriendListComponent implements OnInit {
         this.uS.setActiveRecipient(this.friends[i].username);
         this.uS.setMsgUpdate(true);
         this.updateFriendList();
-        break;
+        return;
       }
   }
 }

@@ -72,6 +72,21 @@ export class RegisterComponent implements OnInit {
       next: () => { },
       error: (err) => console.error(`Error: ${err}`),
       complete: () => {
+        console.log("Adding user completed, :D .");
+        this.db.genCode(this.username).subscribe({
+          next: () => { },
+          error: (err) => console.error(`Error: ${err}`),
+          complete: () => {
+            console.log("Verification code generation completed, :D .");
+            this.db.genRecCode(this.username).subscribe({
+              next: () => { },
+              error: (err) => console.error(`Error: ${err}`),
+              complete: () => {
+                console.log("Recovery code generation completed, :D .");
+              }
+            })
+          }
+        })
         console.log("Signing up completed, :D .");
         this.router.navigate(["login"]);
       }

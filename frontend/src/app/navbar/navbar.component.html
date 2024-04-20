@@ -24,7 +24,7 @@
         </div>
       </li>
       <li class="nav-item active">
-        <button *ngIf="activeUser == '';else logoutBlock" class="btn badge bg-success" (click)="onLoginButtonClick();">
+        <button *ngIf="activeUser === '';else logoutBlock" class="btn badge bg-success" (click)="onLoginButtonClick();">
           <img src="../../node_modules/bootstrap-icons/icons/pen-fill.svg" width="30" height="30" alt="Filled Pen Icon">
         </button>
         <ng-template #logoutBlock>
@@ -33,6 +33,12 @@
               alt="Box Arrow Right Icon">
           </button>
         </ng-template>
+      </li>
+      <li class="nav-item active">
+        <button *ngIf="activeUser != ''" class="btn badge bg-success" (click)="onActivationButtonClick();">
+          <img src="../../node_modules/bootstrap-icons/icons/check-circle-fill.svg" width="30" height="30"
+            alt="Filled Check Circle Icon">
+        </button>
       </li>
       <li class="nav-item disabled">
       </li>

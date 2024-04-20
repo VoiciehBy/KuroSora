@@ -8,7 +8,8 @@ import {
   DONT_HAVE_ACCOUNT_STRING,
   CREATE_ACCOUNT_STRING,
   LOGIN_BTN_STRING,
-  BAD_CREDENTIALS_STRING
+  BAD_CREDENTIALS_STRING,
+  FORGOT_PASSWORD_STRING
 } from 'src/constants';
 import { DbService } from 'src/services/db.service';
 
@@ -25,10 +26,11 @@ export class LoginComponent implements OnInit {
   CREATE_ACCOUNT_STRING: string = CREATE_ACCOUNT_STRING;
   LOGIN_BTN_STRING: string = LOGIN_BTN_STRING;
   BAD_CREDENTIALS_STRING: string = BAD_CREDENTIALS_STRING;
+  FORGOT_PASSWORD_STRING: string = FORGOT_PASSWORD_STRING;
 
   login: string;
   password: string;
-  isMsgNeedToBeUpdated: boolean;
+  isMsgNeedToBeUpdated: boolean = false;
 
   errorTxt: string = ''
 
@@ -42,10 +44,12 @@ export class LoginComponent implements OnInit {
 
   signIn(): void {
     let hash = CryptoJS.HmacSHA512('', this.password).toString();
-    this.db.getUser(this.login, hash).subscribe({
+    this.db.getUser_1(this.login, hash).subscribe({
       next: (data) => {
         if (data.length != 0)
-          this.uS.setActiveUser(JSON.stringify(data[0].username).replace('"', '').replace('"', ''));
+          this.uS.setActiveUser(JSON.stringify(data[0].username)
+            .replace('"', '')
+            .replace('"', ''));
       },
       error: (err) => {
         console.error(`Error: ${err}`)

@@ -1,4 +1,7 @@
 <div class="input-group">
+    <div *ngIf="errorTxt != ''" class="row alert alert-danger errorTxt" role="alert">
+        {{errorTxt}}
+    </div>
     <div class="form-floating">
         <textarea id="inputMessage" class="form-control" type="text" placeholder="Podaj treść wiadomości..."
             aria-label="Input Text Addon" aria-describedby="inputMessage" [(ngModel)]="msgTxt" maxlength="255">

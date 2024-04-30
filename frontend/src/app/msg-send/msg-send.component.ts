@@ -27,7 +27,7 @@ export class MsgSendComponent implements OnInit {
     private db: DbService) { }
 
   ngOnInit(): void {
-    console.log("Message Panel component inited, xdd....");
+    console.log("Message Send component inited, xdd....");
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
     this.isUserActivated = false;
@@ -59,7 +59,7 @@ export class MsgSendComponent implements OnInit {
           })
         else {
           this.errorTxt = this.ACCOUNT_IS_NOT_ACTIVE;
-          setTimeout(() => { this.errorTxt = '' }, 3000)
+          setTimeout(() => { this.errorTxt = '' }, 3000);
         }
         this.msgTxt = '';
       }

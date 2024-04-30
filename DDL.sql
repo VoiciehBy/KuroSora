@@ -41,6 +41,18 @@ CREATE TABLE Friendships(
 
 ALTER TABLE Friendships AUTO_INCREMENT = 1;
 
+CREATE TABLE Notifications(
+    id int AUTO_INCREMENT,
+    type VARCHAR(16) NOT NULL,
+    user_1_id int,
+    user_2_id int,
+    CONSTRAINT notifications_pk PRIMARY KEY(id),
+    CONSTRAINT notifications_user_1_id_users_id_fk FOREIGN KEY(user_1_id) REFERENCES Users(id),
+    CONSTRAINT notifications_user_2_id_users_id_fk FOREIGN KEY(user_2_id) REFERENCES Users(id)
+);
+
+ALTER TABLE Notifications AUTO_INCREMENT = 1;
+
 CREATE TABLE Codes(
     code VARCHAR(6),
     user_id int,

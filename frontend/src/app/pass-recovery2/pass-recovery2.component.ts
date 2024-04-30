@@ -16,7 +16,7 @@ import { UserService } from 'src/services/user.service';
 export class PassRecovery2Component implements OnInit {
   password: string;
   password_1: string;
-  activeUser: string;
+  recoveryUsername: string;
 
   errorTxt: string = ''
 
@@ -28,7 +28,7 @@ export class PassRecovery2Component implements OnInit {
 
   ngOnInit(): void {
     console.log("Password reset(Regen Password Phase #3) component inited, xdd....");
-    this.uS.activeUserState.subscribe(username => this.activeUser = username);
+    this.uS.recoveryUsernameState.subscribe(username => this.recoveryUsername = username);
   }
 
   isPasswordValid(): boolean {
@@ -48,11 +48,12 @@ export class PassRecovery2Component implements OnInit {
       return
     }
 
-    this.db.changePassword(this.activeUser, this.password).subscribe({
+    this.db.changePassword(this.recoveryUsername, this.password).subscribe({
       next: (data: any) => { },
       error: (err: any) => console.error(`Error: ${err} `),
       complete: () => {
         console.log("Password change has been completed, :D")
+        this.uS.setRecoveryUsername('');
         this.router.navigate(["login"]);
       }
     })

@@ -1,8 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-black bg-gradient">
   <div class="container-fluid">
     <a class="navbar-brand">
-      <img src="assets/logo.png" width="30" height="30" alt="KuroSora Logo">
-      KuroSora
+      <img src="assets/logo.png" width="50" height="50" alt="KuroSora Logo">
     </a>
   </div>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#Navbar" aria-controls="Navbar"
@@ -12,8 +11,20 @@
   <div id="Navbar" class="collapse navbar-collapse">
     <ul class="navbar-nav gap-2">
       <li class="nav-item active">
-        <div *ngIf="activeUser != ''" class="badge text-wrap text-bg-success">
-          <img src="../../node_modules/bootstrap-icons/icons/bell-fill.svg" width="30" height="30" alt="Bell Fill Icon">
+        <div *ngIf="activeUser != ''">
+          <button class="btn badge bg-success" (click)="onHomeButtonClick();">
+            <img src="../../node_modules/bootstrap-icons/icons/house-fill.svg" width="30" height="30"
+              alt="Filled Home Icon">
+          </button>
+        </div>
+      </li>
+
+      <li class="nav-item active">
+        <div *ngIf="activeUser != ''">
+          <button class="btn badge bg-success" (click)="onNotificationButtonClick();">
+            <img src="../../node_modules/bootstrap-icons/icons/bell-fill.svg" width="30" height="30"
+              alt="Bell Fill Icon">
+          </button>
         </div>
       </li>
       <li class="nav-item active">
@@ -22,6 +33,12 @@
             alt="Filled Person Icon">
           {{activeUser}}
         </div>
+      </li>
+      <li *ngIf="activeUser != '' && !isActiveUserAccountActivated" class="nav-item active">
+        <button class="btn badge bg-success" (click)="onActivationButtonClick();">
+          <img src="../../node_modules/bootstrap-icons/icons/check-circle-fill.svg" width="30" height="30"
+            alt="Filled Check Circle Icon">
+        </button>
       </li>
       <li class="nav-item active">
         <button *ngIf="activeUser === '';else logoutBlock" class="btn badge bg-success" (click)="onLoginButtonClick();">
@@ -33,12 +50,6 @@
               alt="Box Arrow Right Icon">
           </button>
         </ng-template>
-      </li>
-      <li class="nav-item active">
-        <button *ngIf="activeUser != ''" class="btn badge bg-success" (click)="onActivationButtonClick();">
-          <img src="../../node_modules/bootstrap-icons/icons/check-circle-fill.svg" width="30" height="30"
-            alt="Filled Check Circle Icon">
-        </button>
       </li>
       <li class="nav-item disabled">
       </li>

@@ -3,9 +3,10 @@ import { user } from "../../user";
 import { UserService } from 'src/services/user.service';
 import {
   HOSTNAME,
-  USERS_STRING
+  FRIENDS_STRING
 } from "../../constants";
 import { DbService } from 'src/services/db.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-friend-list',
@@ -15,22 +16,23 @@ import { DbService } from 'src/services/db.service';
 
 export class FriendListComponent implements OnInit {
   host: string = HOSTNAME;
-  USERS_STRING: string = USERS_STRING;
+  FRIENDS_STRING: string = FRIENDS_STRING;
   activeUser: string = '';
   activeRecipient: string = '';
   friends: user[] = [];//this.users = [new user("Wielki Elektronik")];
   isMsgNeedToBeUpdated: boolean = false;
 
   constructor(private uS: UserService,
-    private db: DbService) { }
+    private db: DbService, private router: Router) { }
 
   ngOnInit(): void {
     console.log("Friend list component inited, xD...")
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
 
-    if (this.activeUser != '')
+    if (this.activeUser != '') {
       this.updateFriendList();
+    }
 
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
   }
@@ -58,5 +60,9 @@ export class FriendListComponent implements OnInit {
         this.updateFriendList();
         return;
       }
+  }
+
+  onAddFriendButtonClick(): void {
+    this.router.navigate(["add_friend"], {});
   }
 }

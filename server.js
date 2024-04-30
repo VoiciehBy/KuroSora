@@ -13,6 +13,21 @@ httpServer.on("request", (req, res) => {
     res.setHeader("Content-Type", "application/json");
 
     switch (req.method) {
+        case "HEAD":
+            console.error("Not implemented...")
+            res.writeHead(501, http.STATUS_CODES[501])
+            res.end(`{"error": "Not implemented 501"}`)
+            break;
+        case "OPTIONS":
+            console.error("Not implemented...")
+            res.writeHead(501, http.STATUS_CODES[501])
+            res.end(`{"error": "Not implemented 501"}`)
+            break;
+        case "POST":
+            console.error("Not implemented...")
+            res.writeHead(501, http.STATUS_CODES[501])
+            res.end(`{"error": "Not implemented 501"}`)
+            break;
         case "GET":
             if (pathname == "/") {
                 res.setHeader("Content-Type", "text/html");
@@ -36,30 +51,10 @@ httpServer.on("request", (req, res) => {
                 })
             }
             else if (pathname === "/user") {
-                if (params.has("username")) {
-                    let username = params.get("username");
-                    db.getUser(username).then(result => {
-                        if (result.length != 0) {
-                            console.log(`User '${username}' found...`)
-                            res.writeHead(200, http.STATUS_CODES[200])
-                            res.end(JSON.stringify(result))
-                        }
-                        else {
-                            console.error(`User '${username}' not found 47...`)
-                            res.writeHead(404, http.STATUS_CODES[404])
-                            res.end(JSON.stringify(result))
-                        }
-                    }).catch((err) => {
-                        console.error(`Getting user '${username}' failed...`);
-                        res.end(`{"error": "${err}"}`);
-                    })
-                }
-            }
-            else if (pathname === "/handshake") {
                 if (params.has("login") && params.has("password")) {
                     let login = params.get("login");
                     let password = params.get("password");
-                    db.getUser_1(login, password).then(result => {
+                    db.getUserByHS(login, password).then(result => {
                         if (result.length != 0) {
                             console.log(`User '${login}' found...\n`)
                             res.writeHead(200, http.STATUS_CODES[200])
@@ -72,6 +67,42 @@ httpServer.on("request", (req, res) => {
                         }
                     }).catch((err) => {
                         console.error(`Getting user with given credentials failed...`);
+                        res.end(`{"error": "${err}"}`);
+                    })
+                }
+                else if (params.has("username")) {
+                    let username = params.get("username");
+                    db.getUser(username).then(result => {
+                        if (result.length != 0) {
+                            console.log(`User '${username}' found...`)
+                            res.writeHead(200, http.STATUS_CODES[200])
+                            res.end(JSON.stringify(result))
+                        }
+                        else {
+                            console.error(`User '${username}' not found...`)
+                            res.writeHead(404, http.STATUS_CODES[404])
+                            res.end(JSON.stringify(result))
+                        }
+                    }).catch((err) => {
+                        console.error(`Getting user '${username}' failed...`);
+                        res.end(`{"error": "${err}"}`);
+                    })
+                }
+                else if (params.has("id")) {
+                    let id = params.get("id");
+                    db.getUserById(id).then(result => {
+                        if (result.length != 0) {
+                            console.log(`User found...`)
+                            res.writeHead(200, http.STATUS_CODES[200])
+                            res.end(JSON.stringify(result))
+                        }
+                        else {
+                            console.error(`User not found...`)
+                            res.writeHead(404, http.STATUS_CODES[404])
+                            res.end(JSON.stringify(result))
+                        }
+                    }).catch((err) => {
+                        console.error(`Getting user failed...`);
                         res.end(`{"error": "${err}"}`);
                     })
                 }
@@ -106,9 +137,9 @@ httpServer.on("request", (req, res) => {
                             console.log(`User '${username}' found...`)
                             db.getCode(id).then(result => {
                                 if (result[0].code === code) {
-                                    console.log(`Verfication code was valid... 106`)
+                                    console.log(`Verfication code was valid...`)
                                     res.writeHead(200, http.STATUS_CODES[200])
-                                    res.end(`{"res": "Verfication code was valid... 108"}`);
+                                    res.end(`{"res": "Verfication code was valid..."}`);
                                 }
                                 else {
                                     console.error(`Verification code not found :( ...`)
@@ -121,7 +152,7 @@ httpServer.on("request", (req, res) => {
                             })
                         }
                         else {
-                            console.error(`User '${username}' not found 128...`)
+                            console.error(`User '${username}' not found...`)
                             res.writeHead(404, http.STATUS_CODES[404])
                             res.end(JSON.stringify(result))
                         }
@@ -174,6 +205,20 @@ httpServer.on("request", (req, res) => {
                     })
                 }
             }
+            else if (pathname === "/notifications") {
+                if (params.has("from") && params.has("to")) {
+                    let username = params.get("from");
+                    let username_1 = params.get("to");
+                    db.getNotifications(username, username_1).then(result => {
+                        console.log("Got notifications...");
+                        res.writeHead(200, http.STATUS_CODES[200]);
+                        res.end(JSON.stringify(result));
+                    }).catch((err) => {
+                        console.error("Getting notifications failed...");
+                        res.end(`{"error": "${err}"}`);
+                    })
+                }
+            }
             else {
                 console.error("Bad request...")
                 res.writeHead(400, http.STATUS_CODES[400])
@@ -181,17 +226,7 @@ httpServer.on("request", (req, res) => {
             }
             break;
         case "PUT":
-            if (pathname === "/new_message") {
-                req.on("data", (data) => {
-                    let msgObj = JSON.parse(data)
-                    let current_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-                    db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date)
-                    console.log(`${msgObj.sender}' sent message to '${msgObj.recipient}...`)
-                    res.writeHead(201, http.STATUS_CODES[201])
-                    res.end(`{"info":}:"'${msgObj.sender}' sent message to '${msgObj.recipient}'..."`)
-                })
-            }
-            else if (pathname === "/new_user") {
+            if (pathname === "/new_user") {
                 if (params.has("login") && params.has("password") && params.has("username")) {
                     let username = params.get("username");
                     let login = params.get("login");
@@ -214,13 +249,38 @@ httpServer.on("request", (req, res) => {
                     })
                 }
             }
+            else if (pathname === "/new_message") {
+                req.on("data", (data) => {
+                    let msgObj = JSON.parse(data)
+                    let current_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                    db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date)
+                    console.log(`${msgObj.sender}' sent message to '${msgObj.recipient}...`)
+                    res.writeHead(201, http.STATUS_CODES[201])
+                    res.end(`{"info":}:"'${msgObj.sender}' sent message to '${msgObj.recipient}'..."`)
+                })
+            }
+            else if (pathname === "/new_act_code") {
+                if (params.has("username")) {
+                    let username = params.get("username");
+                    let aCode = crypto.genCode();
+                    db.addCode(aCode, username).then(() => {
+                        console.log(`Activation code was generated successfully...`);
+                        mail.sendAuthMail("laurel57@ethereal.email", aCode);
+                        res.writeHead(200, http.STATUS_CODES[200]);
+                        res.end(`{"res": "Activation code was generated successfully..."}`);
+                    }).catch((err) => {
+                        console.error("Activation code generation failed...")
+                        res.end(`{"error": "${err}"}`)
+                    })
+                }
+            }
             else if (pathname === "/new_code") {
                 if (params.has("username")) {
                     let username = params.get("username");
                     let code = crypto.genCode();
                     db.addCode(code, username).then(() => {
                         console.log(`Verfication code was generated successfully...`);
-                        mail.sendAuthMail("laurel57@ethereal.email", code);
+                        mail.sendAuth_1Mail("laurel57@ethereal.email", code);
                         res.writeHead(200, http.STATUS_CODES[200]);
                         res.end(`{"res": "Verfication code was generated successfully..."}`);
                     }).catch((err) => {
@@ -244,6 +304,52 @@ httpServer.on("request", (req, res) => {
                     })
                 }
             }
+            else if (pathname === "/new_notification") {
+                if (params.has("from") && params.has("to")) {
+                    let username = params.get("from");
+                    let username1 = params.get("to");
+                    db.getUser(username).then((result) => {
+                        if (result.length != 0) {
+                            db.addNotification(username, username1).then(() => {
+                                console.log(`Notification was added...`);
+                                res.writeHead(201, http.STATUS_CODES[201]);
+                                res.end(`{"res": "Notification was added..."}`);
+                            }).catch((err) => {
+                                console.error(`Adding notification failed...`);
+                                res.end(`{"error": "${err}"}`)
+                            });
+                        }
+                        else {
+                            console.error(`Adding notification failed...`);
+                            res.writeHead(400, http.STATUS_CODES[400]);
+                            res.end(`{"res": "Adding notification failed..."}`);
+                        }
+                    })
+                }
+            }
+            else if (pathname === "/new_friend") {
+                if (params.has("u") && params.has("uu")) {
+                    let username = params.get("u");
+                    let username1 = params.get("uu");
+                    db.getUser(username).then((result) => {
+                        if (result.length != 0) {
+                            db.addFriendship(username, username1).then(() => {
+                                console.log(`User '${username}' and user '${username1}' became 'friends' successfully...`);
+                                res.writeHead(201, http.STATUS_CODES[201]);
+                                res.end(`{"res": "User '${username}' and user '${username1}' became 'friends' successfully..."}`);
+                            }).catch((err) => {
+                                console.error(`User '${username}' and user '${username1}' failed two form friendship...`);
+                                res.end(`{"error": "${err}"}`)
+                            });
+                        }
+                        else {
+                            console.error(`UUser '${username}' and user '${username1}' failed two form friendship...`);
+                            res.writeHead(400, http.STATUS_CODES[400]);
+                            res.end(`{"res": "User '${username}' and user '${username1}' failed two form friendship..."}`);
+                        }
+                    })
+                }
+            }
             else {
                 console.error("Bad request...")
                 res.writeHead(400, http.STATUS_CODES[400])
@@ -255,7 +361,7 @@ httpServer.on("request", (req, res) => {
                 if (params.has("username") && params.has("password")) {
                     let username = params.get("username");
                     let hash = crypto.genHash(params.get("password"));
-                    db.changePassword(username, hash).then(() => {
+                    db.changePass(username, hash).then(() => {
                         console.log(`Password was changed successfully...`);
                         res.writeHead(201, http.STATUS_CODES[201]);
                         res.end(`{"res": "Password was changed successfully..."}`);
@@ -266,7 +372,7 @@ httpServer.on("request", (req, res) => {
                 }
                 else if (params.has("username")) {
                     let username = params.get("username");
-                    db.activateAccount(username).then(() => {
+                    db.activateUser(username).then(() => {
                         console.log(`User '${username}' account was activated successfully...`);
                         res.writeHead(201, http.STATUS_CODES[201]);
                         res.end(`{"res": "User '${username}' account was activated successfully..."}`);
@@ -276,9 +382,14 @@ httpServer.on("request", (req, res) => {
                     })
                 }
             }
+            else {
+                console.error("Bad request...")
+                res.writeHead(400, http.STATUS_CODES[400])
+                res.end(`{"error": "Bad request 400"}`)
+            }
             break;
         case "DELETE":
-            if (pathname === "/code")
+            if (pathname === "/code") {
                 if (params.has("v")) {
                     let code = params.get("v");
                     if (code === undefined)
@@ -292,8 +403,54 @@ httpServer.on("request", (req, res) => {
                         res.end(`{"error": "${err}"}`);
                     })
                 }
+            }
+            else if (pathname === "/notification") {
+                if (params.has("from") && params.has("to")) {
+                    let username = params.get("from");
+                    let username_1 = params.get("to");
+                    db.deleteNotification(username, username_1).then(result => {
+                        console.log("Deleteting notification...");
+                        res.writeHead(200, http.STATUS_CODES[200]);
+                        res.end(JSON.stringify(result));
+                    }).catch((err) => {
+                        console.error("Deleteting notification failed...");
+                        res.end(`{"error": "${err}"}`);
+                    })
+                }
+            }
+            else if (pathname === "/friend") {
+                if (params.has("u") && params.has("uu")) {
+                    let username = params.get("u");
+                    let username1 = params.get("uu");
+                    db.getUser(username).then((result) => {
+                        if (result.length != 0) {
+                            db.deleteFriend(username, username1).then(() => {
+                                console.log(`Friendship was ended...`);
+                                res.writeHead(201, http.STATUS_CODES[201]);
+                                res.end(`{"res": "Friendship was ended..."}`);
+                            }).catch((err) => {
+                                console.error(`Ending friendship failed...`);
+                                res.end(`{"error": "${err}"}`)
+                            });
+                        }
+                        else {
+                            console.error(`Ending friendship failed...`);
+                            res.writeHead(400, http.STATUS_CODES[400]);
+                            res.end(`{"err": "Ending friendship failed..."}`);
+                        }
+                    })
+                }
+            }
+            else {
+                console.error("Bad request...")
+                res.writeHead(400, http.STATUS_CODES[400])
+                res.end(`{"error": "Bad request 400"}`)
+            }
             break;
         default:
+            console.error("Not implemented...")
+            res.writeHead(501, http.STATUS_CODES[501])
+            res.end(`{"error": "Not implemented 501"}`)
             break;
     }
 })

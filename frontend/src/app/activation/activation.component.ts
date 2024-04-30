@@ -16,7 +16,7 @@ import {
 
 export class ActivationComponent {
   activeUser: string = '';
-  code: string = '123456';
+  code: string = '';
   errorTxt: string = ''
 
   ACCOUNT_ACTIVATION_STRING = ACCOUNT_ACTIVATION_STRING;
@@ -41,10 +41,13 @@ export class ActivationComponent {
           error: (err: any) => console.error(`Error: ${err} `),
           complete: () => {
             console.log("Account activation has been completed, :D");
-            this.db.deleteCode(this.code).subscribe({
+            this.db.delCode(this.code).subscribe({
               next: (data: any) => { },
               error: (err: any) => console.error(`Error: ${err} `),
-              complete: () => console.log("Temporary verification code has been deleted, :D...")
+              complete: () => {
+                console.log("Temporary verification code has been deleted, :D...")
+                this.uS.setActiveUserActivationState(true);
+              }
             })
           }
         })

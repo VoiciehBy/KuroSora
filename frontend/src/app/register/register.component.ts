@@ -68,12 +68,12 @@ export class RegisterComponent implements OnInit {
       return
     }
 
-    this.db.addUser(this.login, this.username, this.password).subscribe({
+    this.db.createNewAccount(this.login, this.username, this.password).subscribe({
       next: () => { },
       error: (err) => console.error(`Error: ${err}`),
       complete: () => {
         console.log("Adding user completed, :D .");
-        this.db.genCode(this.username).subscribe({
+        this.db.genActCode(this.username).subscribe({
           next: () => { },
           error: (err) => console.error(`Error: ${err}`),
           complete: () => {

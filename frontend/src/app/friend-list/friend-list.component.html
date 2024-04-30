@@ -1,7 +1,13 @@
 <div *ngIf="activeUser != ''" class="row list-group">
     <h6 class="bg-text-dark bg-gradient rounded">
-        {{USERS_STRING}}:
+        {{FRIENDS_STRING}}:
     </h6>
+    <div *ngIf="activeUser != ''" class="nav-item active">
+        <button class="btn badge bg-success" (click)="onAddFriendButtonClick();">
+            <img src="../../node_modules/bootstrap-icons/icons/person-plus-fill.svg" width="30" height="30"
+                alt="Filled Plus Person Icon">
+        </button>
+    </div>
     <div *ngFor="let friend of friends;" (click)="selectRecipient(friend.username)">
         <div *ngIf="friend.username == activeRecipient; else elseBlock">
             <a class="list-group-item list-group-item-action list-group-item-warning rounded">

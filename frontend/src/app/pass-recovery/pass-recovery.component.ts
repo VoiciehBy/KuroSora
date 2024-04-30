@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import * as CryptoJS from 'crypto-js';
 import { UserService } from 'src/services/user.service';
 import {
   HOSTNAME,
@@ -19,7 +18,6 @@ export class PassRecoveryComponent implements OnInit {
   host: string = HOSTNAME;
   RESET_PASSWORD_STRING: string = RESET_PASSWORD_STRING;
   REMIND_PASSWORD_BTN_STRING: string = REMIND_PASSWORD_BTN_STRING;
-  //TODO
 
   email: string;
   username: string;
@@ -40,12 +38,12 @@ export class PassRecoveryComponent implements OnInit {
       next: () => { },
       error: (err) => console.error(`Error: ${err}`),
       complete: () => {
-        console.log("Recovery code was valid, :D... 43")
+        console.log("Recovery code was valid, :D...")
         this.db.genCode(this.username).subscribe({
           next: () => { },
           error: (err) => console.error(`Error: ${err}`),
           complete: () => {
-            this.uS.setActiveUser(this.username);
+            this.uS.setRecoveryUsername(this.username);
             this.router.navigate(["/password_recovery_1"]);
           }
         })

@@ -27,7 +27,7 @@ export class MessagePanelComponent implements OnInit {
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
-    this.messages = []
+    this.messages = [];
 
     setInterval(() => {
       this.uS.setMsgUpdate(true)
@@ -70,8 +70,8 @@ export class MessagePanelComponent implements OnInit {
 
     for (let i = 0; i < this.tmp.length; i++)
       if (message.includes(this.tmp[i].id, this.messages) === false)
-        this.messages.push(this.tmp[i])
-    this.tmp = []
+        this.messages.push(this.tmp[i]);
+    this.tmp = [];
 
     for (let m of this.messages) {
       m.timeSince = message.updateTimeSince(m.m_date)

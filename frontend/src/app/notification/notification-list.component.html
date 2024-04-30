@@ -1,0 +1,16 @@
+<div *ngIf="activeUser != ''" class="row list-group">
+    <h6 class="bg-text-dark bg-gradient rounded">
+        {{NOTIFICATIONS_STRING}}:
+    </h6>
+    <div *ngFor="let notification of notifications;">
+        <div class="btn-group" role="group" aria-label="Button Group">
+            <div class="list-group-item list-group-item-warning rounded">
+                <div *ngIf="notification.type === 'FRIEND_REQUEST'">
+                    Zaproszenie do znajomych od użytkownika {{notification.from}}
+                </div>
+            </div>
+            <button type="button" class="btn btn-success" (click)="onAcceptButtonClicked();">+</button>
+            <button type="button" class="btn btn-danger" (click)="onDeclineButtonClicked();">-</button>
+        </div>
+    </div>
+</div>

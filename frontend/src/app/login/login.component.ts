@@ -40,16 +40,19 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("Login component inited, xdd....");
+    this.uS.setActiveUser('');
   }
 
   signIn(): void {
     let hash = CryptoJS.HmacSHA512('', this.password).toString();
-    this.db.getUser_1(this.login, hash).subscribe({
+    this.db.getUserByHS(this.login, hash).subscribe({
       next: (data) => {
-        if (data.length != 0)
+        if (data.length != 0) {
           this.uS.setActiveUser(JSON.stringify(data[0].username)
             .replace('"', '')
             .replace('"', ''));
+          this.uS.setActiveUserActivationState(data[0].activated === 'T' ? true : false)
+        }
       },
       error: (err) => {
         console.error(`Error: ${err}`)

@@ -1,6 +1,6 @@
 export const HOSTNAME: string = "http://localhost:3000";
 
-export const USERS_STRING : string = "Użytkownicy";
+export const FRIENDS_STRING : string = "Znajomi";
 export const WELCOME_BACK_STRING :string = "Witaj ponownie!";
 export const LOGIN_BTN_STRING : string = "Zaloguj";
 export const LOGOUT_BTN_STRING : string = "Wyloguj";
@@ -21,9 +21,11 @@ export const ACCOUNT_ACTIVATION_STRING = "Aktywacja konta";
 export const ACTIVATE_ACCCOUNT_STRING = "Aktywuj konto";
 export const ACCOUNT_IS_NOT_ACTIVATED = "Konto jest nieaktywne... Aktywuj je, xD...";
 
+export const NOTIFICATIONS_STRING : string = "Powiadomienia";
+export const SEND_USER_REQUEST_BTN_STRING : string = "Wyślij zaproszenie do znajomych";
 
 /*
-export const USERS_STRING : string = "Users";
+export const FRIENDS_STRING : string = "Friends";
 export const WELCOME_BACK_STRING :string = "Welcome back!";
 export const LOGIN_BTN_STRING : string = "Login";
 export const LOGOUT_BTN_STRING : string = "Logout";
@@ -44,4 +46,6 @@ export const REMIND_PASSWORD_BTN_STRING = "Remind password";
 export const ACCOUNT_ACTIVATION_STRING = "Account activation";
 export const ACTIVATE_ACCCOUNT_STRING = "Activate account";
 export const ACCOUNT_IS_NOT_ACTIVATED = "The account is not active. Activate it, xD...";
+export const NOTIFICATIONS_STRING : string = "Notifications";
+export const SEND_USER_REQUEST_BTN_STRING : string = "Send friend request";
 */

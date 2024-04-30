@@ -71,25 +71,73 @@ function getMessagePromise(sender, recipient) {
 
 module.exports = {
     test: () => doQuery(`SELECT id FROM Users WHERE id='1';`),
-    getUsers: () => doQuery("SELECT username FROM Users;"),
-    getUser: (u) => doQuery(`SELECT * FROM USERS WHERE username='${u}';`),
-    getUser_1: (l, p) => doQuery(`SELECT username FROM USERS WHERE login='${l}' AND password='${p}';`),
+    getUsers: () => doQuery("SELECT username, activated FROM Users;"),
+    getUser: (u) => doQuery(`SELECT id, username, activated FROM USERS WHERE username='${u}';`),
+    getUserByHS: (l, p) => doQuery(`SELECT username, activated FROM USERS WHERE login='${l}' AND password='${p}';`),
+    getUserById: (i) => doQuery(`SELECT username FROM USERS WHERE id=${i};`),
+
+    getMessage: (sender, recipient) => getMessagePromise(sender, recipient),
+
     getCode: (u_id, t = 'T') => doQuery(`SELECT code FROM CODES WHERE user_id=${u_id} AND temporary='${t}';`),
+
+    getNotifications: (u, uu) => {
+        /*let x = doQuery(`SELECT id FROM Users WHERE username='${u}'`).then(user_1_id => {
+            doQuery(`SELECT id FROM Users WHERE username='${uu}'`).then(user_2_id => {
+                doQuery(`SELECT * FROM Notifications WHERE user_1_id=${user_1_id[0].id} AND user_2_id=${user_2_id[0].id};`)
+            })
+        })*/
+        return doQuery(`SELECT * FROM Notifications;`);
+    },
+
     addUser: (l, p, u) => doQuery(`INSERT INTO Users (login, password, username, activated) VALUES('${l}','${p}','${u}','F');`),
+
     addMessage: (sender, recipient, c, d) => {
-        doQuery(`SELECT id FROM Users WHERE username='${sender}'`).then(sender_id => {
+        return doQuery(`SELECT id FROM Users WHERE username='${sender}'`).then(sender_id => {
             doQuery(`SELECT id FROM Users WHERE username='${recipient}'`).then(recipient_id => {
                 doQuery(`INSERT INTO Messages (sender_id, recipient_id, content, m_date) VALUES(${sender_id[0].id},${recipient_id[0].id},'${c}','${d}');`)
             })
-        })
+        }) //RETURN TODO
     },
+
     addCode: (c, u, t = 'T') => doQuery(`SELECT id FROM USERS WHERE username='${u}';`).then((u_id) => {
         doQuery(`INSERT INTO CODES (code, user_id,temporary) VALUES ('${c}',${u_id[0].id},'${t}');`)
     }),
+
+    addNotification: (u, uu, t = "FRIEND_REQUEST") => {
+        return doQuery(`SELECT id FROM Users WHERE username='${u}'`).then(user_1_id => {
+            doQuery(`SELECT id FROM Users WHERE username='${uu}'`).then(user_2_id => {
+                doQuery(`INSERT INTO Notifications (user_1_id, user_2_id, type) VALUES(${user_1_id[0].id}, ${user_2_id[0].id}, '${t}');`)
+            })
+        })
+    },
+
+    addFriendship: (u, uu) => {
+        return doQuery(`SELECT id FROM Users WHERE username='${u}'`).then(user_1_id => {
+            doQuery(`SELECT id FROM Users WHERE username='${uu}'`).then(user_2_id => {
+                doQuery(`INSERT INTO Friendships (user_1_id, user_2_id) VALUES(${user_1_id[0].id}, ${user_2_id[0].id});`)
+            })
+        })
+    },
+
     deleteCode: (code, t = 'T') => doQuery(`DELETE FROM CODES WHERE code=${code} AND temporary='${t}';`),
-    getMessage: (sender, recipient) => getMessagePromise(sender, recipient),
-    activateAccount: (u) => doQuery(`UPDATE USERS SET activated='T' WHERE username='${u}';`),
-    changePassword: (u, p) => doQuery(`SELECT id FROM USERS WHERE username='${u}';`).then((u_id) => {
+
+    activateUser: (u) => doQuery(`UPDATE USERS SET activated='T' WHERE username='${u}';`),
+    changePass: (u, p) => doQuery(`SELECT id FROM USERS WHERE username='${u}';`).then((u_id) => {
         doQuery(`UPDATE USERS SET password='${p}' WHERE id=${u_id[0].id};`)
-    })
+    }),
+
+    deleteFriend: (u, uu) => {
+        return doQuery(`SELECT id FROM Users WHERE username='${u}'`).then(user_1_id => {
+            doQuery(`SELECT id FROM Users WHERE username='${uu}'`).then(user_2_id => {
+                doQuery(`DELETE FROM Friendships WHERE user_1_id=${user_1_id[0].id} AND user_2_id=${user_2_id[0].id};`)
+            })
+        })
+    },
+    deleteNotification: (u, uu) => {
+        return doQuery(`SELECT id FROM Users WHERE username='${u}'`).then(user_1_id => {
+            doQuery(`SELECT id FROM Users WHERE username='${uu}'`).then(user_2_id => {
+                doQuery(`DELETE FROM Notifications WHERE user_1_id=${user_1_id[0].id} AND user_2_id=${user_2_id[0].id};`)
+            })
+        })
+    }
 }

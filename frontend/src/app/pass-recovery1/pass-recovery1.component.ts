@@ -10,7 +10,7 @@ import { UserService } from 'src/services/user.service';
 })
 
 export class PassRecovery1Component implements OnInit {
-  activeUser: string;
+  recoveryUsername: string;
   code: string = '123456';
   errorTxt: string = ''
 
@@ -18,18 +18,20 @@ export class PassRecovery1Component implements OnInit {
     private db: DbService,
     private router: Router) { }
 
+    //TO DO TRANSLATIONS STRINGS
+
   ngOnInit(): void {
     console.log("Regen verification(Regen Password Phase #2) component inited, xdd....");
-    this.uS.activeUserState.subscribe(username => this.activeUser = username);//ACTIVE USER ERROR
+    this.uS.recoveryUsernameState.subscribe(username => this.recoveryUsername = username);//ACTIVE USER ERROR
   }
 
   onConfirmActivationButtonClick(): void {
-    this.db.getCode(this.activeUser, this.code).subscribe({
+    this.db.getCode(this.recoveryUsername, this.code).subscribe({
       next: (data: any) => { },
       error: (err: any) => console.error(`Error: ${err} `),
       complete: () => {
         console.log("Verfication has been completed, :D")
-        this.db.deleteCode(this.code).subscribe({
+        this.db.delCode(this.code).subscribe({
           next: (data: any) => { },
           error: (err: any) => console.error(`Error: ${err} `),
           complete: () => {

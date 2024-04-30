@@ -24,6 +24,8 @@ import { ActivationComponent } from './activation/activation.component';
 import { PassRecoveryComponent } from './pass-recovery/pass-recovery.component';
 import { PassRecovery1Component } from './pass-recovery1/pass-recovery1.component';
 import { PassRecovery2Component } from './pass-recovery2/pass-recovery2.component';
+import { NotificationListComponent } from './notification/notification-list.component';
+import { AddFriendComponent } from './add-friend/add-friend.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { PassRecovery2Component } from './pass-recovery2/pass-recovery2.componen
     ActivationComponent,
     PassRecoveryComponent,
     PassRecovery1Component,
-    PassRecovery2Component
+    PassRecovery2Component,
+    NotificationListComponent,
+    AddFriendComponent
   ],
   imports: [
     BrowserModule,

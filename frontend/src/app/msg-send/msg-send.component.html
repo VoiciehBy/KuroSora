@@ -1,13 +1,13 @@
-<div class="input-group">
+<div *ngIf="activeRecipient != undefined && activeRecipient != ''" class="input-group">
     <div *ngIf="errorTxt != ''" class="row alert alert-danger errorTxt" role="alert">
         {{errorTxt}}
     </div>
     <div class="form-floating">
-        <textarea id="inputMessage" class="form-control" type="text" placeholder="Podaj treść wiadomości..."
-            aria-label="Input Text Addon" aria-describedby="inputMessage" [(ngModel)]="msgTxt" maxlength="255">
+        <textarea id="inputMessageField" class="form-control" type="text" placeholder="Podaj treść wiadomości..."
+            aria-label="Input Text Addon" aria-describedby="inputMessageField" [(ngModel)]="msgTxt" maxlength="255">
       {{msgTxt}}
     </textarea>
-        <label for="inputMessage">
+        <label for="inputMessageField">
             {{SENT_MESSAGE_TO_STRING}} {{activeRecipient}}...
         </label>
     </div>
@@ -20,7 +20,7 @@
             </button>
         </div>
         <div class="modal fade" id="emojiModal" tabIndex="-1" aria-labelledby="Emoji Modal">
-            <div class="modal-dialog" style="width:fit-content;height:fit-content;">
+            <div id="emojiModalDialog" class="modal-dialog">
                 <div class="modal-content">
                     <div class="text-end">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

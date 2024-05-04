@@ -23,8 +23,9 @@
             </div>
             <div class="input-group justify-content-center">
                 <span class="input-group-text">
-                    <input class="form-control" type="password" placeholder="Powtórz hasło" aria-label="Password 1 Field Addon"
-                        aria-describedby="password_1FieldAddon" [(ngModel)]="password_1" required>
+                    <input class="form-control" type="password" placeholder="Powtórz hasło"
+                        aria-label="Password 1 Field Addon" aria-describedby="password_1FieldAddon"
+                        [(ngModel)]="password_1" required>
                 </span>
             </div>
             <div class="input-group justify-content-center">
@@ -36,12 +37,11 @@
             </div>
             <div class="input-group justify-content-center">
                 <span class="input-group-text">
-                    <input class="form-control" type="text" placeholder="Adres e-mail"
-                        aria-label="Email Field Addon" aria-describedby="emailFieldAddon" [(ngModel)]="email"
-                        required>
+                    <input class="form-control" type="text" placeholder="Adres e-mail" aria-label="Email Field Addon"
+                        aria-describedby="emailFieldAddon" [(ngModel)]="email" (keydown.enter)="signUp()" required>
                 </span>
             </div>
-            <button type="button" class="btn btn-success bg-gradient submitButton" (click)="signUp();">
+            <button class="btn btn-success bg-gradient submitButton" type="button" (click)="signUp();">
                 {{REGISTER_BTN_STRING}}
             </button>
         </form>

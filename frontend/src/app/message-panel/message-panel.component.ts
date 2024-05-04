@@ -30,13 +30,15 @@ export class MessagePanelComponent implements OnInit {
     this.messages = [];
 
     setInterval(() => {
-      this.uS.setMsgUpdate(true)
+      if (this.activeUser != undefined && this.activeUser != '')
+        this.uS.setMsgUpdate(true)
       this.showSpinner = true;
-    }, 1500);
+    }, 2000);
 
     setInterval(() => {
-      this.updateMessages()
-    }, 1000);
+      if (this.activeUser != undefined && this.activeUser != '')
+        this.updateMessages()
+    }, 2500);
   }
 
   addMessagesToTmp(A: string, B: string) {

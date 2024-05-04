@@ -206,15 +206,27 @@ httpServer.on("request", (req, res) => {
                 }
             }
             else if (pathname === "/notifications") {
-                if (params.has("from") && params.has("to")) {
-                    let username = params.get("from");
-                    let username_1 = params.get("to");
-                    db.getNotifications(username, username_1).then(result => {
+                if (params.has("to")) {
+                    let username = params.get("to");
+                    db.getNotifications(username).then(result => {
                         console.log("Got notifications...");
                         res.writeHead(200, http.STATUS_CODES[200]);
                         res.end(JSON.stringify(result));
                     }).catch((err) => {
                         console.error("Getting notifications failed...");
+                        res.end(`{"error": "${err}"}`);
+                    })
+                }
+            }
+            else if (pathname === "/friends") {
+                if (params.has("of")) {
+                    let username = params.get("of");
+                    db.getFriends(username).then(result => {
+                        console.log("Got friends, :D...");
+                        res.writeHead(200, http.STATUS_CODES[200]);
+                        res.end(JSON.stringify(result));
+                    }).catch((err) => {
+                        console.error("Getting friend failed, :(...");
                         res.end(`{"error": "${err}"}`);
                     })
                 }
@@ -426,7 +438,7 @@ httpServer.on("request", (req, res) => {
                         if (result.length != 0) {
                             db.deleteFriend(username, username1).then(() => {
                                 console.log(`Friendship was ended...`);
-                                res.writeHead(201, http.STATUS_CODES[201]);
+                                res.writeHead(200, http.STATUS_CODES[200]);
                                 res.end(`{"res": "Friendship was ended..."}`);
                             }).catch((err) => {
                                 console.error(`Ending friendship failed...`);

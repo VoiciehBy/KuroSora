@@ -37,8 +37,12 @@ export class DbService {
     return this.http.get(`${this.host}/rec_code?username=${username}&code=${code}`);
   }
 
-  getNotifications(username: string = '%', username_1: string): Observable<any> {
-    return this.http.get(`${this.host}/notifications?from=${username}&to=${username_1}`);
+  getNotifications(username: string): Observable<any> {
+    return this.http.get(`${this.host}/notifications?to=${username}`);
+  }
+
+  getFriends(username: string): Observable<any> {
+    return this.http.get(`${this.host}/friends?of=${username}`);
   }
 
   createNewAccount(login: string, username: string, password: string): Observable<any> {
@@ -77,7 +81,7 @@ export class DbService {
   activateAccount(username: string): Observable<any> {
     return this.http.patch(`${this.host}/user?username=${username}`, {})
   }
-  
+
   changePassword(username: string, password: string): Observable<any> {
     return this.http.patch(`${this.host}/user?username=${username}&password=${password}`, {})
   }

@@ -12,10 +12,11 @@
             <div class="input-group justify-content-center">
                 <span class="input-group-text">
                     <input class="form-control" type="text" placeholder="Kod weryfikacyjny"
-                        aria-label="Code Field Addon" aria-describedby="codeFieldAddon" [(ngModel)]="code" required>
+                        aria-label="Code Field Addon" aria-describedby="codeFieldAddon" [(ngModel)]="code"
+                        (keydown.enter)="onConfirmActivationButtonClick()" required>
                 </span>
             </div>
-            <button type="button" class="btn btn-success bg-gradient submitButton"
+            <button class="btn btn-success bg-gradient submitButton" type="button"
                 (click)="onConfirmActivationButtonClick();">
                 Potwierdź zmianę hasła kodem weryfikacyjnym
             </button>

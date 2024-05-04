@@ -31,12 +31,11 @@ CREATE TABLE Messages(
 ALTER TABLE Messages AUTO_INCREMENT = 1;
 
 CREATE TABLE Friendships(
-    id int AUTO_INCREMENT,
     user_1_id int,
     user_2_id int,
-    CONSTRAINT friendships_pk PRIMARY KEY(id),
     CONSTRAINT friendships_user_1_id_users_id_fk FOREIGN KEY(user_1_id) REFERENCES Users(id),
-    CONSTRAINT friendships_user_2_id_users_id_fk FOREIGN KEY(user_2_id) REFERENCES Users(id)
+    CONSTRAINT friendships_user_2_id_users_id_fk FOREIGN KEY(user_2_id) REFERENCES Users(id),
+    CONSTRAINT friendships_pk PRIMARY KEY(user_1_id, user_2_id)
 );
 
 ALTER TABLE Friendships AUTO_INCREMENT = 1;

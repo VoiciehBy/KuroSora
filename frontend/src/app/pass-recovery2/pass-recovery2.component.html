@@ -19,12 +19,12 @@
                 <span class="input-group-text">
                     <input class="form-control" type="password" placeholder="Powtórz hasło"
                         aria-label="Password 1 Field Addon" aria-describedby="password_1FieldAddon"
-                        [(ngModel)]="password_1" required>
+                        [(ngModel)]="password_1" (keydown.enter)="onConfirmButtonClick()" required>
                 </span>
             </div>
             <div class="input-group justify-content-center">
             </div>
-            <button type="button" class="btn btn-success bg-gradient submitButton" (click)="onConfirmButtonClick();">
+            <button class="btn btn-success bg-gradient submitButton" type="button" (click)="onConfirmButtonClick();">
                 <img src="../../node_modules/bootstrap-icons/icons/check-lg.svg" width="30" height="30"
                     alt="Large Check Icon">
             </button>

@@ -18,10 +18,11 @@
             <div class="input-group justify-content-center">
                 <span class="input-group-text">
                     <input class="form-control" type="password" placeholder="Hasło" aria-label="Password Field Addon"
-                        aria-describedby="passwordFieldAddon" [(ngModel)]="password" required>
+                        aria-describedby="passwordFieldAddon" [(ngModel)]="password" (keydown.enter)="signIn()"
+                        required>
                 </span>
             </div>
-            <button type="button" class="btn btn-success bg-gradient submitButton" (click)="signIn();">
+            <button class="btn btn-success bg-gradient submitButton" type="button" (click)="signIn();">
                 {{LOGIN_BTN_STRING}}
             </button>
         </form>

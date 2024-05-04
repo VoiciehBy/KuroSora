@@ -19,7 +19,7 @@ export class FriendListComponent implements OnInit {
   FRIENDS_STRING: string = FRIENDS_STRING;
   activeUser: string = '';
   activeRecipient: string = '';
-  friends: user[] = [];//this.users = [new user("Wielki Elektronik")];
+  friends: user[] = [];
   isMsgNeedToBeUpdated: boolean = false;
 
   constructor(private uS: UserService,
@@ -38,7 +38,7 @@ export class FriendListComponent implements OnInit {
   }
 
   updateFriendList(): void {
-    this.db.getUsers().subscribe({
+    this.db.getFriends(this.activeUser).subscribe({
       next: (data: any) => {
         this.friends = [];
         for (let i = 0; i < data.length; i++) {
@@ -48,21 +48,25 @@ export class FriendListComponent implements OnInit {
         }
       },
       error: (err: any) => console.error(`Error: ${err} `),
-      complete: () => console.log("Friend list updated, :D")
+      complete: () => {
+        console.log("Friend list updated, :D")
+        if (this.friends.length != 0)
+          this.uS.setActiveRecipient(this.friends[0].username);
+      }
     })
   }
 
   selectRecipient(username: string): void {
     for (let i = 0; i < this.friends.length; i++)
-      if (username != this.activeRecipient && this.friends[i].username == username) {
+      if (username != this.activeRecipient && this.friends[i].username === username) {
         this.uS.setActiveRecipient(this.friends[i].username);
         this.uS.setMsgUpdate(true);
-        this.updateFriendList();
         return;
       }
   }
 
   onAddFriendButtonClick(): void {
+    this.uS.setMsgUpdate(false);
     this.router.navigate(["add_friend"], {});
   }
 }

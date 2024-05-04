@@ -1,5 +1,10 @@
-#inputMessage {
+#inputMessageField {
     width: 100%;
     height: auto;
     resize: none;
+}
+
+#emojiModalDialog {
+    width: fit-content;
+    height: fit-content;
 }

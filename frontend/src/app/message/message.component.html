@@ -1,4 +1,4 @@
-<div *ngIf="sender == activeUser;" class="row" id="firstRow">
+<div *ngIf="sender == activeUser;" class="row firstRow">
     <div class="col-4 card text-wrap messageReceived">
         <h6 class="card-title text-start">
             {{content}}
@@ -17,7 +17,7 @@
     </div>
     <div class="col-6"></div>
 </div>
-<div class="row" id="secondRow">
+<div class="row secondRow">
     <div class="col-6"></div>
     <div *ngIf="sender != activeUser" class="col-4 card text-wrap messageSent">
         <div class="card-title text-end">

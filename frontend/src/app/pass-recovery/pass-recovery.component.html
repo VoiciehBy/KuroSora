@@ -25,11 +25,11 @@
             <div class="input-group justify-content-center">
                 <span class="input-group-text">
                     <input class="form-control" type="text" placeholder="Kod odzyskiwania"
-                        aria-label="Recovery Code Field Addon" aria-describedby="recoveryCodeFieldAddon" [(ngModel)]="recoveryCode"
-                        required>
+                        aria-label="Recovery Code Field Addon" aria-describedby="recoveryCodeFieldAddon"
+                        [(ngModel)]="recoveryCode" (keydown.enter)="onRegenPassBtnClick()" required>
                 </span>
             </div>
-            <button type="button" class="btn btn-success bg-gradient submitButton" (click)="onRegenPassBtnClick();">
+            <button class="btn btn-success bg-gradient submitButton" type="button" (click)="onRegenPassBtnClick();">
                 {{REMIND_PASSWORD_BTN_STRING}}
             </button>
         </form>

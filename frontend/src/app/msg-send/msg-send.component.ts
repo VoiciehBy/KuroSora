@@ -49,7 +49,7 @@ export class MsgSendComponent implements OnInit {
       },
       error: (err) => console.error(`Error: ${err} `),
       complete: () => {
-        if (this.isUserActivated)
+        if (this.isUserActivated && this.msgTxt.length != 0)
           this.sendMessage().subscribe({
             next: (data) => console.log(data),
             error: (err) => console.error(`Error: ${err} `),
@@ -58,7 +58,10 @@ export class MsgSendComponent implements OnInit {
             }
           })
         else {
-          this.errorTxt = this.ACCOUNT_IS_NOT_ACTIVE;
+          if (this.isUserActivated == false)
+            this.errorTxt = this.ACCOUNT_IS_NOT_ACTIVE;
+          else if (this.msgTxt.length == 0)//REFACTOR TODO
+            this.errorTxt = "PLACEHOLDER"
           setTimeout(() => { this.errorTxt = '' }, 3000);
         }
         this.msgTxt = '';

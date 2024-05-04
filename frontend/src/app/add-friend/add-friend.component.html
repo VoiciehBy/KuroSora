@@ -13,10 +13,10 @@
                 <span class="input-group-text">
                     <input class="form-control" type="text" placeholder="Nazwa użytkownika"
                         aria-label="Username Field Addon" aria-describedby="usernameFieldAddon" [(ngModel)]="username"
-                        required>
+                        (keydown.enter)="onFindButtonClick()" required>
                 </span>
             </div>
-            <button type="button" class="btn btn-success bg-gradient submitButton" (click)="onFindButtonClick();">
+            <button class="btn btn-success bg-gradient submitButton" type="button" (click)="onFindButtonClick();">
                 {{SEND_USER_REQUEST_BTN_STRING}}
             </button>
         </form>

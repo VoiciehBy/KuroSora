@@ -27,10 +27,14 @@ export class NavbarComponent implements OnInit {
   }
 
   onNotificationButtonClick(): void {
+    this.uS.setActiveRecipient('');
+    this.uS.setMsgUpdate(false);
     this.router.navigate(["notifications"], {});
   }
 
   onActivationButtonClick(): void {
+    this.uS.setActiveRecipient('');
+    this.uS.setMsgUpdate(false);
     this.router.navigate(["activate"], {});
   }
 
@@ -42,6 +46,7 @@ export class NavbarComponent implements OnInit {
     this.uS.setActiveUser('');
     this.uS.setActiveRecipient('');
     this.uS.setActiveUserActivationState(false);
+    this.uS.setMsgUpdate(false);
     this.router.navigate(["login"], {});
   }
 }

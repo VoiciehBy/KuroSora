@@ -3,6 +3,7 @@ import { notification } from "../../notification";
 import {
   HOSTNAME,
   NOTIFICATIONS_STRING,
+  NO_NOTIFICATION_STRING
 } from 'src/constants';
 import { UserService } from 'src/services/user.service';
 import { DbService } from 'src/services/db.service';
@@ -16,6 +17,7 @@ import { DbService } from 'src/services/db.service';
 export class NotificationListComponent implements OnInit {
   host: string = HOSTNAME;
   NOTIFICATIONS_STRING: string = NOTIFICATIONS_STRING;
+  NO_NOTIFICATION_STRING: string = NO_NOTIFICATION_STRING;
   activeUser: string = '';
   activeRecipient: string = '';
   notifications: notification[] = [];
@@ -35,11 +37,10 @@ export class NotificationListComponent implements OnInit {
   }
 
   updateNotificationList(): void {
-    this.db.getNotifications('%', this.activeUser).subscribe({
+    this.db.getNotifications(this.activeUser).subscribe({
       next: (data: any) => {
         this.notifications = [];
-        let nn = data.length;
-        for (let i = 0; i < nn; i++) {
+        for (let i = 0; i < data.length; i++) {
           this.db.getUserById(data[i].user_1_id).subscribe({
             next: (result) => {
               let n: notification = new notification(data[i].id, result[0].username, this.activeUser);
@@ -58,15 +59,12 @@ export class NotificationListComponent implements OnInit {
     })
   }
 
-  onAcceptButtonClicked(): void {
-    console.log(this.notifications[0].from)
+  onAcceptButtonClicked(i: number): void {
     this.db.addFriend(this.notifications[0].from, this.activeUser).subscribe({
       next: (data) => { },
       error: (err: any) => console.error(err),
       complete: () => {
         console.log("Friend request successfull...");
-        console.log(this.notifications[0].from)
-        console.log(this.activeUser) //SOME ERROR HERE
         this.db.delNotification(this.notifications[0].from, this.activeUser).subscribe({
           next: () => { },
           error: (err: any) => console.error(`Error: ${err}`),
@@ -75,7 +73,8 @@ export class NotificationListComponent implements OnInit {
       }
     })
   }
-  onDeclineButtonClicked(): void {
+
+  onDeclineButtonClicked(i: number): void {
     this.db.delNotification(this.notifications[0].from, this.activeUser).subscribe({
       next: () => { },
       error: (err: any) => console.error(`Error: ${err}`),

@@ -23,6 +23,7 @@ export class NavbarComponent implements OnInit {
   }
 
   onHomeButtonClick(): void {
+    this.uS.setFriendListUpdate(true);
     this.router.navigate([""], {});
   }
 

@@ -47,6 +47,7 @@ export class ActivationComponent {
               complete: () => {
                 console.log("Temporary verification code has been deleted, :D...")
                 this.uS.setActiveUserActivationState(true);
+                this.uS.setFriendListUpdate(true);
               }
             })
           }

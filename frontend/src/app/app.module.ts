@@ -26,6 +26,7 @@ import { PassRecovery1Component } from './pass-recovery1/pass-recovery1.componen
 import { PassRecovery2Component } from './pass-recovery2/pass-recovery2.component';
 import { NotificationListComponent } from './notification/notification-list.component';
 import { AddFriendComponent } from './add-friend/add-friend.component';
+import { ContextMenuComponent } from './context-menu/context-menu.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { AddFriendComponent } from './add-friend/add-friend.component';
     PassRecovery1Component,
     PassRecovery2Component,
     NotificationListComponent,
-    AddFriendComponent
+    AddFriendComponent,
+    ContextMenuComponent
   ],
   imports: [
     BrowserModule,

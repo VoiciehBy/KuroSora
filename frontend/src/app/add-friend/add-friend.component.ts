@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
-  SEND_USER_REQUEST_BTN_STRING
+  ADD_FRIEND_STRING
 } from 'src/constants';
 import { DbService } from 'src/services/db.service';
 import { UserService } from 'src/services/user.service';
@@ -15,7 +15,7 @@ import { UserService } from 'src/services/user.service';
 })
 
 export class AddFriendComponent implements OnInit {
-  SEND_USER_REQUEST_BTN_STRING: string = SEND_USER_REQUEST_BTN_STRING;
+  ADD_FRIEND_STRING: string = ADD_FRIEND_STRING;
   activeUser: string;
   errorTxt: string = '';
   username: string = '';
@@ -35,12 +35,19 @@ export class AddFriendComponent implements OnInit {
         setTimeout(() => { this.errorTxt = '' }, 3000);
       },
       complete: () => {
-        this.db.sendNotification(this.activeUser, this.username).subscribe({
-          next: () => { },
+        this.db.getFriendship(this.activeUser, this.username).subscribe({
+          next: (data) => { if (data.length != 0) return; },
           error: (err: any) => console.error(`Error: ${err} `),
           complete: () => {
-            console.log("Notification was added successfully, :D")
-            this.router.navigate([""]);
+            console.log("XD, :D");
+            this.db.sendNotification(this.activeUser, this.username).subscribe({
+              next: () => { },
+              error: (err: any) => console.error(`Error: ${err} `),
+              complete: () => {
+                console.log("Notification was added successfully, :D")
+                this.router.navigate([""]);
+              }
+            })
           }
         })
       },

@@ -9,6 +9,8 @@ export class UserService {
     private messageUpdateSubject = new BehaviorSubject<boolean>(true);
 
     private recoveryUsernameSubject = new BehaviorSubject<string>("");
+    
+    private friendUpdateSubject = new BehaviorSubject<boolean>(false);
 
     activeUserState: Observable<string> = this.activeUserSubject.asObservable();
     activeUserActivationState: Observable<boolean> = this.activeUserActivationSubject.asObservable();
@@ -17,6 +19,8 @@ export class UserService {
 
     recoveryUsernameState: Observable<string> = this.recoveryUsernameSubject.asObservable();
 
+    friendUpdateState: Observable<boolean> = this.friendUpdateSubject.asObservable();
+    
     constructor() { }
 
     setActiveUser(username: string) {
@@ -37,5 +41,9 @@ export class UserService {
 
     setRecoveryUsername(username: string) {
         this.recoveryUsernameSubject.next(username);
+    }
+
+    setFriendListUpdate(b : boolean){
+        this.friendUpdateSubject.next(b);
     }
 }

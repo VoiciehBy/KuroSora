@@ -114,6 +114,45 @@ function getFriendsPromise(u) {
     })
 }
 
+function getFriendshipPromise(u, uu) {
+    return new Promise((resolve, reject) => {
+        doQuery(`SELECT id FROM Users WHERE username='${u}';`)
+            .then(r => {
+                if (r[0] === undefined) {
+                    reject("Given user not found...")
+                    return
+                }
+                doQuery(`SELECT id FROM Users WHERE username='${uu}';`)
+                    .then(rr => {
+                        if (rr[0] === undefined) {
+                            reject("Given user not found...")
+                            return
+                        }
+                        let i = r[0].id;
+                        let ii = rr[0].id;
+                        if (i <= ii)
+                            doQuery(`SELECT user_1_id, user_2_id FROM Friendships WHERE user_1_id=${i} AND user_2_id=${ii};`)
+                                .then((rows) => {
+                                    console.log(rows)
+                                    resolve(rows)
+                                }).catch((err) => {
+                                    console.error(err)
+                                    reject(err)
+                                })
+                        else
+                            doQuery(`SELECT user_1_id, user_2_id FROM Friendships WHERE user_1_id=${ii} AND user_2_id=${i};`)
+                                .then((rows) => {
+                                    console.log(rows)
+                                    resolve(rows)
+                                }).catch((err) => {
+                                    console.error(err)
+                                    reject(err)
+                                })
+                    })
+            })
+    })
+}
+
 module.exports = {
     test: () => doQuery(`SELECT id FROM Users WHERE id='1';`),
     getUsers: () => doQuery("SELECT username, activated FROM Users;"),
@@ -124,6 +163,7 @@ module.exports = {
     getCode: (u_id, t = 'T') => doQuery(`SELECT code FROM CODES WHERE user_id=${u_id} AND temporary='${t}';`),
     getNotifications: (u) => getNotificationsPromise(u),
     getFriends: (u) => getFriendsPromise(u),
+    getFriendship: (u, uu) => getFriendshipPromise(uu),
     addUser: (l, p, u) => doQuery(`INSERT INTO Users (login, password, username, activated) VALUES('${l}','${p}','${u}','F');`),
     addMessage: (sender, recipient, c, d) => {
         return doQuery(`SELECT id FROM Users WHERE username='${sender}'`).then(sender_id => {
@@ -145,7 +185,12 @@ module.exports = {
     addFriendship: (u, uu) => {
         return doQuery(`SELECT id FROM Users WHERE username='${u}'`).then(user_1_id => {
             doQuery(`SELECT id FROM Users WHERE username='${uu}'`).then(user_2_id => {
-                doQuery(`INSERT INTO Friendships (user_1_id, user_2_id) VALUES(${user_1_id[0].id}, ${user_2_id[0].id});`)
+                let i = user_1_id[0].id;
+                let ii = user_2_id[0].id;
+                if (i <= ii)
+                    doQuery(`INSERT INTO Friendships (user_1_id, user_2_id) VALUES(${i}, ${ii});`);
+                else
+                    doQuery(`INSERT INTO Friendships (user_1_id, user_2_id) VALUES(${ii}, ${i});`);
             })
         })
     },
@@ -157,7 +202,12 @@ module.exports = {
     deleteFriend: (u, uu) => {
         return doQuery(`SELECT id FROM Users WHERE username='${u}'`).then(user_1_id => {
             doQuery(`SELECT id FROM Users WHERE username='${uu}'`).then(user_2_id => {
-                doQuery(`DELETE FROM Friendships WHERE user_1_id=${user_1_id[0].id} AND user_2_id=${user_2_id[0].id};`)
+                let i = user_1_id[0].id;
+                let ii = user_2_id[0].id;
+                if (i <= ii)
+                    doQuery(`DELETE FROM Friendships WHERE user_1_id=${i} AND user_2_id=${ii};`)
+                else
+                    doQuery(`DELETE FROM Friendships WHERE user_1_id=${ii} AND user_2_id=${i};`)
             })
         })
     },

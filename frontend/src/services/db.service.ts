@@ -45,6 +45,10 @@ export class DbService {
     return this.http.get(`${this.host}/friends?of=${username}`);
   }
 
+  getFriendship(username : string, username_1: string) : Observable<any>{
+    return this.http.get(`${this.host}/friendship?u=${username}&uu=${username_1}`);
+  }
+
   createNewAccount(login: string, username: string, password: string): Observable<any> {
     return this.http.put(`${this.host}/new_user?login=${login}&username=${username}&password=${password}`, {});
   }
@@ -92,5 +96,9 @@ export class DbService {
 
   delNotification(username: string, username_1: string): Observable<any> {
     return this.http.delete(`${this.host}/notification?from=${username}&to=${username_1}`, {});
+  }
+
+  delFriendship(username: string, username_1: string) : Observable<any> {
+    return this.http.delete(`${this.host}/friend?u=${username}&uu=${username_1}`, {});
   }
 }

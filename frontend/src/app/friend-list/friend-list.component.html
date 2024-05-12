@@ -8,16 +8,20 @@
                 alt="Filled Plus Person Icon">
         </button>
     </div>
-    <div *ngFor="let friend of friends;" (click)="selectRecipient(friend.username)">
-        <div *ngIf="friend.username == activeRecipient; else elseBlock">
-            <a class="list-group-item list-group-item-action list-group-item-warning rounded">
+    <div *ngFor="let friend of friends;">
+        <div *ngIf="friend.username === activeRecipient; else elseBlock">
+            <a class="list-group-item list-group-item-action list-group-item-warning rounded"
+                (click)="selectRecipient(friend.username)" (contextmenu)="onRightButtonClick($event)">
                 {{friend.username}}
             </a>
         </div>
         <ng-template #elseBlock>
-            <a class="list-group-item list-group-item-action list-group-item-success rounded">
+            <a class="list-group-item list-group-item-action list-group-item-success rounded"
+                (click)="selectRecipient(friend.username)" (contextmenu)="onRightButtonClick($event)">
                 {{friend.username}}
             </a>
         </ng-template>
     </div>
+    <app-context-menu [visible]="visible" [ctxMenuUsername]="ctxMenuUsername"
+        [activeUser]="activeUser"></app-context-menu>
 </div>

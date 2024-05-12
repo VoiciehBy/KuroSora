@@ -61,6 +61,7 @@ export class LoginComponent implements OnInit {
       },
       complete: () => {
         console.log("Signing in completed, :D");
+        this.uS.setFriendListUpdate(true);
         this.router.navigate([""]);
       }
     })

@@ -231,6 +231,21 @@ httpServer.on("request", (req, res) => {
                     })
                 }
             }
+            else if (pathname === "/friendship") {
+                if (params.has("u") && params.has("uu")) {
+                    let username = params.get("u");
+                    let username_1 = params.get("uu");
+                    db.getFriendship(username,username_1).then(result => {
+                        console.log("Got friendship, :D...");
+                        res.writeHead(200, http.STATUS_CODES[200]);
+                        res.end(JSON.stringify(result));
+                    }).catch((err) => {
+                        console.error(err);
+                        console.error("Getting frienship failed, :(...");
+                        res.end(`{"error": "${err}"}`);
+                    })
+                }
+            }
             else {
                 console.error("Bad request...")
                 res.writeHead(400, http.STATUS_CODES[400])
@@ -433,7 +448,7 @@ httpServer.on("request", (req, res) => {
             else if (pathname === "/friend") {
                 if (params.has("u") && params.has("uu")) {
                     let username = params.get("u");
-                    let username1 = params.get("uu");
+                    let username1 = params.get("uu").trim();
                     db.getUser(username).then((result) => {
                         if (result.length != 0) {
                             db.deleteFriend(username, username1).then(() => {

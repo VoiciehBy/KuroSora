@@ -3,7 +3,8 @@ import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 import {
   SENT_MESSAGE_TO_STRING,
-  ACCOUNT_IS_NOT_ACTIVATED
+  ACCOUNT_IS_NOT_ACTIVATED,
+  MESSAGE_EMPTY_STRING
 } from 'src/constants';
 import { DbService } from 'src/services/db.service';
 
@@ -16,6 +17,7 @@ import { DbService } from 'src/services/db.service';
 export class MsgSendComponent implements OnInit {
   SENT_MESSAGE_TO_STRING: string = SENT_MESSAGE_TO_STRING;
   ACCOUNT_IS_NOT_ACTIVE: string = ACCOUNT_IS_NOT_ACTIVATED;
+  MESSAGE_EMPTY_STRING: string = MESSAGE_EMPTY_STRING;
   activeUser: string;
   activeRecipient: string;
   msgTxt: string = '';
@@ -61,7 +63,7 @@ export class MsgSendComponent implements OnInit {
           if (this.isUserActivated == false)
             this.errorTxt = this.ACCOUNT_IS_NOT_ACTIVE;
           else if (this.msgTxt.length == 0)//REFACTOR TODO
-            this.errorTxt = "PLACEHOLDER"
+            this.errorTxt = MESSAGE_EMPTY_STRING;
           setTimeout(() => { this.errorTxt = '' }, 3000);
         }
         this.msgTxt = '';

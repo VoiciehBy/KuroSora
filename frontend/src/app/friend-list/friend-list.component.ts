@@ -21,6 +21,10 @@ export class FriendListComponent implements OnInit {
   activeRecipient: string = '';
   friends: user[] = [];
   isMsgNeedToBeUpdated: boolean = false;
+  isFriendListNeedToBeUpdated: boolean = true;
+
+  visible: boolean = false;
+  ctxMenuUsername: string = '';
 
   constructor(private uS: UserService,
     private db: DbService, private router: Router) { }
@@ -29,8 +33,9 @@ export class FriendListComponent implements OnInit {
     console.log("Friend list component inited, xD...")
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
-
-    if (this.activeUser != '') {
+    this.uS.friendUpdateState.subscribe(b => this.isFriendListNeedToBeUpdated = b);
+    
+    if (this.activeUser != '' && this.isFriendListNeedToBeUpdated) {
       this.updateFriendList();
     }
 
@@ -52,6 +57,7 @@ export class FriendListComponent implements OnInit {
         console.log("Friend list updated, :D")
         if (this.friends.length != 0)
           this.uS.setActiveRecipient(this.friends[0].username);
+        this.uS.setFriendListUpdate(false);
       }
     })
   }
@@ -68,5 +74,18 @@ export class FriendListComponent implements OnInit {
   onAddFriendButtonClick(): void {
     this.uS.setMsgUpdate(false);
     this.router.navigate(["add_friend"], {});
+  }
+
+  onRightButtonClick(event: any): boolean {
+    console.log("A");
+    if (event.which === 3) {
+      this.visible = true;
+      this.ctxMenuUsername = event.target.innerHTML;
+    }
+    else {
+      this.visible = false;
+      this.ctxMenuUsername = '';
+    }
+    return false;
   }
 }

@@ -9,16 +9,17 @@ export class DbService {
   host: string = HOSTNAME;
   constructor(private http: HttpClient) { }
 
-  getUsers(): Observable<any> {
-    return this.http.get(`${this.host}/users`)
-  }
-
   getUser(username: string): Observable<any> {
     return this.http.get(`${this.host}/user?username=${username}`)
   }
 
-  getUserByHS(login: string, password: string): Observable<any> {
-    return this.http.get(`${this.host}/user?login=${login}&password=${password}`)
+  authUser(login: string, password: string): Observable<any> {
+    return this.http.post(`${this.host}/login`,
+      {
+        "login": login,
+        "password": password
+      }
+    )
   }
 
   getUserById(id: number): Observable<any> {
@@ -45,12 +46,16 @@ export class DbService {
     return this.http.get(`${this.host}/friends?of=${username}`);
   }
 
-  getFriendship(username : string, username_1: string) : Observable<any>{
+  getFriendship(username: string, username_1: string): Observable<any> {
     return this.http.get(`${this.host}/friendship?u=${username}&uu=${username_1}`);
   }
 
   createNewAccount(login: string, username: string, password: string): Observable<any> {
-    return this.http.put(`${this.host}/new_user?login=${login}&username=${username}&password=${password}`, {});
+    return this.http.put(`${this.host}/new_user`, {
+      "login": login,
+      "username": username,
+      "password": password
+    });
   }
 
   sendMessage(activeUser: string, activeRecipient: string, message: string): Observable<any> {
@@ -87,7 +92,10 @@ export class DbService {
   }
 
   changePassword(username: string, password: string): Observable<any> {
-    return this.http.patch(`${this.host}/user?username=${username}&password=${password}`, {})
+    return this.http.patch(`${this.host}/user_pass`, {
+      "username": username,
+      "password": password
+    })
   }
 
   delCode(code: string): Observable<any> {
@@ -98,7 +106,7 @@ export class DbService {
     return this.http.delete(`${this.host}/notification?from=${username}&to=${username_1}`, {});
   }
 
-  delFriendship(username: string, username_1: string) : Observable<any> {
+  delFriendship(username: string, username_1: string): Observable<any> {
     return this.http.delete(`${this.host}/friend?u=${username}&uu=${username_1}`, {});
   }
 }

@@ -24,6 +24,8 @@ export class NotificationListComponent implements OnInit {
   activeRecipient: string = '';
   notifications: notification[] = [];
 
+  isNotificationsNeedToBeUpdated: boolean = false;
+
   constructor(private uS: UserService,
     private db: DbService) { }
 
@@ -31,8 +33,9 @@ export class NotificationListComponent implements OnInit {
     console.log("Notfication list component inited, xD...")
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
+    this.uS.notificationUpdateState.subscribe(b => this.isNotificationsNeedToBeUpdated = b);
 
-    if (this.activeUser != '') {
+    if (this.activeUser != '' && this.isNotificationsNeedToBeUpdated) {
       this.notifications = [];
       this.updateNotificationList();
     }
@@ -43,21 +46,23 @@ export class NotificationListComponent implements OnInit {
       next: (data: any) => {
         this.notifications = [];
         for (let i = 0; i < data.length; i++) {
-          this.db.getUserById(data[i].user_1_id).subscribe({
+          this.db.getUserById(data[i].user_1_id).subscribe({ //TO DO REFACTOR
             next: (result) => {
               let n: notification = new notification(data[i].id, result[0].username, this.activeUser);
               if (n.from != this.activeUser)
                 this.notifications.push(n);
             },
             error: (err: any) => console.error(`Error: ${err} `),
-            complete: () => {
+            complete: () =>
               console.log("Notification list updated successfully, :D...")
-            }
           });
         }
       },
       error: (err: any) => console.error(`Error: ${err} `),
-      complete: () => console.log("Notification list updated, :D")
+      complete: () => {
+        console.log("Notification list updated, :D")
+        this.uS.setNotificationListUpdate(false);
+      }
     })
   }
 
@@ -70,7 +75,10 @@ export class NotificationListComponent implements OnInit {
         this.db.delNotification(this.notifications[0].from, this.activeUser).subscribe({
           next: () => { },
           error: (err: any) => console.error(`Error: ${err}`),
-          complete: () => console.log("Deleting friend request successfull...")
+          complete: () => {
+            console.log("Deleting friend request successfull...");
+            this.uS.setNotificationListUpdate(true);
+          }
         })
       }
     })

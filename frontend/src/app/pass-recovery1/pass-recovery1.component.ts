@@ -11,7 +11,7 @@ import { UserService } from 'src/services/user.service';
 
 export class PassRecovery1Component implements OnInit {
   recoveryUsername: string;
-  code: string = '123456';
+  code: string = '';
   errorTxt: string = ''
 
   constructor(private uS: UserService,

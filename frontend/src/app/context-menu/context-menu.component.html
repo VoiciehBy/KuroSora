@@ -6,7 +6,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="title text-dark">Usuwanie użytkownika z listy znajomych</h5>
+                    <h5 class="title text-dark text-wrap">Usuń użytkownika {{ctxMenuUsername}} z listy znajomych</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-wrap">
@@ -14,6 +14,9 @@
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group" role="group" aria-label="Button Group">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                            Anuluj
+                        </button>
                         <button class="btn btn-danger" type="button" (click)="deleteFriend();" data-bs-dismiss="modal">
                             Usuń znajomego
                         </button>

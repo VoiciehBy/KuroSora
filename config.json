@@ -8,7 +8,8 @@
         "hostname": "127.0.0.1",
         "port": 3000,
         "db_ok_html": "<!DOCTYPE html><head><title>KSHTTP Server</title></head><body><h1>DB Status: Ok</h1></body></html>",
-        "db_error_html": "<!DOCTYPE html><head><title>KSHTTP Server</title></head><body><h1>DB Status: Error</h1></body></html>"
+        "db_error_html": "<!DOCTYPE html><head><title>KSHTTP Server</title></head><body><h1>DB Status: Error</h1></body></html>",
+        "test_email": "laurel57@ethereal.email"
     },
     "devMode": true
 }

@@ -24,12 +24,31 @@ httpServer.on("request", (req, res) => {
             res.end(`{"error": "Not implemented 501"}`)
             break;
         case "POST":
-            console.error("Not implemented...")
-            res.writeHead(501, http.STATUS_CODES[501])
-            res.end(`{"error": "Not implemented 501"}`)
+            if (pathname === "/login") {
+                req.on("data", (data) => {
+                    let credentialsObj = JSON.parse(data);
+                    let login = credentialsObj.login;
+                    let hash = credentialsObj.password;
+                    db.getUserByHS(login, hash).then(result => {
+                        if (result.length != 0) {
+                            console.log(`User '${login}' found...\n`);
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                        }
+                        else {
+                            console.error(`User with given credentials not found...\n`);
+                            res.writeHead(404, http.STATUS_CODES[404]);
+                        }
+                        res.end(JSON.stringify(result));
+                    }).catch((err) => {
+                        console.error(`Getting user with given credentials failed...`);
+                        res.writeHead(500, http.STATUS_CODES[500])
+                        res.end(`{"error": "${err}"}`);
+                    })
+                })
+            }
             break;
         case "GET":
-            if (pathname == "/") {
+            if (pathname === "/") {
                 res.setHeader("Content-Type", "text/html");
                 db.test().then(() => {
                     res.writeHead(200, http.STATUS_CODES[200]);
@@ -40,69 +59,44 @@ httpServer.on("request", (req, res) => {
                     res.end(config.db_error_html);
                 })
             }
-            else if (pathname === "/users") {
-                db.getUsers().then(result => {
-                    console.log("Got users...");
-                    res.writeHead(200, http.STATUS_CODES[200]);
-                    res.end(JSON.stringify(result));
-                }).catch((err) => {
-                    console.error("Getting users failed...");
-                    res.end(`{"error": "${err}"}`);
-                })
-            }
             else if (pathname === "/user") {
-                if (params.has("login") && params.has("password")) {
-                    let login = params.get("login");
-                    let password = params.get("password");
-                    db.getUserByHS(login, password).then(result => {
-                        if (result.length != 0) {
-                            console.log(`User '${login}' found...\n`)
-                            res.writeHead(200, http.STATUS_CODES[200])
-                            res.end(JSON.stringify(result))
-                        }
-                        else {
-                            console.error(`User with given credentials not found...\n`)
-                            res.writeHead(404, http.STATUS_CODES[404])
-                            res.end(JSON.stringify(result))
-                        }
-                    }).catch((err) => {
-                        console.error(`Getting user with given credentials failed...`);
-                        res.end(`{"error": "${err}"}`);
-                    })
-                }
-                else if (params.has("username")) {
+                if (params.has("username")) {
                     let username = params.get("username");
+                    if (username === undefined)
+                        return
                     db.getUser(username).then(result => {
                         if (result.length != 0) {
-                            console.log(`User '${username}' found...`)
-                            res.writeHead(200, http.STATUS_CODES[200])
-                            res.end(JSON.stringify(result))
+                            console.log(`User '${username}' found...`);
+                            res.writeHead(200, http.STATUS_CODES[200]);
                         }
                         else {
-                            console.error(`User '${username}' not found...`)
-                            res.writeHead(404, http.STATUS_CODES[404])
-                            res.end(JSON.stringify(result))
+                            console.error(`User '${username}' not found...`);
+                            res.writeHead(404, http.STATUS_CODES[404]);
                         }
+                        res.end(JSON.stringify(result));
                     }).catch((err) => {
                         console.error(`Getting user '${username}' failed...`);
+                        res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
                 }
                 else if (params.has("id")) {
                     let id = params.get("id");
+                    if (id === undefined)
+                        return
                     db.getUserById(id).then(result => {
                         if (result.length != 0) {
                             console.log(`User found...`)
-                            res.writeHead(200, http.STATUS_CODES[200])
-                            res.end(JSON.stringify(result))
+                            res.writeHead(200, http.STATUS_CODES[200]);
                         }
                         else {
-                            console.error(`User not found...`)
-                            res.writeHead(404, http.STATUS_CODES[404])
-                            res.end(JSON.stringify(result))
+                            console.error(`User not found...`);
+                            res.writeHead(404, http.STATUS_CODES[404]);
                         }
+                        res.end(JSON.stringify(result))
                     }).catch((err) => {
                         console.error(`Getting user failed...`);
+                        res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
                 }
@@ -114,13 +108,18 @@ httpServer.on("request", (req, res) => {
                     if (sender === undefined || recipient === undefined)
                         return
                     db.getMessage(sender, recipient).then(result => {
-                        if (result.length != 0)
+                        if (result.length != 0) {
                             console.log(`'${recipient}' got ${result.length} messages from '${sender}'...`)
-                        else
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                        }
+                        else {
                             console.log(`'${sender}' got no messages from '${recipient}'...`)
-                        res.end(JSON.stringify(result))
+                            res.writeHead(404, http.STATUS_CODES[404]);
+                        }
+                        res.end(JSON.stringify(result));
                     }).catch((err) => {
                         console.error(`Getting messages failed :( ...`);
+                        res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
                 }
@@ -138,26 +137,28 @@ httpServer.on("request", (req, res) => {
                             db.getCode(id).then(result => {
                                 if (result[0].code === code) {
                                     console.log(`Verfication code was valid...`)
-                                    res.writeHead(200, http.STATUS_CODES[200])
-                                    res.end(`{"res": "Verfication code was valid..."}`);
+                                    res.writeHead(200, http.STATUS_CODES[200]);
+                                    res.end(JSON.stringify(result));
                                 }
                                 else {
                                     console.error(`Verification code not found :( ...`)
-                                    res.writeHead(404, http.STATUS_CODES[404])
-                                    res.end(`{"error": "${err}"}`)
+                                    res.writeHead(404, http.STATUS_CODES[404]);
+                                    res.end(JSON.stringify([]));
                                 }
                             }).catch((err) => {
                                 console.error("Getting verification code failed...")
+                                res.writeHead(500, http.STATUS_CODES[500])
                                 res.end(`{"error": "${err}"}`)
                             })
                         }
                         else {
-                            console.error(`User '${username}' not found...`)
-                            res.writeHead(404, http.STATUS_CODES[404])
-                            res.end(JSON.stringify(result))
+                            console.error(`User '${username}' not found...`);
+                            res.writeHead(404, http.STATUS_CODES[404]);
+                            res.end(JSON.stringify(result));
                         }
                     }).catch((err) => {
                         console.error("Checking for user existence failed...")
+                        res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`)
                     })
                 }
@@ -166,6 +167,8 @@ httpServer.on("request", (req, res) => {
                 if (params.has("username") && params.has("code")) {
                     let username = params.get("username");
                     let code = params.get("code");
+                    if (username === undefined || code === undefined)
+                        return
                     db.getUser(username).then((result) => {
                         if (result.length != 0) {
                             let id = result[0].id;
@@ -179,28 +182,29 @@ httpServer.on("request", (req, res) => {
                             else {
                                 db.getCode(id, 'F').then(result => {
                                     if (result[0].code === code) {
-                                        console.log(`Recovery code was valid, :D...`)
-                                        res.writeHead(200, http.STATUS_CODES[200]);
-                                        res.end(`{"res": "Recovery codes matched..."}`);
+                                        console.log(`Recovery code was valid...`)
+                                        res.writeHead(200, http.STATUS_CODES[200])
                                     }
                                     else {
-                                        console.error(`Recovery code not found :( ...`)
-                                        res.writeHead(404, http.STATUS_CODES[404])
-                                        res.end(`{"error": "${err}"}`)
+                                        console.error(`Verification code not found :( ...`)
+                                        res.writeHead(404, http.STATUS_CODES[404]);
                                     }
+                                    res.end(JSON.stringify(result));
                                 }).catch((err) => {
                                     console.error("Getting recovery code failed...")
+                                    res.writeHead(500, http.STATUS_CODES[500])
                                     res.end(`{"error": "${err}"}`)
                                 })
                             }
                         }
                         else {
-                            console.error(`User '${username}' not found 171...`)
-                            res.writeHead(404, http.STATUS_CODES[404])
-                            res.end(JSON.stringify(result))
+                            console.error(`User '${username}' not found...`);
+                            res.writeHead(404, http.STATUS_CODES[404]);
+                            res.end(JSON.stringify(result));
                         }
                     }).catch((err) => {
                         console.error("Checking for user existence failed...")
+                        res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`)
                     })
                 }
@@ -208,12 +212,21 @@ httpServer.on("request", (req, res) => {
             else if (pathname === "/notifications") {
                 if (params.has("to")) {
                     let username = params.get("to");
+                    if (username === undefined)
+                        return
                     db.getNotifications(username).then(result => {
-                        console.log("Got notifications...");
-                        res.writeHead(200, http.STATUS_CODES[200]);
+                        if (result[0].length != 0) {
+                            console.log("Got notifications...");
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                        }
+                        else {
+                            console.error(`No new notifications...`)
+                            res.writeHead(404, http.STATUS_CODES[404]);
+                        }
                         res.end(JSON.stringify(result));
                     }).catch((err) => {
                         console.error("Getting notifications failed...");
+                        res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
                 }
@@ -221,12 +234,21 @@ httpServer.on("request", (req, res) => {
             else if (pathname === "/friends") {
                 if (params.has("of")) {
                     let username = params.get("of");
+                    if (username === undefined)
+                        return
                     db.getFriends(username).then(result => {
-                        console.log("Got friends, :D...");
-                        res.writeHead(200, http.STATUS_CODES[200]);
+                        if (JSON.stringify(result) === JSON.stringify([])) {
+                            console.log(`User '${username}' has no friends, :(...`);
+                            res.writeHead(404, http.STATUS_CODES[404]);
+                        }
+                        else {
+                            console.log(`Got friends of '${username}', :D...`);
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                        }
                         res.end(JSON.stringify(result));
                     }).catch((err) => {
-                        console.error("Getting friend failed, :(...");
+                        console.error("Getting friends failed, :(...");
+                        res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
                 }
@@ -235,13 +257,15 @@ httpServer.on("request", (req, res) => {
                 if (params.has("u") && params.has("uu")) {
                     let username = params.get("u");
                     let username_1 = params.get("uu");
-                    db.getFriendship(username,username_1).then(result => {
-                        console.log("Got friendship, :D...");
-                        res.writeHead(200, http.STATUS_CODES[200]);
+                    if (username === undefined || username_1 === undefined)
+                        return
+                    db.getFriendship(username, username_1).then(result => {
+                        console.log("Got friendship, :D..."); //TODO REFACTOR
+                        res.writeHead(200, http.STATUS_CODES[200]); //TODO WORKS BUT
                         res.end(JSON.stringify(result));
                     }).catch((err) => {
-                        console.error(err);
                         console.error("Getting frienship failed, :(...");
+                        res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
                 }
@@ -254,27 +278,29 @@ httpServer.on("request", (req, res) => {
             break;
         case "PUT":
             if (pathname === "/new_user") {
-                if (params.has("login") && params.has("password") && params.has("username")) {
-                    let username = params.get("username");
-                    let login = params.get("login");
-                    let hash = crypto.genHash(params.get("password"))
+                req.on("data", (data) => {
+                    let newUserObj = JSON.parse(data);
+                    let username = newUserObj.username;
+                    let hash = crypto.genHash(newUserObj.password);
                     db.getUser(username).then((result) => {
                         if (JSON.stringify(result) === JSON.stringify([]))
-                            db.addUser(login, hash, username).then(() => {
+                            db.addUser(newUserObj.login, hash, username).then(() => {
                                 console.log(`User '${username}' was registered successfully...`);
                                 res.writeHead(201, http.STATUS_CODES[201]);
                                 res.end(`{"res": "User '${username}' was registered successfully..."}`);
                             }).catch((err) => {
                                 console.error(`User '${username}' registration failed...`);
+                                res.writeHead(500, http.STATUS_CODES[500]);
                                 res.end(`{"error": "${err}"}`)
                             });
                         else {
-                            console.error(`User '${username}' a registration failed...`);
-                            res.writeHead(400, http.STATUS_CODES[400]);
-                            res.end(`{"res": "User '${username}' registration failed..."}`);
+                            console.error(`User with given '${username}' exists...`);
+                            res.writeHead(403, http.STATUS_CODES[403]);
+                            res.end(`{"res": "User with given '${username}' exists..."}`);
                         }
                     })
-                }
+                })
+
             }
             else if (pathname === "/new_message") {
                 req.on("data", (data) => {
@@ -292,7 +318,7 @@ httpServer.on("request", (req, res) => {
                     let aCode = crypto.genCode();
                     db.addCode(aCode, username).then(() => {
                         console.log(`Activation code was generated successfully...`);
-                        mail.sendAuthMail("laurel57@ethereal.email", aCode);
+                        mail.sendAuthMail(config.test_email, aCode);
                         res.writeHead(200, http.STATUS_CODES[200]);
                         res.end(`{"res": "Activation code was generated successfully..."}`);
                     }).catch((err) => {
@@ -307,12 +333,13 @@ httpServer.on("request", (req, res) => {
                     let code = crypto.genCode();
                     db.addCode(code, username).then(() => {
                         console.log(`Verfication code was generated successfully...`);
-                        mail.sendAuth_1Mail("laurel57@ethereal.email", code);
-                        res.writeHead(200, http.STATUS_CODES[200]);
+                        mail.sendAuth_1Mail(config.test_email, code);
+                        res.writeHead(200, http.STATUS_CODES[201]);
                         res.end(`{"res": "Verfication code was generated successfully..."}`);
                     }).catch((err) => {
-                        console.error("Verification code generation failed...")
-                        res.end(`{"error": "${err}"}`)
+                        console.error("Verification code generation failed...");
+                        res.writeHead(500, http.STATUS_CODES[500]);
+                        res.end(`{"error": "${err}"}`);
                     })
                 }
             }
@@ -322,11 +349,12 @@ httpServer.on("request", (req, res) => {
                     let rCode = crypto.genRecoveryCode();
                     db.addCode(rCode, username, 'F').then(() => {
                         console.log(`Recovery code was generated successfully...`);
-                        mail.sendAuth_2Mail("laurel57@ethereal.email", rCode);
+                        mail.sendAuth_2Mail(config.test_email, rCode);
                         res.writeHead(200, http.STATUS_CODES[200]);
                         res.end(`{"res": "Recovery code was generated successfully..."}`);
                     }).catch((err) => {
                         console.error("Recovery code generation failed...")
+                        res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`)
                     })
                 }
@@ -343,6 +371,7 @@ httpServer.on("request", (req, res) => {
                                 res.end(`{"res": "Notification was added..."}`);
                             }).catch((err) => {
                                 console.error(`Adding notification failed...`);
+                                res.writeHead(500, http.STATUS_CODES[500]);
                                 res.end(`{"error": "${err}"}`)
                             });
                         }
@@ -365,14 +394,15 @@ httpServer.on("request", (req, res) => {
                                 res.writeHead(201, http.STATUS_CODES[201]);
                                 res.end(`{"res": "User '${username}' and user '${username1}' became 'friends' successfully..."}`);
                             }).catch((err) => {
-                                console.error(`User '${username}' and user '${username1}' failed two form friendship...`);
+                                console.error(`User '${username}' and user '${username1}' failed to form friendship...`);
+                                res.writeHead(500, http.STATUS_CODES[500]);
                                 res.end(`{"error": "${err}"}`)
                             });
                         }
                         else {
-                            console.error(`UUser '${username}' and user '${username1}' failed two form friendship...`);
+                            console.error(`UUser '${username}' and user '${username1}' failed to form friendship...`);
                             res.writeHead(400, http.STATUS_CODES[400]);
-                            res.end(`{"res": "User '${username}' and user '${username1}' failed two form friendship..."}`);
+                            res.end(`{"res": "User '${username}' and user '${username1}' failed to form friendship..."}`); //TODO REFACTOR
                         }
                     })
                 }
@@ -385,19 +415,7 @@ httpServer.on("request", (req, res) => {
             break;
         case "PATCH":
             if (pathname === "/user") {
-                if (params.has("username") && params.has("password")) {
-                    let username = params.get("username");
-                    let hash = crypto.genHash(params.get("password"));
-                    db.changePass(username, hash).then(() => {
-                        console.log(`Password was changed successfully...`);
-                        res.writeHead(201, http.STATUS_CODES[201]);
-                        res.end(`{"res": "Password was changed successfully..."}`);
-                    }).catch((err) => {
-                        console.error(`Password change failed...`);
-                        res.end(`{"error": "${err}"}`)
-                    })
-                }
-                else if (params.has("username")) {
+                if (params.has("username")) {
                     let username = params.get("username");
                     db.activateUser(username).then(() => {
                         console.log(`User '${username}' account was activated successfully...`);
@@ -408,6 +426,16 @@ httpServer.on("request", (req, res) => {
                         res.end(`{"error": "${err}"}`)
                     })
                 }
+            }
+            else if (pathname === "/user_pass") {
+                req.on("data", (data) => {
+                    let credentialsObj = JSON.parse(data);
+                    let hash = crypto.genHash(credentialsObj.password);
+                    db.changePass(credentialsObj.username, hash);
+                    console.log(`'${credentialsObj.username}' changed password successfully...`)
+                    res.writeHead(201, http.STATUS_CODES[201])
+                    res.end(`{"info":}:"'${credentialsObj.username}' changed password successfully..."`)
+                })
             }
             else {
                 console.error("Bad request...")
@@ -423,10 +451,11 @@ httpServer.on("request", (req, res) => {
                         return
                     db.deleteCode(code).then(() => {
                         console.log(`Verification code deletion was successful...`)
-                        res.writeHead(200, http.STATUS_CODES[200])
-                        res.end(`{"res": "Verification code deletion was successful..."}`);
+                        res.writeHead(204, http.STATUS_CODES[204]);
+                        res.end(`{}`);
                     }).catch((err) => {
-                        console.error(`Verification code deletion failed...`)
+                        console.error(`Verification code deletion failed...`);
+                        res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
                 }
@@ -437,10 +466,11 @@ httpServer.on("request", (req, res) => {
                     let username_1 = params.get("to");
                     db.deleteNotification(username, username_1).then(result => {
                         console.log("Deleteting notification...");
-                        res.writeHead(200, http.STATUS_CODES[200]);
-                        res.end(JSON.stringify(result));
+                        res.writeHead(204, http.STATUS_CODES[204]);
+                        res.end(`{}`);
                     }).catch((err) => {
                         console.error("Deleteting notification failed...");
+                        res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
                 }
@@ -453,17 +483,18 @@ httpServer.on("request", (req, res) => {
                         if (result.length != 0) {
                             db.deleteFriend(username, username1).then(() => {
                                 console.log(`Friendship was ended...`);
-                                res.writeHead(200, http.STATUS_CODES[200]);
-                                res.end(`{"res": "Friendship was ended..."}`);
+                                res.writeHead(204, http.STATUS_CODES[204]);
+                                res.end(`{}`);
                             }).catch((err) => {
                                 console.error(`Ending friendship failed...`);
+                                res.writeHead(500, http.STATUS_CODES[500]);
                                 res.end(`{"error": "${err}"}`)
                             });
                         }
                         else {
-                            console.error(`Ending friendship failed...`);
-                            res.writeHead(400, http.STATUS_CODES[400]);
-                            res.end(`{"err": "Ending friendship failed..."}`);
+                            console.error(`User '${username}' not found...`);
+                            res.writeHead(404, http.STATUS_CODES[404]);
+                            res.end(JSON.stringify(result));
                         }
                     })
                 }

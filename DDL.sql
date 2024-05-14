@@ -60,18 +60,36 @@ CREATE TABLE Codes(
     CONSTRAINT codes_pk PRIMARY KEY(code, user_id)
 );
 
+CREATE TABLE Templates(
+    id int AUTO_INCREMENT,
+    owner_id int,
+    content VARCHAR(255),
+    CONSTRAINT templates_pk PRIMARY KEY(id),
+    CONSTRAINT templates_owner_id_users_fk FOREIGN KEY(owner_id) REFERENCES Users(id)
+);
+
 /*
-DROP TABLE Users
+DELETE * FROM Codes;
+DROP TABLE Codes
 CASCADE CONSTRAINTS;
 
-DROP TABLE Messages
-CASCADE CONSTRAINTS;
-*/
-
-/*
+DELETE * FROM Friendships;
 DROP TABLE Friendships
 CASCADE CONSTRAINTS;
 
-DROP TABLE Codes
+DELETE * FROM Friendships;
+DROP TABLE Messages
+CASCADE CONSTRAINTS;
+
+DELETE * FROM Notifications;
+DROP TABLE Notifications
+CASCADE CONSTRAINTS;
+
+DELETE * FROM Templates;
+DROP TABLE Templates
+CASCADE CONSTRAINTS;
+
+DELETE * FROM Users;
+DROP TABLE Users
 CASCADE CONSTRAINTS;
 */

@@ -8,7 +8,6 @@ import { PassRecoveryComponent } from './pass-recovery/pass-recovery.component';
 import { PassRecovery1Component } from './pass-recovery1/pass-recovery1.component';
 import { PassRecovery2Component } from './pass-recovery2/pass-recovery2.component';
 import { NotificationListComponent } from './notification/notification-list.component';
-import { AddFriendComponent } from './add-friend/add-friend.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent },
@@ -18,8 +17,7 @@ const routes: Routes = [
   { path: "password_recovery_1", component: PassRecovery1Component },
   { path: "password_recovery_2", component: PassRecovery2Component },
   { path: "activate", component: ActivationComponent },
-  { path: "notifications", component: NotificationListComponent },
-  { path: "add_friend", component: AddFriendComponent }
+  { path: "notifications", component: NotificationListComponent }
 ];
 
 @NgModule({

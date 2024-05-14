@@ -1,0 +1,47 @@
+<div *ngIf="activeUser != ''" class="row list-group">
+    <h6 class="bg-text-dark bg-gradient rounded">
+        {{FRIENDS_STRING}}:
+    </h6>
+    <div *ngIf="activeUser != ''" class="nav-item active">
+        <button class="btn btn-success bg-gradient" type="button" value="add" data-bs-toggle="modal"
+            data-bs-target="#addFriendModal"><img src="../../node_modules/bootstrap-icons/icons/person-plus-fill.svg"
+                width="30" height="30" alt="Filled Plus Person Icon"></button>
+        <div class="modal fade" id="addFriendModal" tabIndex="-1" aria-labelledby="Add Friend Modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="title text-dark">
+                            {{ADD_FRIEND_STRING}}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-wrap">
+                        <div *ngIf="errorTxt != ''" class="row alert alert-danger errorTxt" role="alert">
+                            {{errorTxt}}
+                        </div>
+                        <div class="justify-content-center">
+                            <form class="needs-validation was-validated" novalidate>
+                                <input class="form-control" type="text" placeholder="Nazwa użytkownika"
+                                    aria-label="Username Field Addon" aria-describedby="usernameFieldAddon"
+                                    [(ngModel)]="newFriendUsername" (keydown.enter)="onAddFriendButtonClick()" required>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="btn-group" role="group" aria-label="Button Group">
+                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+                                Anuluj
+                            </button>
+                            <button class="btn btn-success" type="button" (click)="onAddFriendButtonClick();"
+                                data-bs-dismiss="modal">
+                                Dodaj znajomego
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <app-friend-list></app-friend-list>
+</div>

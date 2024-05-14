@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
 
   signIn(): void {
     let hash = CryptoJS.HmacSHA512('', this.password).toString();
-    this.db.getUserByHS(this.login, hash).subscribe({
+    this.db.authUser(this.login, hash).subscribe({
       next: (data) => {
         if (data.length != 0) {
           this.uS.setActiveUser(JSON.stringify(data[0].username)

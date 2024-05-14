@@ -33,27 +33,28 @@ export class ActivationComponent {
 
   onActivateButtonClick(): void {
     this.db.getCode(this.activeUser, this.code).subscribe({
-      next: (data: any) => { },
       error: (err: any) => console.error(`Error: ${err} `),
       complete: () => {
         this.db.activateAccount(this.activeUser).subscribe({
-          next: (data: any) => { },
-          error: (err: any) => console.error(`Error: ${err} `),
+          error: (err: any) => {
+            console.error(`Error: ${err} `);
+            this.errorTxt = "BAD PLACEHOLDER";
+            setTimeout(() => { this.errorTxt = '' }, 3000);
+          },
           complete: () => {
             console.log("Account activation has been completed, :D");
             this.db.delCode(this.code).subscribe({
-              next: (data: any) => { },
               error: (err: any) => console.error(`Error: ${err} `),
               complete: () => {
                 console.log("Temporary verification code has been deleted, :D...")
                 this.uS.setActiveUserActivationState(true);
                 this.uS.setFriendListUpdate(true);
+                this.router.navigate([""], {});
               }
             })
           }
         })
       }
     })
-    this.router.navigate([""], {});
   }
 }

@@ -15,6 +15,7 @@ export class ContextMenuComponent implements OnInit {
   constructor(private uS: UserService, private db: DbService) { }
 
   ngOnInit(): void {
+    console.log("Context menu component inited, xdd....");
   }
 
   onRightButtonClick(event: any): boolean {
@@ -24,7 +25,6 @@ export class ContextMenuComponent implements OnInit {
   deleteFriend(): void {
     if (this.activeUser != '')
       this.db.delFriendship(this.activeUser, this.ctxMenuUsername).subscribe({
-        next: () => { },
         error: (err: any) => console.error(`Error: ${err}`),
         complete: () => {
           console.log("Ending friendship was successfull...")

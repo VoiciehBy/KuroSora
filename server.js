@@ -49,14 +49,13 @@ httpServer.on("request", (req, res) => {
             break;
         case "GET":
             if (pathname === "/") {
-                res.setHeader("Content-Type", "text/html");
                 db.test().then(() => {
                     res.writeHead(200, http.STATUS_CODES[200]);
-                    res.end(config.db_ok_html);
+                    res.end(`{"info" : "DB: Ok"}`);
                 }).catch((err) => {
                     console.error("Establishing database connection failed, :(...");
                     res.writeHead(503, http.STATUS_CODES[503]);
-                    res.end(config.db_error_html);
+                    res.end(`{"error" : "DB unavailable..."}`); //TODO
                 })
             }
             else if (pathname === "/user") {
@@ -270,6 +269,28 @@ httpServer.on("request", (req, res) => {
                     })
                 }
             }
+            else if (pathname === "/templates") {
+                if (params.has("of")) {
+                    let username = params.get("of");
+                    if (username === undefined)
+                        return
+                    db.getTemplates(username).then(result => {
+                        if (JSON.stringify(result) === JSON.stringify([])) {
+                            console.log(`User '${username}' has no templates, :(...`);
+                            res.writeHead(404, http.STATUS_CODES[404]);
+                        }
+                        else {
+                            console.log(`Got templates of '${username}', :D...`);
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                        }
+                        res.end(JSON.stringify(result));
+                    }).catch((err) => {
+                        console.error("Getting templates failed, :(...");
+                        res.writeHead(500, http.STATUS_CODES[500]);
+                        res.end(`{"error": "${err}"}`);
+                    })
+                }
+            }
             else {
                 console.error("Bad request...")
                 res.writeHead(400, http.STATUS_CODES[400])
@@ -306,10 +327,13 @@ httpServer.on("request", (req, res) => {
                 req.on("data", (data) => {
                     let msgObj = JSON.parse(data)
                     let current_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+                    console.log(new Date().toISOString().slice(0, 19));
+
                     db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date)
                     console.log(`${msgObj.sender}' sent message to '${msgObj.recipient}...`)
                     res.writeHead(201, http.STATUS_CODES[201])
-                    res.end(`{"info":}:"'${msgObj.sender}' sent message to '${msgObj.recipient}'..."`)
+                    res.end(`{"info":}:"'${msgObj.sender}' sent message to '${msgObj.recipient}'..."`);
                 })
             }
             else if (pathname === "/new_act_code") {
@@ -516,16 +540,15 @@ httpServer.on("request", (req, res) => {
 httpServer.listen(config.port, config.hostname, () => {
     console.log(`Server running at http://${config.hostname}:${config.port}/`);
     http.get(`http://${config.hostname}:${config.port}/`, (res) => {
-        switch (res.statusCode) {
-            case 200:
-                console.log("DB: Ok", res.statusCode)
-                break;
-            case 503:
-                console.error("DB unavailable...", res.statusCode)
-                break;
-            default:
-                console.log('?', res.statusCode)
-                break;
+        if (res.statusCode === 200) {
+            res.on("data", data => {
+                console.log(JSON.parse(data).info, res.statusCode);
+            })
         }
+        else if (res.statusCode === 503) {
+            console.error(res.statusMessage); //TODO more info
+        }
+        else
+            console.log('?', res.statusCode);
     })
 });

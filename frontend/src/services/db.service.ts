@@ -46,6 +46,10 @@ export class DbService {
     return this.http.get(`${this.host}/friends?of=${username}`);
   }
 
+  getTemplates(username: string) : Observable<any>{
+    return this.http.get(`${this.host}/templates?of=${username}`);
+  }
+
   getFriendship(username: string, username_1: string): Observable<any> {
     return this.http.get(`${this.host}/friendship?u=${username}&uu=${username_1}`);
   }

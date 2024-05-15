@@ -39,6 +39,7 @@
           <img src="../../node_modules/bootstrap-icons/icons/check-circle-fill.svg" width="30" height="30"
             alt="Filled Check Circle Icon">
         </button>
+        <div>{{isActiveUserAccountActivated}}</div>
       </li>
       <li class="nav-item active">
         <button *ngIf="activeUser === '';else logoutBlock" class="btn badge bg-success" (click)="onLoginButtonClick();">

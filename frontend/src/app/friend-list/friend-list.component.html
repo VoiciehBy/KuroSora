@@ -1,6 +1,3 @@
-<div *ngIf="showSpinner === true" class="spinner-border text-success m-3" role="status">
-    <span class="visually-hidden">Loading...</span>
-</div>
 <div *ngFor="let friend of friends;">
     <div *ngIf="friend.username === activeRecipient; else elseBlock">
         <a class="list-group-item list-group-item-action list-group-item-warning rounded"
@@ -14,6 +11,9 @@
             {{friend.username}}
         </a>
     </ng-template>
+</div>
+<div *ngIf="showSpinner === true" class="spinner-border text-success m-3" role="status">
+    <span class="visually-hidden">Loading...</span>
 </div>
 <app-context-menu [visible]="ctxMenuVisible" [ctxMenuUsername]="ctxMenuUsername"
     [activeUser]="activeUser"></app-context-menu>

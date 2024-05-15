@@ -46,11 +46,9 @@ export class LoginComponent implements OnInit {
   signIn(): void {
     let hash = CryptoJS.HmacSHA512('', this.password).toString();
     this.db.authUser(this.login, hash).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         if (data.length != 0) {
-          this.uS.setActiveUser(JSON.stringify(data[0].username)
-            .replace('"', '')
-            .replace('"', ''));
+          this.uS.setActiveUser(data[0].username);
           this.uS.setActiveUserActivationState(data[0].activated === 'T' ? true : false)
         }
       },

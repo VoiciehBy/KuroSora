@@ -23,7 +23,9 @@ export class NavbarComponent implements OnInit {
   }
 
   onHomeButtonClick(): void {
+    this.uS.setMsgUpdate(true);
     this.uS.setFriendListUpdate(true);
+    this.uS.setNotificationListUpdate(false);
     this.router.navigate([""], {});
   }
 
@@ -31,7 +33,6 @@ export class NavbarComponent implements OnInit {
     this.uS.setActiveRecipient('');
     this.uS.setMsgUpdate(false);
     this.uS.setFriendListUpdate(false);
-    this.uS.setNotificationListUpdate(true);
     this.router.navigate(["notifications"], {});
   }
 

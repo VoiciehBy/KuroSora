@@ -12,7 +12,6 @@ const createConnection = (timeout = 1000) => {
                 console.log("Database connection established, :D...")
                 resolve(connection)
             }).catch((err) => {
-                //console.error(err)
                 console.error("Database connection refused :( ...")
                 reject(err)
             })
@@ -27,14 +26,12 @@ function doQuery(query = "", timeout = 1000) {
         setTimeout(() => {
             connection.then(con => con.query(query))
                 .catch((err) => {
-                    //console.error(err)
                     console.error("Cannot do the query :( ...")
                     reject(err)
                 })
                 .then(([rows, fields]) => {
                     resolve(rows)
                 }).catch((err) => {
-                    //console.error(err)
                     console.error("Cannot fetch data :( ...")
                     reject(err)
                 })
@@ -139,12 +136,30 @@ function getFriendshipPromise(u, uu) {
                         else
                             doQuery(`SELECT user_1_id, user_2_id FROM Friendships WHERE user_1_id=${ii} AND user_2_id=${i};`)
                                 .then((rows) => {
-                                    console.log(rows)
                                     resolve(rows)
                                 }).catch((err) => {
                                     console.error(err)
                                     reject(err)
                                 })
+                    })
+            })
+    })
+}
+
+function getTemplatesPromise(u) {
+    return new Promise((resolve, reject) => {
+        doQuery(`SELECT id FROM Users WHERE username='${u}';`)
+            .then(result => {
+                if (result[0] === undefined) {
+                    reject("Given user not found...")
+                    return
+                }
+                doQuery(`SELECT * FROM Templates WHERE owner_id=${result[0].id};`)
+                    .then((rows) => {
+                        resolve(rows)
+                    }).catch((err) => {
+                        console.error(err)
+                        reject(err)
                     })
             })
     })
@@ -160,6 +175,7 @@ module.exports = {
     getNotifications: (u) => getNotificationsPromise(u),
     getFriends: (u) => getFriendsPromise(u),
     getFriendship: (u, uu) => getFriendshipPromise(u, uu),
+    getTemplates: (u) => getTemplatesPromise(u),
     addUser: (l, p, u) => doQuery(`INSERT INTO Users (login, password, username, activated) VALUES('${l}','${p}','${u}','F');`),
     addMessage: (sender, recipient, c, d) => {
         return doQuery(`SELECT id FROM Users WHERE username='${sender}'`).then(sender_id => {

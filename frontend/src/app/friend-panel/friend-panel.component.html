@@ -1,11 +1,13 @@
 <div *ngIf="activeUser != ''" class="row list-group">
     <h6 class="bg-text-dark bg-gradient rounded">
         {{FRIENDS_STRING}}:
+        <div class="btn-group" role="group" aria-label="Button Group">
+            <button class="btn btn-success bg-gradient rounded" type="button" value="add" data-bs-toggle="modal"
+            data-bs-target="#addFriendModal"><img src="../../node_modules/bootstrap-icons/icons/person-plus-fill.svg"
+                width="15" height="15" alt="Filled Plus Person Icon"></button>
+        </div>
     </h6>
     <div *ngIf="activeUser != ''" class="nav-item active">
-        <button class="btn btn-success bg-gradient" type="button" value="add" data-bs-toggle="modal"
-            data-bs-target="#addFriendModal"><img src="../../node_modules/bootstrap-icons/icons/person-plus-fill.svg"
-                width="30" height="30" alt="Filled Plus Person Icon"></button>
         <div class="modal fade" id="addFriendModal" tabIndex="-1" aria-labelledby="Add Friend Modal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -43,5 +45,5 @@
         </div>
 
     </div>
-    <app-friend-list></app-friend-list>
+    <app-friend-list [isFriendListNeedToBeUpdated]="isFriendListNeedToBeUpdated"></app-friend-list>
 </div>

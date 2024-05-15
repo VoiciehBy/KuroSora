@@ -1,4 +1,4 @@
-<div *ngIf="activeRecipient != undefined && activeRecipient != ''" class="input-group">
+<div *ngIf="activeRecipient != ''" class="input-group">
     <div *ngIf="errorTxt != ''" class="row alert alert-danger errorTxt" role="alert">
         {{errorTxt}}
     </div>
@@ -11,10 +11,67 @@
             {{SENT_MESSAGE_TO_STRING}} {{activeRecipient}}...
         </label>
     </div>
-    <div class="btn-group" role="group" aria-label="Vertical button group">
-        <button class="btn btn-success badge" type="button" value="Journal">
+    <div class="btn-group text-dark" role="group" aria-label="Horizontal button group">
+        <button class="btn btn-success badge" type="button" value="Journal" data-bs-toggle="modal"
+            data-bs-target="#insertTemplateModal">
             <img src="../../node_modules/bootstrap-icons/icons/journal.svg" width="60" height="30" alt="Journal Icon">
         </button>
+        <div class="modal fade" id="insertTemplateModal" tabIndex="-1" aria-labelledby="Insert Template Modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="title text-wrap">Wybór szablonu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-wrap">
+                        <span>
+                            Szablony:
+                            <div *ngFor="let template of templates;">
+                                <div *ngIf="template.id === currentTemplateId; else elseBlock">
+                                    <a class="list-group-item list-group-item-action list-group-item-warning rounded pill"
+                                        (click)="selectTemplate(template)" (contextmenu)="onRightButtonClick($event)">
+                                        {{template.content}}
+                                    </a>
+                                </div>
+                                <ng-template #elseBlock>
+                                    <a class="list-group-item list-group-item-action list-group-item-success rounded pill"
+                                        (click)="selectTemplate(template)" (contextmenu)="onRightButtonClick($event)">
+                                        {{template.content}}
+                                    </a>
+                                </ng-template>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="btn-group" role="group" aria-label="Button Group">
+                            <button class="btn btn-primary" type="button" (click)="insertTemplate();"
+                                data-bs-dismiss="modal">
+                                <img src="../../node_modules/bootstrap-icons/icons/send-plus.svg" width="60" height="30" alt="Send Plus Icon">
+                            </button>
+                            <button class="btn btn-success" type="button" (click)="sendTemplate();"
+                                data-bs-dismiss="modal">
+                                <img src="../../node_modules/bootstrap-icons/icons/send.svg" width="60" height="30" alt="Send Icon">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="emojiModal" tabIndex="-1" aria-labelledby="Emoji Modal">
+            <div id="emojiModalDialog" class="modal-dialog">
+                <div class="modal-content">
+                    <div class="text-end">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-wrap">
+                        <emoji-mart emoji="+1" set="twitter" [darkMode]=false [sheetSize]=32 [emojiSize]=32
+                            (emojiClick)="addEmoji($event)"></emoji-mart>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <button class="btn btn-success badge" type="button" value="Emoji" data-bs-toggle="modal"
             data-bs-target="#emojiModal">
             <img src="../../node_modules/bootstrap-icons/icons/emoji-smile-fill.svg" width="60" height="30"

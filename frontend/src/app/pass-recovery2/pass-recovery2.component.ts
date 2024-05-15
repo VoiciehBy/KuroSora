@@ -53,9 +53,9 @@ export class PassRecovery2Component implements OnInit {
       error: (err: any) => console.error(`Error: ${err} `),
       complete: () => {
         console.log("Password change has been completed, :D")
-        this.uS.setRecoveryUsername('');//TODO some error here wont't navigate to login
-        this.router.navigate(["login"]);
+        this.uS.setRecoveryUsername('');
       }
     })
+    this.router.navigate(["login"]);
   }
 }

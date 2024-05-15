@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { DbService } from 'src/services/db.service';
 import { UserService } from 'src/services/user.service';
 import { user } from 'src/user';
@@ -8,12 +8,15 @@ import { user } from 'src/user';
   templateUrl: './friend-list.component.html',
   styleUrls: ['./friend-list.component.css']
 })
+
 export class FriendListComponent implements OnInit {
   activeUser: string = '';
   activeRecipient: string = '';
   friends: user[] = [];
   isMsgNeedToBeUpdated: boolean = false;
-  isFriendListNeedToBeUpdated: boolean = true;
+
+  @Input() isFriendListNeedToBeUpdated: boolean;
+
   ctxMenuVisible: boolean = false;
   ctxMenuUsername: string = '';
 
@@ -32,6 +35,7 @@ export class FriendListComponent implements OnInit {
 
     setInterval(() => {
       if (this.activeUser != '' && this.isFriendListNeedToBeUpdated) {
+        this.friends = [];
         this.updateFriendList();
         this.ctxMenuVisible = false;
         this.showSpinner = true;
@@ -45,6 +49,7 @@ export class FriendListComponent implements OnInit {
         this.friends = [];
         if (data.length === 0) {
           console.log("User has no friends, :(...");
+          this.uS.setActiveRecipient('');
           return;
         }
         else {
@@ -60,6 +65,8 @@ export class FriendListComponent implements OnInit {
         console.log("Friend list updated, :D...")
         if (this.friends.length != 0)
           this.uS.setActiveRecipient(this.friends[0].username);
+        else
+          this.uS.setActiveRecipient('');
         this.uS.setFriendListUpdate(false);
       }
     })

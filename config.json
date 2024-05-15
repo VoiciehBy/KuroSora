@@ -2,13 +2,17 @@
     "db": {
         "hostname": "localhost",
         "user": "root",
-        "db_name": "dev"
+        "db_name": "dev",
+        "users_table": "Users",
+        "messages_table": "Messages",
+        "friendships_table": "Friendships",
+        "notifications_table": "Notifications",
+        "codes_table": "Code",
+        "templates_table": "Templates"
     },
     "http": {
         "hostname": "127.0.0.1",
         "port": 3000,
-        "db_ok_html": "<!DOCTYPE html><head><title>KSHTTP Server</title></head><body><h1>DB Status: Ok</h1></body></html>",
-        "db_error_html": "<!DOCTYPE html><head><title>KSHTTP Server</title></head><body><h1>DB Status: Error</h1></body></html>",
         "test_email": "laurel57@ethereal.email"
     },
     "devMode": true

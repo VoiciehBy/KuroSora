@@ -34,11 +34,15 @@ export class NotificationListComponent implements OnInit {
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
     this.uS.notificationUpdateState.subscribe(b => this.isNotificationsNeedToBeUpdated = b);
+    
+    this.uS.setNotificationListUpdate(true);
 
-    if (this.activeUser != '' && this.isNotificationsNeedToBeUpdated) {
-      this.notifications = [];
-      this.updateNotificationList();
-    }
+    setInterval(() => {
+      if (this.activeUser != '' && this.isNotificationsNeedToBeUpdated) {
+        this.notifications = [];
+        this.updateNotificationList();
+      }
+    }, 3200)
   }
 
   updateNotificationList(): void {

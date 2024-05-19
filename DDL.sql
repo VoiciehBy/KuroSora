@@ -38,8 +38,6 @@ CREATE TABLE Friendships(
     CONSTRAINT friendships_pk PRIMARY KEY(user_1_id, user_2_id)
 );
 
-ALTER TABLE Friendships AUTO_INCREMENT = 1;
-
 CREATE TABLE Notifications(
     id int AUTO_INCREMENT,
     type VARCHAR(16) NOT NULL,

@@ -12,7 +12,7 @@ const createConnection = (timeout = 1000) => {
                 host: config.hostname,
                 port: config.port,
                 user: config.user,
-                password: process.env.DB_PASSWORD,
+                //password: process.env.DB_PASSWORD,
                 database: config.db_name,
             }).then((connection) => {
                 console.log("Database connection established, :D...")

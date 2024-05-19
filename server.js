@@ -13,16 +13,6 @@ httpServer.on("request", (req, res) => {
     res.setHeader("Content-Type", "application/json");
 
     switch (req.method) {
-        case "HEAD":
-            console.error("Not implemented...")
-            res.writeHead(501, http.STATUS_CODES[501])
-            res.end(`{"error": "Not implemented 501"}`)
-            break;
-        case "OPTIONS":
-            console.error("Not implemented...")
-            res.writeHead(501, http.STATUS_CODES[501])
-            res.end(`{"error": "Not implemented 501"}`)
-            break;
         case "POST":
             if (pathname === "/login") {
                 req.on("data", (data) => {
@@ -236,13 +226,13 @@ httpServer.on("request", (req, res) => {
                     if (username === undefined)
                         return
                     db.getFriends(username).then(result => {
-                        if (JSON.stringify(result) === JSON.stringify([])) {
-                            console.log(`User '${username}' has no friends, :(...`);
-                            res.writeHead(404, http.STATUS_CODES[404]);
-                        }
-                        else {
+                        if (result.length != 0) {
                             console.log(`Got friends of '${username}', :D...`);
                             res.writeHead(200, http.STATUS_CODES[200]);
+                        }
+                        else {
+                            console.log(`User '${username}' has no friends, :(...`);
+                            res.writeHead(404, http.STATUS_CODES[404]);
                         }
                         res.end(JSON.stringify(result));
                     }).catch((err) => {
@@ -275,13 +265,13 @@ httpServer.on("request", (req, res) => {
                     if (username === undefined)
                         return
                     db.getTemplates(username).then(result => {
-                        if (JSON.stringify(result) === JSON.stringify([])) {
-                            console.log(`User '${username}' has no templates, :(...`);
-                            res.writeHead(404, http.STATUS_CODES[404]);
-                        }
-                        else {
+                        if (result.length != 0) {
                             console.log(`Got templates of '${username}', :D...`);
                             res.writeHead(200, http.STATUS_CODES[200]);
+                        }
+                        else {
+                            console.log(`User '${username}' has no templates, :(...`);
+                            res.writeHead(404, http.STATUS_CODES[404]);
                         }
                         res.end(JSON.stringify(result));
                     }).catch((err) => {
@@ -304,7 +294,12 @@ httpServer.on("request", (req, res) => {
                     let username = newUserObj.username;
                     let hash = crypto.genHash(newUserObj.password);
                     db.getUser(username).then((result) => {
-                        if (JSON.stringify(result) === JSON.stringify([]))
+                        if (result.length != 0) {
+                            console.error(`User with given '${username}' exists...`);
+                            res.writeHead(403, http.STATUS_CODES[403]);
+                            res.end(`{"res": "User with given '${username}' exists..."}`);
+                        }
+                        else {
                             db.addUser(newUserObj.login, hash, username).then(() => {
                                 console.log(`User '${username}' was registered successfully...`);
                                 res.writeHead(201, http.STATUS_CODES[201]);
@@ -314,22 +309,14 @@ httpServer.on("request", (req, res) => {
                                 res.writeHead(500, http.STATUS_CODES[500]);
                                 res.end(`{"error": "${err}"}`)
                             });
-                        else {
-                            console.error(`User with given '${username}' exists...`);
-                            res.writeHead(403, http.STATUS_CODES[403]);
-                            res.end(`{"res": "User with given '${username}' exists..."}`);
                         }
                     })
                 })
-
             }
             else if (pathname === "/new_message") {
                 req.on("data", (data) => {
                     let msgObj = JSON.parse(data)
                     let current_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-                    console.log(new Date().toISOString().slice(0, 19));
-
                     db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date)
                     console.log(`${msgObj.sender}' sent message to '${msgObj.recipient}...`)
                     res.writeHead(201, http.STATUS_CODES[201])
@@ -342,7 +329,7 @@ httpServer.on("request", (req, res) => {
                     let aCode = crypto.genCode();
                     db.addCode(aCode, username).then(() => {
                         console.log(`Activation code was generated successfully...`);
-                        mail.sendAuthMail(config.test_email, aCode);
+                        mail.sendAuthMail(config.test_email, aCode, username);
                         res.writeHead(200, http.STATUS_CODES[200]);
                         res.end(`{"res": "Activation code was generated successfully..."}`);
                     }).catch((err) => {
@@ -357,7 +344,7 @@ httpServer.on("request", (req, res) => {
                     let code = crypto.genCode();
                     db.addCode(code, username).then(() => {
                         console.log(`Verfication code was generated successfully...`);
-                        mail.sendAuth_1Mail(config.test_email, code);
+                        mail.sendAuth_1Mail(config.test_email, code, username);
                         res.writeHead(200, http.STATUS_CODES[201]);
                         res.end(`{"res": "Verfication code was generated successfully..."}`);
                     }).catch((err) => {
@@ -373,7 +360,7 @@ httpServer.on("request", (req, res) => {
                     let rCode = crypto.genRecoveryCode();
                     db.addCode(rCode, username, 'F').then(() => {
                         console.log(`Recovery code was generated successfully...`);
-                        mail.sendAuth_2Mail(config.test_email, rCode);
+                        mail.sendAuth_2Mail(config.test_email, rCode, username);
                         res.writeHead(200, http.STATUS_CODES[200]);
                         res.end(`{"res": "Recovery code was generated successfully..."}`);
                     }).catch((err) => {
@@ -488,7 +475,7 @@ httpServer.on("request", (req, res) => {
                 if (params.has("from") && params.has("to")) {
                     let username = params.get("from");
                     let username_1 = params.get("to");
-                    db.deleteNotification(username, username_1).then(result => {
+                    db.deleteNotification(username, username_1).then(() => {
                         console.log("Deleteting notification...");
                         res.writeHead(204, http.STATUS_CODES[204]);
                         res.end(`{}`);
@@ -535,7 +522,7 @@ httpServer.on("request", (req, res) => {
             res.end(`{"error": "Not implemented 501"}`)
             break;
     }
-})
+}) //TODO TO DO REFACTOR CODE REPETITION
 
 httpServer.listen(config.port, config.hostname, () => {
     console.log(`Server running at http://${config.hostname}:${config.port}/`);

@@ -7,7 +7,7 @@
         "messages_table": "Messages",
         "friendships_table": "Friendships",
         "notifications_table": "Notifications",
-        "codes_table": "Code",
+        "codes_table": "Codes",
         "templates_table": "Templates"
     },
     "http": {

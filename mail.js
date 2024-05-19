@@ -25,20 +25,20 @@ async function sendMail(email, subject = "", text = "", html = "<h1>XD</h1>") {
     console.log("The E-mail message sent...");
 }
 
-async function sendActivationMail(email, code = "12345") {
-    sendMail(email, "Activate your KuroSora Account", `Activation code:${code}`, `<h1>${code}</h1>`)
+async function sendActivationMail(email, code = "12345", username="") {
+    sendMail(email, "Activate your KuroSora Account", `Dear ${username} your activation code is ${code}`, `<h1>Dear ${username} your activation code is ${code}</h1>`)
 }
 
-async function sendVerifcationMail(email, code = "12345") {
-    sendMail(email, "Verificate your KuroSora Account", `Verification code:${code}`, `<h1>${code}</h1>`)
+async function sendVerifcationMail(email, code = "12345", username="") {
+    sendMail(email, "Verificate your KuroSora Account", `Dear ${username} your verification code is ${code}`, `<h1>$Dear ${username} your verification code is {code}</h1>`)
 }
 
-async function sendRecoveryMail(email, code = "12345"){
-    sendMail(email, "Recovery code for your KuroSora Account", `Recovery code:${code}`, `<h1>${code}</h1>`)
+async function sendRecoveryMail(email, code = "12345",username=""){
+    sendMail(email, "Recovery code for your KuroSora Account", `Dear ${username} your recovery code is ${code}`, `<h1>Dear ${username} your recovery code is ${code}</h1>`)
 }
 
 module.exports = {
-    sendAuthMail: (e, c) => sendActivationMail(e, c),
-    sendAuth_1Mail: (e, c) => sendVerifcationMail(e, c),
-    sendAuth_2Mail: (e, c) => sendRecoveryMail(e, c),
+    sendAuthMail: (e, c, u) => sendActivationMail(e, c, u),
+    sendAuth_1Mail: (e, c, u) => sendVerifcationMail(e, c, u),
+    sendAuth_2Mail: (e, c, u) => sendRecoveryMail(e, c, u),
 }

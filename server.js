@@ -51,8 +51,6 @@ httpServer.on("request", (req, res) => {
             else if (pathname === "/user") {
                 if (params.has("username")) {
                     let username = params.get("username");
-                    if (username === undefined)
-                        return
                     db.getUser(username).then(result => {
                         if (result.length != 0) {
                             console.log(`User '${username}' found...`);
@@ -71,8 +69,6 @@ httpServer.on("request", (req, res) => {
                 }
                 else if (params.has("id")) {
                     let id = params.get("id");
-                    if (id === undefined)
-                        return
                     db.getUserById(id).then(result => {
                         if (result.length != 0) {
                             console.log(`User found...`)
@@ -118,8 +114,6 @@ httpServer.on("request", (req, res) => {
                     let username = params.get("username");
                     let type = params.get("type");
                     let code = params.get("code");
-                    if (username === undefined || type === undefined || code === undefined)
-                        return
                     db.getUser(username).then(result => {
                         if (result.length != 0) {
                             let id = result[0].id;
@@ -183,8 +177,6 @@ httpServer.on("request", (req, res) => {
             else if (pathname === "/notifications") {
                 if (params.has("to")) {
                     let username = params.get("to");
-                    if (username === undefined)
-                        return
                     db.getNotifications(username).then(result => {
                         if (result[0].length != 0) {
                             console.log("Got notifications...");
@@ -205,8 +197,6 @@ httpServer.on("request", (req, res) => {
             else if (pathname === "/friends") {
                 if (params.has("of")) {
                     let username = params.get("of");
-                    if (username === undefined)
-                        return
                     db.getFriends(username).then(result => {
                         if (result.length != 0) {
                             console.log(`Got friends of '${username}', :D...`);
@@ -228,11 +218,9 @@ httpServer.on("request", (req, res) => {
                 if (params.has("u") && params.has("uu")) {
                     let username = params.get("u");
                     let username_1 = params.get("uu");
-                    if (username === undefined || username_1 === undefined)
-                        return
                     db.getFriendship(username, username_1).then(result => {
-                        console.log("Got friendship, :D..."); //TODO REFACTOR
-                        res.writeHead(200, http.STATUS_CODES[200]); //TODO WORKS BUT
+                        console.log("Got friendship, :D...");
+                        res.writeHead(200, http.STATUS_CODES[200]);
                         res.end(JSON.stringify(result));
                     }).catch((err) => {
                         console.error("Getting frienship failed, :(...");
@@ -244,8 +232,6 @@ httpServer.on("request", (req, res) => {
             else if (pathname === "/templates") {
                 if (params.has("of")) {
                     let username = params.get("of");
-                    if (username === undefined)
-                        return
                     db.getTemplates(username).then(result => {
                         if (result.length != 0) {
                             console.log(`Got templates of '${username}', :D...`);
@@ -302,7 +288,7 @@ httpServer.on("request", (req, res) => {
                     db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date)
                     console.log(`${msgObj.sender}' sent message to '${msgObj.recipient}...`)
                     res.writeHead(201, http.STATUS_CODES[201])
-                    res.end(`{"info":}:"'${msgObj.sender}' sent message to '${msgObj.recipient}'..."`);
+                    res.end(`{"info":"'${msgObj.sender}' sent message to '${msgObj.recipient}'..."}`);
                 })
             }
             else if (pathname === "/new_code") {
@@ -408,25 +394,27 @@ httpServer.on("request", (req, res) => {
             if (pathname === "/user") {
                 if (params.has("username")) {
                     let username = params.get("username");
-                    db.activateUser(username).then(() => {
-                        console.log(`User '${username}' account was activated successfully...`);
-                        res.writeHead(201, http.STATUS_CODES[201]);
-                        res.end(`{"res": "User '${username}' account was activated successfully..."}`);
-                    }).catch((err) => {
-                        console.error(`User '${username}' account activation failed...`);
-                        res.end(`{"error": "${err}"}`)
+                    req.on("data", (data) => {
+                        let payload = JSON.parse(data);
+                        if (Object.hasOwn(payload, "password")) {
+                            let hash = crypto.genHash(payload.password);
+                            db.changePass(payload.username, hash);
+                            console.log(`'${payload.username}' changed password successfully...`)
+                            res.writeHead(201, http.STATUS_CODES[201])
+                            res.end(`{"info":}:"'${payload.username}' changed password successfully..."`)
+                        }
+                        else {
+                            db.activateUser(username).then(() => {
+                                console.log(`User '${username}' account was activated successfully...`);
+                                res.writeHead(201, http.STATUS_CODES[201]);
+                                res.end(`{"res": "User '${username}' account was activated successfully..."}`);
+                            }).catch((err) => {
+                                console.error(`User '${username}' account activation failed...`);
+                                res.end(`{"error": "${err}"}`)
+                            })
+                        }
                     })
                 }
-            }
-            else if (pathname === "/user_pass") {
-                req.on("data", (data) => {
-                    let credentialsObj = JSON.parse(data);
-                    let hash = crypto.genHash(credentialsObj.password);
-                    db.changePass(credentialsObj.username, hash);
-                    console.log(`'${credentialsObj.username}' changed password successfully...`)
-                    res.writeHead(201, http.STATUS_CODES[201])
-                    res.end(`{"info":}:"'${credentialsObj.username}' changed password successfully..."`)
-                })
             }
             else {
                 console.error("Bad request...")
@@ -438,8 +426,6 @@ httpServer.on("request", (req, res) => {
             if (pathname === "/code") {
                 if (params.has("v")) {
                     let code = params.get("v");
-                    if (code === undefined)
-                        return
                     db.deleteCode(code).then(() => {
                         console.log(`Verification code deletion was successful...`)
                         res.writeHead(204, http.STATUS_CODES[204]);

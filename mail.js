@@ -30,7 +30,7 @@ async function sendActivationMail(email, code = "12345", username="") {
 }
 
 async function sendVerifcationMail(email, code = "12345", username="") {
-    sendMail(email, "Verificate your KuroSora Account", `Dear ${username} your verification code is ${code}`, `<h1>Dear ${username} your verification code is {code}</h1>`)
+    sendMail(email, "Verificate your KuroSora Account", `Dear ${username} your verification code is ${code}`, `<h1>Dear ${username} your verification code is ${code}</h1>`)
 }
 
 async function sendRecoveryMail(email, code = "12345",username=""){

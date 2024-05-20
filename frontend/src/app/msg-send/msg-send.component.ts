@@ -23,8 +23,8 @@ export class MsgSendComponent implements OnInit {
   templates: template[] = [];
   currentTemplateId: number = 0;
 
-  activeUser: string;
-  activeRecipient: string;
+  activeUser: string = '';
+  activeRecipient: string = '';
   msgTxt: string = '';
   errorTxt: string = ''
 

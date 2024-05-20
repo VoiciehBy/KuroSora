@@ -114,73 +114,55 @@ httpServer.on("request", (req, res) => {
                 }
             }
             else if (pathname === "/code") {
-                if (params.has("username") && params.has("code")) {
+                if (params.has("username") && params.has("type") && params.has("code")) {
                     let username = params.get("username");
+                    let type = params.get("type");
                     let code = params.get("code");
-                    if (username === undefined || code === undefined)
+                    if (username === undefined || type === undefined || code === undefined)
                         return
                     db.getUser(username).then(result => {
                         if (result.length != 0) {
                             let id = result[0].id;
-                            console.log(`User '${username}' found...`)
-                            db.getCode(id).then(result => {
-                                if (result[0].code === code) {
-                                    console.log(`Verfication code was valid...`)
-                                    res.writeHead(200, http.STATUS_CODES[200]);
-                                    res.end(JSON.stringify(result));
-                                }
-                                else {
-                                    console.error(`Verification code not found :( ...`)
-                                    res.writeHead(404, http.STATUS_CODES[404]);
-                                    res.end(JSON.stringify([]));
-                                }
-                            }).catch((err) => {
-                                console.error("Getting verification code failed...")
-                                res.writeHead(500, http.STATUS_CODES[500])
-                                res.end(`{"error": "${err}"}`)
-                            })
-                        }
-                        else {
-                            console.error(`User '${username}' not found...`);
-                            res.writeHead(404, http.STATUS_CODES[404]);
-                            res.end(JSON.stringify(result));
-                        }
-                    }).catch((err) => {
-                        console.error("Checking for user existence failed...")
-                        res.writeHead(500, http.STATUS_CODES[500]);
-                        res.end(`{"error": "${err}"}`)
-                    })
-                }
-            }
-            else if (pathname === "/rec_code") {
-                if (params.has("username") && params.has("code")) {
-                    let username = params.get("username");
-                    let code = params.get("code");
-                    if (username === undefined || code === undefined)
-                        return
-                    db.getUser(username).then((result) => {
-                        if (result.length != 0) {
-                            let id = result[0].id;
                             let activated = result[0].activated;
                             console.log(`User '${username}' found...`)
-                            if (activated === 'F') {
-                                console.error(`Cannot regenerate password for inactive account`);
-                                res.writeHead(403, http.STATUS_CODES[403]);
-                                res.end(`{"error": "Cannot regenerate password for inactive account"}`);
+                            if (type === 'r') {
+                                if (activated === 'F') {
+                                    console.error(`Cannot regenerate password for inactive account`);
+                                    res.writeHead(403, http.STATUS_CODES[403]);
+                                    res.end(`{"error": "Cannot regenerate password for inactive account"}`);
+                                }
+                                else {
+                                    db.getCode(id, 'F').then(result => {
+                                        if (result[0].code === code) {
+                                            console.log(`Recovery code was valid...`)
+                                            res.writeHead(200, http.STATUS_CODES[200])
+                                        }
+                                        else {
+                                            console.error(`Verification code not found :( ...`)
+                                            res.writeHead(404, http.STATUS_CODES[404]);
+                                        }
+                                        res.end(JSON.stringify(result));
+                                    }).catch((err) => {
+                                        console.error("Getting recovery code failed...")
+                                        res.writeHead(500, http.STATUS_CODES[500])
+                                        res.end(`{"error": "${err}"}`)
+                                    })
+                                }
                             }
                             else {
-                                db.getCode(id, 'F').then(result => {
+                                db.getCode(id).then(result => {
                                     if (result[0].code === code) {
-                                        console.log(`Recovery code was valid...`)
-                                        res.writeHead(200, http.STATUS_CODES[200])
+                                        console.log(`Verfication code was valid...`)
+                                        res.writeHead(200, http.STATUS_CODES[200]);
+                                        res.end(JSON.stringify(result));
                                     }
                                     else {
                                         console.error(`Verification code not found :( ...`)
                                         res.writeHead(404, http.STATUS_CODES[404]);
+                                        res.end(JSON.stringify([]));
                                     }
-                                    res.end(JSON.stringify(result));
                                 }).catch((err) => {
-                                    console.error("Getting recovery code failed...")
+                                    console.error("Getting verification code failed...")
                                     res.writeHead(500, http.STATUS_CODES[500])
                                     res.end(`{"error": "${err}"}`)
                                 })
@@ -323,51 +305,49 @@ httpServer.on("request", (req, res) => {
                     res.end(`{"info":}:"'${msgObj.sender}' sent message to '${msgObj.recipient}'..."`);
                 })
             }
-            else if (pathname === "/new_act_code") {
-                if (params.has("username")) {
-                    let username = params.get("username");
-                    let aCode = crypto.genCode();
-                    db.addCode(aCode, username).then(() => {
-                        console.log(`Activation code was generated successfully...`);
-                        mail.sendAuthMail(config.test_email, aCode, username);
-                        res.writeHead(200, http.STATUS_CODES[200]);
-                        res.end(`{"res": "Activation code was generated successfully..."}`);
-                    }).catch((err) => {
-                        console.error("Activation code generation failed...")
-                        res.end(`{"error": "${err}"}`)
-                    })
-                }
-            }
             else if (pathname === "/new_code") {
-                if (params.has("username")) {
+                if (params.has("username") && params.has("type")) {
                     let username = params.get("username");
-                    let code = crypto.genCode();
-                    db.addCode(code, username).then(() => {
-                        console.log(`Verfication code was generated successfully...`);
-                        mail.sendAuth_1Mail(config.test_email, code, username);
-                        res.writeHead(200, http.STATUS_CODES[201]);
-                        res.end(`{"res": "Verfication code was generated successfully..."}`);
-                    }).catch((err) => {
-                        console.error("Verification code generation failed...");
-                        res.writeHead(500, http.STATUS_CODES[500]);
-                        res.end(`{"error": "${err}"}`);
-                    })
-                }
-            }
-            else if (pathname === "/new_rec_code") {
-                if (params.has("username")) {
-                    let username = params.get("username");
-                    let rCode = crypto.genRecoveryCode();
-                    db.addCode(rCode, username, 'F').then(() => {
-                        console.log(`Recovery code was generated successfully...`);
-                        mail.sendAuth_2Mail(config.test_email, rCode, username);
-                        res.writeHead(200, http.STATUS_CODES[200]);
-                        res.end(`{"res": "Recovery code was generated successfully..."}`);
-                    }).catch((err) => {
-                        console.error("Recovery code generation failed...")
-                        res.writeHead(500, http.STATUS_CODES[500]);
-                        res.end(`{"error": "${err}"}`)
-                    })
+                    let type = params.get("type");
+                    if (type === 'a') {
+                        let aCode = crypto.genCode();
+                        db.addCode(aCode, username).then(() => {
+                            console.log(`Activation code was generated successfully...`);
+                            mail.sendAuthMail(config.test_email, aCode, username);
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(`{"res": "Activation code was generated successfully..."}`);
+                        }).catch((err) => {
+                            console.error("Activation code generation failed...")
+                            res.end(`{"error": "${err}"}`)
+                        })
+                    }
+                    else if (type === 'r') {
+                        let username = params.get("username");
+                        let rCode = crypto.genRecoveryCode();
+                        db.addCode(rCode, username, 'F').then(() => {
+                            console.log(`Recovery code was generated successfully...`);
+                            mail.sendAuth_2Mail(config.test_email, rCode, username);
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(`{"res": "Recovery code was generated successfully..."}`);
+                        }).catch((err) => {
+                            console.error("Recovery code generation failed...")
+                            res.writeHead(500, http.STATUS_CODES[500]);
+                            res.end(`{"error": "${err}"}`)
+                        })
+                    }
+                    else {
+                        let code = crypto.genCode();
+                        db.addCode(code, username).then(() => {
+                            console.log(`Verfication code was generated successfully...`);
+                            mail.sendAuth_1Mail(config.test_email, code, username);
+                            res.writeHead(200, http.STATUS_CODES[201]);
+                            res.end(`{"res": "Verfication code was generated successfully..."}`);
+                        }).catch((err) => {
+                            console.error("Verification code generation failed...");
+                            res.writeHead(500, http.STATUS_CODES[500]);
+                            res.end(`{"error": "${err}"}`);
+                        })
+                    }
                 }
             }
             else if (pathname === "/new_notification") {

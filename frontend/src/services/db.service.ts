@@ -31,11 +31,11 @@ export class DbService {
   }
 
   getCode(username: string, code: string): Observable<any> {
-    return this.http.get(`${this.host}/code?username=${username}&code=${code}`);
+    return this.http.get(`${this.host}/code?username=${username}&type=d&code=${code}`);
   }
 
   getRecoveryCode(username: string, code: string): Observable<any> {
-    return this.http.get(`${this.host}/rec_code?username=${username}&code=${code}`);
+    return this.http.get(`${this.host}/code?username=${username}&type=r&code=${code}`);
   }
 
   getNotifications(username: string): Observable<any> {
@@ -72,15 +72,15 @@ export class DbService {
   }
 
   genActCode(username: string): Observable<any> {
-    return this.http.put(`${this.host}/new_act_code?username=${username}`, {});
+    return this.http.put(`${this.host}/new_code?username=${username}&type=a`, {});
   }
 
   genCode(username: string): Observable<any> {
-    return this.http.put(`${this.host}/new_code?username=${username}`, {});
+    return this.http.put(`${this.host}/new_code?username=${username}&type=d`, {});
   }
 
   genRecCode(username: string): Observable<any> {
-    return this.http.put(`${this.host}/new_rec_code?username=${username}`, {});
+    return this.http.put(`${this.host}/new_code?username=${username}&type=r`, {});
   }
 
   sendNotification(username: string, username_1: string): Observable<any> {

@@ -26,7 +26,7 @@ export class DbService {
     return this.http.get(`${this.host}/user?id=${id}`)
   }
 
-  getMessages(sender: string, recipient: string): Observable<any> {
+  getMessages(sender: string='', recipient: string=''): Observable<any> {
     return this.http.get(`${this.host}/user_messages?sender=${sender}&recipient=${recipient}`)
   }
 

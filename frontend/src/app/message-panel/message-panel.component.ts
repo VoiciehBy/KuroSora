@@ -10,8 +10,8 @@ import { DbService } from 'src/services/db.service';
 })
 
 export class MessagePanelComponent implements OnInit {
-  activeUser: string;
-  activeRecipient: string;
+  activeUser: string = '';
+  activeRecipient: string = '';
   msgTxt: string = '';
   isMsgNeedToBeUpdated: boolean = false;
   messages: message[] = [];
@@ -65,7 +65,7 @@ export class MessagePanelComponent implements OnInit {
 
   updateMessages() {
     if (this.isMsgNeedToBeUpdated == false ||
-      (this.activeUser == '' || this.activeRecipient == '')) {
+      (this.activeUser === '' || this.activeRecipient === '')) {
       this.showSpinner = false;
       return;
     }
@@ -86,8 +86,8 @@ export class MessagePanelComponent implements OnInit {
         m.olderThan8Hours = true;
     }
 
-    this.tmp = structuredClone(this.messages)
-    this.messages = []
+    this.tmp = structuredClone(this.messages);
+    this.messages = [];
 
     for (let m of this.tmp)
       if (

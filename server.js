@@ -90,9 +90,7 @@ httpServer.on("request", (req, res) => {
                 if (params.has("sender") && params.has("recipient")) {
                     let sender = params.get("sender");
                     let recipient = params.get("recipient");
-                    if (sender === undefined || recipient === undefined)
-                        return
-                    db.getMessage(sender, recipient).then(result => {
+                    db.getMessages(sender, recipient).then(result => {
                         if (result.length != 0) {
                             console.log(`'${recipient}' got ${result.length} messages from '${sender}'...`)
                             res.writeHead(200, http.STATUS_CODES[200]);
@@ -308,7 +306,6 @@ httpServer.on("request", (req, res) => {
                         })
                     }
                     else if (type === 'r') {
-                        let username = params.get("username");
                         let rCode = crypto.genRecoveryCode();
                         db.addCode(rCode, username, 'F').then(() => {
                             console.log(`Recovery code was generated successfully...`);

@@ -176,7 +176,7 @@ module.exports = {
     getUser: (u) => doQuery(`SELECT id, username, activated FROM ${config.users_table} WHERE username='${u}';`),
     getUserByHS: (l, p) => doQuery(`SELECT username, activated FROM ${config.users_table} WHERE login='${l}' AND password='${p}';`),
     getUserById: (i) => doQuery(`SELECT username FROM ${config.users_table} WHERE id=${i};`),
-    getMessage: (sender, recipient) => getMessagePromise(sender, recipient),
+    getMessages: (sender, recipient) => getMessagePromise(sender, recipient),
     getCode: (u_id, t = 'T') => doQuery(`SELECT code FROM ${config.codes_table} WHERE user_id=${u_id} AND temporary='${t}';`),
     getNotifications: (u) => getNotificationsPromise(u),
     getFriends: (u) => getFriendsPromise(u),

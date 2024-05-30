@@ -74,27 +74,21 @@ INSERT INTO Templates (owner_id,content) VALUES(3, "Nie jestem zainteresowany/a"
 INSERT INTO Templates (owner_id,content) VALUES(3, "Dziękuje");
 
 /*
-DELETE * FROM Codes;
-DROP TABLE Codes
-CASCADE CONSTRAINTS;
+DELETE FROM Codes;
+DROP TABLE Codes;
 
-DELETE * FROM Friendships;
-DROP TABLE Friendships
-CASCADE CONSTRAINTS;
+DELETE FROM Friendships;
+DROP TABLE Friendships;
 
-DELETE * FROM Friendships;
-DROP TABLE Messages
-CASCADE CONSTRAINTS;
+DELETE FROM Messages;
+DROP TABLE Messages;
 
-DELETE * FROM Notifications;
-DROP TABLE Notifications
-CASCADE CONSTRAINTS;
+DELETE FROM Notifications;
+DROP TABLE Notifications;
 
-DELETE * FROM Templates;
-DROP TABLE Templates
-CASCADE CONSTRAINTS;
+DELETE FROM Templates;
+DROP TABLE Templates;
 
-DELETE * FROM Users;
-DROP TABLE Users
-CASCADE CONSTRAINTS;
+DELETE FROM Users;
+DROP TABLE Users;
 */

@@ -23,11 +23,11 @@ export class RegisterComponent implements OnInit {
   LOGIN_STRING: string = LOGIN_STRING;
   ALREADY_HAVE_ACCOUNT_STRING: string = ALREADY_HAVE_ACCOUNT_STRING;
 
-  login: string;
-  password: string;
-  password_1: string;
-  username: string;
-  email: string;
+  login: string = '';
+  password: string = '';
+  password_1: string = '';
+  username: string = '';
+  email: string = '';
 
   errorTxt: string = ''
 
@@ -38,48 +38,49 @@ export class RegisterComponent implements OnInit {
   }
 
   emailValid(): boolean {
-    return this.email != undefined && this.email.includes('@');
+    return this.email.includes('@');
   }
 
   isLoginValid(): boolean {
-    return this.login != undefined
+    return this.login != ''
   }
 
   isUsernameValid(): boolean {
-    return this.username != undefined
+    return this.username != ''
   }
 
   isPasswordValid(): boolean {
-    return this.password != undefined && this.password_1 != undefined;
+    return this.password != '' && this.password_1 != '';
   }
 
   isTwoPasswordsMatch(): boolean {
     return this.password === this.password_1;
   }
+  
+  isCredentialsValid(): boolean {
+    return (!this.isTwoPasswordsMatch()
+    || !this.isLoginValid()
+    || !this.isUsernameValid()
+    || !this.emailValid()
+    || !this.isPasswordValid());
+  }
 
   signUp(): void {
-    if (!this.isTwoPasswordsMatch()
-      || !this.isLoginValid()
-      || !this.isUsernameValid()
-      || !this.emailValid()
-      || !this.isPasswordValid()) {
+    if (this.isCredentialsValid()) {
       this.errorTxt = BAD_REGISTRATION_FORM_STRING
       setTimeout(() => { this.errorTxt = '' }, 3000)
       return
     }
 
     this.db.createNewAccount(this.login, this.username, this.password).subscribe({
-      next: () => { },
       error: (err) => console.error(`Error: ${err}`),
       complete: () => {
         console.log("Adding user completed, :D .");
         this.db.genActCode(this.username).subscribe({
-          next: () => { },
           error: (err) => console.error(`Error: ${err}`),
           complete: () => {
-            console.log("Verification code generation completed, :D .");
+            console.log("Activation code generation completed, :D .");
             this.db.genRecCode(this.username).subscribe({
-              next: () => { },
               error: (err) => console.error(`Error: ${err}`),
               complete: () => {
                 console.log("Recovery code generation completed, :D .");

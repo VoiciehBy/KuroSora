@@ -115,50 +115,34 @@ httpServer.on("request", (req, res) => {
                     db.getUser(username).then(result => {
                         if (result.length != 0) {
                             let id = result[0].id;
-                            let activated = result[0].activated;
-                            console.log(`User '${username}' found...`)
-                            if (type === 'r') {
-                                if (activated === 'F') {
-                                    console.error(`Cannot regenerate password for inactive account`);
-                                    res.writeHead(403, http.STATUS_CODES[403]);
-                                    res.end(`{"error": "Cannot regenerate password for inactive account"}`);
+                            let temporary = 'T';
+                            console.log(`User '${username}' found...`);
+                            if (type === 'r')
+                                temporary = 'F';
+                            db.getCode(id, temporary).then(result => {
+                                if (result[0].code === code) {
+                                    if (type === 'r')
+                                        console.log(`Recovery code was valid...`);
+                                    else
+                                        console.log(`Temporary code was valid...`)
+                                    res.writeHead(200, http.STATUS_CODES[200]);
                                 }
                                 else {
-                                    db.getCode(id, 'F').then(result => {
-                                        if (result[0].code === code) {
-                                            console.log(`Recovery code was valid...`)
-                                            res.writeHead(200, http.STATUS_CODES[200])
-                                        }
-                                        else {
-                                            console.error(`Verification code not found :( ...`)
-                                            res.writeHead(404, http.STATUS_CODES[404]);
-                                        }
-                                        res.end(JSON.stringify(result));
-                                    }).catch((err) => {
-                                        console.error("Getting recovery code failed...")
-                                        res.writeHead(500, http.STATUS_CODES[500])
-                                        res.end(`{"error": "${err}"}`)
-                                    })
+                                    if (type === 'r')
+                                        console.error(`Recovery code not found :( ...`);
+                                    else
+                                        console.error(`Temporary code not found :( ...`)
+                                    res.writeHead(404, http.STATUS_CODES[404]);
                                 }
-                            }
-                            else {
-                                db.getCode(id).then(result => {
-                                    if (result[0].code === code) {
-                                        console.log(`Verfication code was valid...`)
-                                        res.writeHead(200, http.STATUS_CODES[200]);
-                                        res.end(JSON.stringify(result));
-                                    }
-                                    else {
-                                        console.error(`Verification code not found :( ...`)
-                                        res.writeHead(404, http.STATUS_CODES[404]);
-                                        res.end(JSON.stringify([]));
-                                    }
-                                }).catch((err) => {
-                                    console.error("Getting verification code failed...")
-                                    res.writeHead(500, http.STATUS_CODES[500])
-                                    res.end(`{"error": "${err}"}`)
-                                })
-                            }
+                                res.end(JSON.stringify(result));
+                            }).catch((err) => {
+                                if (type === 'r')
+                                    console.error("Getting recovery code failed...")
+                                else
+                                    console.error("Getting temporary code failed...")
+                                res.writeHead(500, http.STATUS_CODES[500])
+                                res.end(`{"error": "${err}"}`)
+                            })
                         }
                         else {
                             console.error(`User '${username}' not found...`);
@@ -313,9 +297,9 @@ httpServer.on("request", (req, res) => {
                             res.writeHead(200, http.STATUS_CODES[200]);
                             res.end(`{"res": "Recovery code was generated successfully..."}`);
                         }).catch((err) => {
-                            console.error("Recovery code generation failed...")
+                            console.error("Recovery code generation failed...");
                             res.writeHead(500, http.STATUS_CODES[500]);
-                            res.end(`{"error": "${err}"}`)
+                            res.end(`{"error": "${err}"}`);
                         })
                     }
                     else {

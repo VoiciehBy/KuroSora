@@ -49,10 +49,9 @@ export class PassRecovery2Component implements OnInit {
     }
 
     this.db.changePassword(this.recoveryUsername, this.password).subscribe({
-      next: (data: any) => { },
       error: (err: any) => console.error(`Error: ${err} `),
       complete: () => {
-        console.log("Password change has been completed, :D")
+        console.log("Password change has been completed, :D");
         this.uS.setRecoveryUsername('');
       }
     })

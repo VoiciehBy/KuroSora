@@ -1,8 +1,8 @@
 const http = require("http");
-const db = require("./db")
-const config = require("./config").http
-const crypto = require("./crypto")
-const mail = require("./mail")
+const db = require("./db");
+const config = require("./config").http;
+const crypto = require("./crypto");
+const mail = require("./mail");
 
 const httpServer = http.createServer();
 
@@ -126,6 +126,7 @@ httpServer.on("request", (req, res) => {
                                     else
                                         console.log(`Temporary code was valid...`)
                                     res.writeHead(200, http.STATUS_CODES[200]);
+                                    res.end(JSON.stringify(result));
                                 }
                                 else {
                                     if (type === 'r')
@@ -133,8 +134,8 @@ httpServer.on("request", (req, res) => {
                                     else
                                         console.error(`Temporary code not found :( ...`)
                                     res.writeHead(404, http.STATUS_CODES[404]);
+                                    res.end(JSON.stringify({}));
                                 }
-                                res.end(JSON.stringify(result));
                             }).catch((err) => {
                                 if (type === 'r')
                                     console.error("Getting recovery code failed...")
@@ -281,19 +282,20 @@ httpServer.on("request", (req, res) => {
                         let aCode = crypto.genCode();
                         db.addCode(aCode, username).then(() => {
                             console.log(`Activation code was generated successfully...`);
-                            mail.sendAuthMail(config.test_email, aCode, username);
+                            mail.sendAuthMail(aCode, username);
                             res.writeHead(200, http.STATUS_CODES[200]);
                             res.end(`{"res": "Activation code was generated successfully..."}`);
                         }).catch((err) => {
-                            console.error("Activation code generation failed...")
-                            res.end(`{"error": "${err}"}`)
+                            console.error("Activation code generation failed...");
+                            res.writeHead(500, http.STATUS_CODES[500]);
+                            res.end(`{"error": "${err}"}`);
                         })
                     }
                     else if (type === 'r') {
                         let rCode = crypto.genRecoveryCode();
                         db.addCode(rCode, username, 'F').then(() => {
                             console.log(`Recovery code was generated successfully...`);
-                            mail.sendAuth_2Mail(config.test_email, rCode, username);
+                            mail.sendAuth_2Mail(rCode, username);
                             res.writeHead(200, http.STATUS_CODES[200]);
                             res.end(`{"res": "Recovery code was generated successfully..."}`);
                         }).catch((err) => {
@@ -306,7 +308,7 @@ httpServer.on("request", (req, res) => {
                         let code = crypto.genCode();
                         db.addCode(code, username).then(() => {
                             console.log(`Verfication code was generated successfully...`);
-                            mail.sendAuth_1Mail(config.test_email, code, username);
+                            mail.sendAuth_1Mail(code, username);
                             res.writeHead(200, http.STATUS_CODES[201]);
                             res.end(`{"res": "Verfication code was generated successfully..."}`);
                         }).catch((err) => {

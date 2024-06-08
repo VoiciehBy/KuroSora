@@ -23,7 +23,7 @@ export class PassRecoveryComponent implements OnInit {
   username: string;
   recoveryCode: string;
 
-  errorTxt: string = ''
+  errorTxt: string = '';
 
   constructor(private uS: UserService,
     private db: DbService,
@@ -34,19 +34,44 @@ export class PassRecoveryComponent implements OnInit {
   }
 
   onRegenPassBtnClick(): void {
-    this.db.getRecoveryCode(this.username, this.recoveryCode).subscribe({
-      next: () => { },
-      error: (err) => console.error(`Error: ${err}`),
+    let isAccountActivated = true;
+    this.db.getUser(this.username).subscribe({
+      next: (data) => {
+        if (data[0].activated === 'F')
+          isAccountActivated = isAccountActivated && false;
+      },
+      error: (err: any) => {
+        console.error(`Error: ${err}`);
+        this.errorTxt = "BAD PLACEHOLDER";
+        setTimeout(() => { this.errorTxt = '' }, 3000);
+      },
       complete: () => {
-        console.log("Recovery code was valid, :D...")
-        this.db.genCode(this.username).subscribe({
-          next: () => { },
-          error: (err) => console.error(`Error: ${err}`),
-          complete: () => {
-            this.uS.setRecoveryUsername(this.username);
-            this.router.navigate(["/password_recovery_1"]);
-          }
-        })
+        if (isAccountActivated)
+          this.db.getRecoveryCode(this.username, this.recoveryCode).subscribe({
+            error: (err: any) => {
+              console.error(`Error: ${err}`);
+              this.errorTxt = "BAD PLACEHOLDER";
+              setTimeout(() => { this.errorTxt = '' }, 3000);
+            },
+            complete: () => {
+              console.log("Recovery code was valid, :D...")
+              this.db.genCode(this.username).subscribe({
+                error: (err: any) => {
+                  console.error(`Error: ${err}`);
+                  this.errorTxt = "BAD PLACEHOLDER";
+                  setTimeout(() => { this.errorTxt = '' }, 3000);
+                },
+                complete: () => {
+                  this.uS.setRecoveryUsername(this.username);
+                  this.router.navigate(["/password_recovery_1"]);
+                }
+              })
+            }
+          })
+        else {
+          this.errorTxt = "BAD PLACEHOLDER";
+          setTimeout(() => { this.errorTxt = '' }, 3000);
+        }
       }
     })
   }

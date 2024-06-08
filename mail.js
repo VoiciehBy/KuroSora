@@ -1,20 +1,21 @@
-const dotenv = require("dotenv")
+const dotenv = require("dotenv");
+const config = require("./config").mail;
 const nodemailer = require("nodemailer");
 
-dotenv.config()
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
+    host: config.hostname,
+    port: config.port,
     secure: false,
     auth: {
-        user: "laurel57@ethereal.email",
+        user: config.test_email,
         pass: process.env.TEST_MAIL_PASSWORD
     },
     tls: { rejectUnauthorized: false }
 })
 
-async function sendMail(email, subject = "", text = "", html = "<h1>XD</h1>") {
+async function sendMail(email = "", subject = "", text = "", html = "<h1>XD</h1>") {
     await transporter.sendMail({
         from: '"KuroSora Team" <noreply@kurosora.edu>',
         to: `${email}`,
@@ -25,20 +26,20 @@ async function sendMail(email, subject = "", text = "", html = "<h1>XD</h1>") {
     console.log("The E-mail message sent...");
 }
 
-async function sendActivationMail(email, code = "12345", username="") {
+async function sendActivationMail(email = "", code = "12345", username = "") {
     sendMail(email, "Activate your KuroSora Account", `Dear ${username} your activation code is ${code}`, `<h1>Dear ${username} your activation code is ${code}</h1>`)
 }
 
-async function sendVerifcationMail(email, code = "12345", username="") {
+async function sendVerifcationMail(email = "", code = "12345", username = "") {
     sendMail(email, "Verificate your KuroSora Account", `Dear ${username} your verification code is ${code}`, `<h1>Dear ${username} your verification code is ${code}</h1>`)
 }
 
-async function sendRecoveryMail(email, code = "12345",username=""){
+async function sendRecoveryMail(email = "", code = "12345", username = "") {
     sendMail(email, "Recovery code for your KuroSora Account", `Dear ${username} your recovery code is ${code}`, `<h1>Dear ${username} your recovery code is ${code}</h1>`)
 }
 
 module.exports = {
-    sendAuthMail: (e, c, u) => sendActivationMail(e, c, u),
-    sendAuth_1Mail: (e, c, u) => sendVerifcationMail(e, c, u),
-    sendAuth_2Mail: (e, c, u) => sendRecoveryMail(e, c, u),
+    sendAuthMail: (c, u) => sendActivationMail(config.test_email, c, u),
+    sendAuth_1Mail: (c, u) => sendVerifcationMail(config.test_email, c, u),
+    sendAuth_2Mail: (c, u) => sendRecoveryMail(config.test_email, c, u),
 }

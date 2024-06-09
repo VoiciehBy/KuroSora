@@ -46,32 +46,19 @@
                         <div class="btn-group" role="group" aria-label="Button Group">
                             <button class="btn btn-primary" type="button" (click)="insertTemplate();"
                                 data-bs-dismiss="modal">
-                                <img src="../../node_modules/bootstrap-icons/icons/send-plus.svg" width="60" height="30" alt="Send Plus Icon">
+                                <img src="../../node_modules/bootstrap-icons/icons/send-plus.svg" width="60" height="30"
+                                    alt="Send Plus Icon">
                             </button>
                             <button class="btn btn-success" type="button" (click)="sendTemplate();"
                                 data-bs-dismiss="modal">
-                                <img src="../../node_modules/bootstrap-icons/icons/send.svg" width="60" height="30" alt="Send Icon">
+                                <img src="../../node_modules/bootstrap-icons/icons/send.svg" width="60" height="30"
+                                    alt="Send Icon">
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="modal fade" id="emojiModal" tabIndex="-1" aria-labelledby="Emoji Modal">
-            <div id="emojiModalDialog" class="modal-dialog">
-                <div class="modal-content">
-                    <div class="text-end">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body text-wrap">
-                        <emoji-mart emoji="+1" set="twitter" [darkMode]=false [sheetSize]=32 [emojiSize]=32
-                            (emojiClick)="addEmoji($event)"></emoji-mart>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <button class="btn btn-success badge" type="button" value="Emoji" data-bs-toggle="modal"
             data-bs-target="#emojiModal">
             <img src="../../node_modules/bootstrap-icons/icons/emoji-smile-fill.svg" width="60" height="30"
@@ -84,7 +71,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body text-wrap">
-                        <emoji-mart emoji="+1" set="twitter" [sheetSize]=32 [emojiSize]=32
+                        <emoji-mart emoji="+1" set="twitter" [darkMode]=false [sheetSize]=32 [emojiSize]=32
                             (emojiClick)="addEmoji($event)"></emoji-mart>
                     </div>
                 </div>

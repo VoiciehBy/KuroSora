@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class HomeComponent implements OnInit {
-  constructor() { }
+  leftAligned: boolean;
+  constructor(private uS: UserService) { }
 
   ngOnInit(): void {
     console.log("Home component inited, xdd....");
+    this.uS.leftAlignedState.subscribe(b => this.leftAligned = b);
   }
 }

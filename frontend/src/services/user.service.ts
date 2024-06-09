@@ -9,9 +9,11 @@ export class UserService {
     private messageUpdateSubject = new BehaviorSubject<boolean>(true);
 
     private recoveryUsernameSubject = new BehaviorSubject<string>("");
-    
+
     private friendUpdateSubject = new BehaviorSubject<boolean>(false);
     private notificationListSubject = new BehaviorSubject<boolean>(false);
+
+    private leftAlignedSubject = new BehaviorSubject<boolean>(true);
 
     activeUserState: Observable<string> = this.activeUserSubject.asObservable();
     activeUserActivationState: Observable<boolean> = this.activeUserActivationSubject.asObservable();
@@ -22,7 +24,9 @@ export class UserService {
 
     friendUpdateState: Observable<boolean> = this.friendUpdateSubject.asObservable();
     notificationUpdateState: Observable<boolean> = this.notificationListSubject.asObservable();
- 
+
+    leftAlignedState: Observable<boolean> = this.leftAlignedSubject.asObservable();
+
     constructor() { }
 
     setActiveUser(username: string) {
@@ -45,11 +49,15 @@ export class UserService {
         this.recoveryUsernameSubject.next(username);
     }
 
-    setFriendListUpdate(b : boolean){
+    setFriendListUpdate(b: boolean) {
         this.friendUpdateSubject.next(b);
     }
 
-    setNotificationListUpdate(b : boolean){
+    setNotificationListUpdate(b: boolean) {
         this.notificationListSubject.next(b);
+    }
+
+    setLeftAlignedState(b: boolean) {
+        this.leftAlignedSubject.next(b);
     }
 }

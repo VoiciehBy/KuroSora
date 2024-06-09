@@ -27,6 +27,7 @@ export class MessageComponent implements OnInit {
   @Input() content: string;
   @Input() timeSince: string;
   @Input() olderThan8Hours: boolean;
+  @Input() leftAligned: boolean;
 
   constructor(private uS: UserService) { }
 

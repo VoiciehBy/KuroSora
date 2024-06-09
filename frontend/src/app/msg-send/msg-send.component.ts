@@ -30,6 +30,8 @@ export class MsgSendComponent implements OnInit {
 
   isUserActivated: boolean = false;
 
+  leftAligned: boolean;
+
   constructor(private uS: UserService,
     private db: DbService) { }
 
@@ -37,12 +39,13 @@ export class MsgSendComponent implements OnInit {
     console.log("Message Send component inited, xdd....");
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
+    this.uS.leftAlignedState.subscribe(b => this.leftAligned = b);
     this.isUserActivated = false;
 
     this.updateTemplates();
   }
 
-  updateTemplates(){
+  updateTemplates() {
     this.db.getTemplates(this.activeUser).subscribe({
       next: (data: any) => {
         this.templates = [];
@@ -63,7 +66,7 @@ export class MsgSendComponent implements OnInit {
       }
     })
   }
-  
+
   sendMessage(): Observable<any> {
     return this.db.sendMessage(this.activeUser, this.activeRecipient, this.msgTxt);
   }
@@ -74,14 +77,14 @@ export class MsgSendComponent implements OnInit {
 
   insertTemplate(): void {
     for (let i = 0; i < this.templates.length; i++) {
-      if (this.templates[i].id == this.currentTemplateId){
+      if (this.templates[i].id == this.currentTemplateId) {
         this.msgTxt += ' ';
         this.msgTxt += this.templates[i].content;
       }
     }
   }
 
-  sendTemplate(): void{
+  sendTemplate(): void {
     this.insertTemplate();
     this.onSendButtonClick();
   }

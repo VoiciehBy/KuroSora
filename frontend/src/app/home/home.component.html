@@ -1,19 +1,42 @@
-<div class="row">
-    <div class="col-2">
-        <div class="list-group scrollBox">
-            <div class="scrollBoxContent">
-                <app-friend-panel></app-friend-panel>
+<div *ngIf="leftAligned;else rightAligned">
+    <div class="row">
+        <div class="col-2">
+            <div class="list-group scrollBox">
+                <div class="scrollBoxContent">
+                    <app-friend-panel></app-friend-panel>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-10">
-        <div class="container-fluid scrollBox">
-            <div class="scrollBoxContent">
-                <app-message-panel></app-message-panel>
+        <div class="col-10">
+            <div class="container-fluid scrollBox">
+                <div class="scrollBoxContent">
+                    <app-message-panel></app-message-panel>
+                </div>
             </div>
-        </div>
-        <div>
-            <app-msg-send></app-msg-send>
+            <div>
+                <app-msg-send></app-msg-send>
+            </div>
         </div>
     </div>
 </div>
+<ng-template #rightAligned>
+    <div class="row">
+        <div class="col-10">
+            <div class="container-fluid scrollBox">
+                <div class="scrollBoxContent">
+                    <app-message-panel></app-message-panel>
+                </div>
+            </div>
+            <div>
+                <app-msg-send></app-msg-send>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="list-group scrollBox">
+                <div class="scrollBoxContent">
+                    <app-friend-panel></app-friend-panel>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

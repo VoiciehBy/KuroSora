@@ -19,6 +19,8 @@ export class MessagePanelComponent implements OnInit {
 
   showSpinner: boolean = false;
 
+  leftAligned: boolean;
+
   constructor(private uS: UserService,
     private db: DbService) { }
 
@@ -27,12 +29,13 @@ export class MessagePanelComponent implements OnInit {
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
+    this.uS.leftAlignedState.subscribe(b => this.leftAligned = b);
     this.messages = [];
 
     setInterval(() => {
       if (this.activeUser != '')
         this.uS.setMsgUpdate(true)
-      if(this.activeRecipient === ''){
+      if (this.activeRecipient === '') {
         this.messages = []
         this.tmp = []
         console.log("sdassa")

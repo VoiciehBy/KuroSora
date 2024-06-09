@@ -1,6 +1,6 @@
 <div *ngFor="let msg of messages;" class="row">
   <app-message [sender]="msg.sender" [content]="msg.content" [timeSince]="msg.timeSince"
-    [olderThan8Hours]="msg.olderThan8Hours">
+    [olderThan8Hours]="msg.olderThan8Hours" [leftAligned]="leftAligned">
   </app-message>
 </div>
 <div class="row">

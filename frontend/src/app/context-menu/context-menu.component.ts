@@ -27,6 +27,7 @@ export class ContextMenuComponent implements OnInit {
   }
 
   deleteFriend(): void {
+    this.uS.setMsgUpdate(false);
     if (this.activeUser != '')
       this.db.delFriendship(this.activeUser, this.ctxMenuUsername).subscribe({
         error: (err: any) => console.error(`Error: ${err}`),

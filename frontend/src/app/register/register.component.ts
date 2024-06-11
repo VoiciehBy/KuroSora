@@ -29,7 +29,8 @@ export class RegisterComponent implements OnInit {
   username: string = '';
   email: string = '';
 
-  errorTxt: string = ''
+  errorTxt: string = '';
+  goodTxt: string = '';
 
   constructor(private db: DbService, private router: Router) { }
 
@@ -42,11 +43,11 @@ export class RegisterComponent implements OnInit {
   }
 
   isLoginValid(): boolean {
-    return this.login != ''
+    return this.login != '';
   }
 
   isUsernameValid(): boolean {
-    return this.username != ''
+    return this.username != '';
   }
 
   isPasswordValid(): boolean {
@@ -56,20 +57,20 @@ export class RegisterComponent implements OnInit {
   isTwoPasswordsMatch(): boolean {
     return this.password === this.password_1;
   }
-  
+
   isCredentialsValid(): boolean {
     return (!this.isTwoPasswordsMatch()
-    || !this.isLoginValid()
-    || !this.isUsernameValid()
-    || !this.emailValid()
-    || !this.isPasswordValid());
+      || !this.isLoginValid()
+      || !this.isUsernameValid()
+      || !this.emailValid()
+      || !this.isPasswordValid());
   }
 
   signUp(): void {
     if (this.isCredentialsValid()) {
-      this.errorTxt = BAD_REGISTRATION_FORM_STRING
-      setTimeout(() => { this.errorTxt = '' }, 3000)
-      return
+      this.errorTxt = BAD_REGISTRATION_FORM_STRING;
+      setTimeout(() => { this.errorTxt = '' }, 3000);
+      return;
     }
 
     this.db.createNewAccount(this.login, this.username, this.password).subscribe({
@@ -89,7 +90,10 @@ export class RegisterComponent implements OnInit {
           }
         })
         console.log("Signing up completed, :D .");
-        this.router.navigate(["login"]);
+        setTimeout(() => { this.goodTxt = "GOOD PLACEHOLDER"; }, 3000);
+        setTimeout(() => { 
+          this.goodTxt = "GOOD PLACEHOLDER";
+          this.router.navigate(["login"]);}, 5000);
       }
     })
   }

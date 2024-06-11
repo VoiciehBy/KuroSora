@@ -68,10 +68,12 @@ CREATE TABLE Templates(
 
 ALTER TABLE Templates AUTO_INCREMENT = 1;
 
+/*
 INSERT INTO Templates (owner_id,content) VALUES(3, "Ok");
 INSERT INTO Templates (owner_id,content) VALUES(3, "Dobranoc");
 INSERT INTO Templates (owner_id,content) VALUES(3, "Nie jestem zainteresowany/a");
 INSERT INTO Templates (owner_id,content) VALUES(3, "Dziękuje");
+*/
 
 /*
 DELETE FROM Codes;

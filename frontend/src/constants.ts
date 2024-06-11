@@ -56,3 +56,8 @@ export const NO_NOTIFICATION_STRING : string = "No new notifications";
 export const ADD_FRIEND_STRING: string = "Send friend request";
 export const FRIEND_REQUEST_STRING: string = "Friend request from ";
 */
+
+export const FRIEND_LIST_UPDATE_INTERVAL = 3200;
+export const SHOW_SPINNER_INTERVAL = FRIEND_LIST_UPDATE_INTERVAL;
+export const MESSAGE_LIST_UPDATE_INTERVAL = FRIEND_LIST_UPDATE_INTERVAL * 10000;
+export const NOTIFICATION_LIST_UPDATE_INTERVAL = FRIEND_LIST_UPDATE_INTERVAL;

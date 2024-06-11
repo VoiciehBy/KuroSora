@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
   password: string;
   isMsgNeedToBeUpdated: boolean = false;
 
-  errorTxt: string = ''
+  errorTxt: string = '';
 
   constructor(private uS: UserService,
     private db: DbService,
@@ -49,13 +49,13 @@ export class LoginComponent implements OnInit {
       next: (data: any) => {
         if (data.length != 0) {
           this.uS.setActiveUser(data[0].username);
-          this.uS.setActiveUserActivationState(data[0].activated === 'T' ? true : false)
+          this.uS.setActiveUserActivationState(data[0].activated === 'T' ? true : false);
         }
       },
       error: (err) => {
         console.error(`Error: ${err}`)
-        this.errorTxt = this.BAD_CREDENTIALS_STRING
-        setTimeout(() => { this.errorTxt = '' }, 3000)
+        this.errorTxt = this.BAD_CREDENTIALS_STRING;
+        setTimeout(() => { this.errorTxt = '' }, 3000);
       },
       complete: () => {
         console.log("Signing in completed, :D");

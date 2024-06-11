@@ -1,4 +1,4 @@
-const { createHmac } = require(`node:crypto`)
+const { createHmac } = require(`node:crypto`);
 
 function genH(secret) {
     return createHmac("sha512", secret).digest("hex");

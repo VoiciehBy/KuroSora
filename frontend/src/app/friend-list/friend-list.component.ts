@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { DbService } from 'src/services/db.service';
 import { UserService } from 'src/services/user.service';
 import { user } from 'src/user';
+import { FRIEND_LIST_UPDATE_INTERVAL } from 'src/constants';
 
 @Component({
   selector: 'app-friend-list',
@@ -23,6 +24,8 @@ export class FriendListComponent implements OnInit {
   errorTxt: string = '';
   showSpinner: boolean = false;
 
+  friendUpdateInterval: any;
+
   constructor(private uS: UserService,
     private db: DbService) { }
 
@@ -33,14 +36,14 @@ export class FriendListComponent implements OnInit {
     this.uS.friendUpdateState.subscribe(b => this.isFriendListNeedToBeUpdated = b);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
 
-    setInterval(() => {
+    this.friendUpdateInterval = setInterval(() => {
       if (this.activeUser != '' && this.isFriendListNeedToBeUpdated) {
         this.friends = [];
         this.updateFriendList();
         this.ctxMenuVisible = false;
         this.showSpinner = true;
       }
-    }, 3200);
+    }, FRIEND_LIST_UPDATE_INTERVAL);
   }
 
   updateFriendList(): void {
@@ -91,5 +94,9 @@ export class FriendListComponent implements OnInit {
       this.ctxMenuUsername = '';
     }
     return false;
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.friendUpdateInterval);
   }
 }

@@ -1,4 +1,4 @@
-<div *ngFor="let friend of friends;">
+<div *ngFor="let friend of friends;" (click)="onRightButtonClick($event)">
     <div *ngIf="friend.username === activeRecipient; else elseBlock">
         <a class="list-group-item list-group-item-action list-group-item-warning rounded"
             (click)="selectRecipient(friend.username)" (contextmenu)="onRightButtonClick($event)">
@@ -15,7 +15,7 @@
 <div *ngIf="showSpinner === true" class="spinner-border text-success m-3" role="status">
     <span class="visually-hidden">Loading...</span>
 </div>
-<div (click)="onRightButtonClick($event)">
+<div>
     <app-context-menu [visible]="ctxMenuVisible" [ctxMenuUsername]="ctxMenuUsername"
         [activeUser]="activeUser"></app-context-menu>
 </div>

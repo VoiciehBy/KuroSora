@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { notification } from "../../notification";
 import {
   HOSTNAME,
   NOTIFICATIONS_STRING,
   NO_NOTIFICATION_STRING,
-  FRIEND_REQUEST_STRING
+  FRIEND_REQUEST_STRING,
+  NOTIFICATION_LIST_UPDATE_INTERVAL
 } from 'src/constants';
 import { UserService } from 'src/services/user.service';
 import { DbService } from 'src/services/db.service';
@@ -26,6 +27,8 @@ export class NotificationListComponent implements OnInit {
 
   isNotificationsNeedToBeUpdated: boolean = false;
 
+  notificationListUpdate: any;
+
   constructor(private uS: UserService,
     private db: DbService) { }
 
@@ -37,12 +40,12 @@ export class NotificationListComponent implements OnInit {
     
     this.uS.setNotificationListUpdate(true);
 
-    setInterval(() => {
+    this.notificationListUpdate = setInterval(() => {
       if (this.activeUser != '' && this.isNotificationsNeedToBeUpdated) {
         this.notifications = [];
         this.updateNotificationList();
       }
-    }, 3200)
+    }, NOTIFICATION_LIST_UPDATE_INTERVAL)
   }
 
   updateNotificationList(): void {
@@ -94,5 +97,9 @@ export class NotificationListComponent implements OnInit {
       error: (err: any) => console.error(`Error: ${err}`),
       complete: () => console.log("Deleting friend request successfull...")
     })
+  }
+  
+  ngOnDestroy() : void{
+    clearInterval(this.notificationListUpdate);
   }
 }

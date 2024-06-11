@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { message } from 'src/message';
 import { UserService } from 'src/services/user.service';
 import { DbService } from 'src/services/db.service';
+import {
+  SHOW_SPINNER_INTERVAL,
+  MESSAGE_LIST_UPDATE_INTERVAL
+} from 'src/constants';
 
 @Component({
   selector: 'app-message-panel',
@@ -21,6 +25,9 @@ export class MessagePanelComponent implements OnInit {
 
   leftAligned: boolean;
 
+  showSpinnerInterval: any;
+  messageUpdateInterval: any;
+
   constructor(private uS: UserService,
     private db: DbService) { }
 
@@ -32,7 +39,7 @@ export class MessagePanelComponent implements OnInit {
     this.uS.leftAlignedState.subscribe(b => this.leftAligned = b);
     this.messages = [];
 
-    setInterval(() => {
+    this.showSpinnerInterval = setInterval(() => {
       if (this.activeUser != '')
         this.uS.setMsgUpdate(true)
       if (this.activeRecipient === '') {
@@ -41,12 +48,12 @@ export class MessagePanelComponent implements OnInit {
         console.log("sdassa")
       }
       this.showSpinner = true;
-    }, 3200);
+    }, SHOW_SPINNER_INTERVAL);
 
-    setInterval(() => {
+    this.messageUpdateInterval = setInterval(() => {
       if (this.activeUser != '')
         this.updateMessages()
-    }, 6400);
+    }, MESSAGE_LIST_UPDATE_INTERVAL);
   }
 
   addMessagesToTmp(A: string, B: string) {
@@ -101,5 +108,10 @@ export class MessagePanelComponent implements OnInit {
         this.messages.push(m)
     this.showSpinner = false;
     this.uS.setMsgUpdate(false);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.showSpinnerInterval);
+    clearInterval(this.messageUpdateInterval);
   }
 }

@@ -258,7 +258,7 @@ httpServer.on("request", (req, res) => {
                             }).catch((err) => {
                                 console.error(`User '${username}' registration failed...`);
                                 res.writeHead(500, http.STATUS_CODES[500]);
-                                res.end(`{"error": "${err}"}`)
+                                res.end(`{"error": "${err}"}`);
                             });
                         }
                     })

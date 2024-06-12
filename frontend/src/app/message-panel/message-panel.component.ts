@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { message } from 'src/message';
 import { UserService } from 'src/services/user.service';
 import { DbService } from 'src/services/db.service';
@@ -17,37 +17,32 @@ export class MessagePanelComponent implements OnInit {
   activeUser: string = '';
   activeRecipient: string = '';
   msgTxt: string = '';
-  isMsgNeedToBeUpdated: boolean = false;
   messages: message[] = [];
   tmp: message[] = [];
-
-  showSpinner: boolean = false;
-
-  leftAligned: boolean;
-
-  showSpinnerInterval: any;
+  isMsgNeedToBeUpdated: boolean = false;
+  isSpinnerVisible: boolean = false;
+  isLeftAligned: boolean = false;
+  isSpinnerVisibleInterval: any;
   messageUpdateInterval: any;
 
-  constructor(private uS: UserService,
-    private db: DbService) { }
+  constructor(private uS: UserService, private db: DbService) { }
 
   ngOnInit(): void {
     console.log("Message Panel component inited, xdd....");
-    this.uS.activeUserState.subscribe(username => this.activeUser = username);
-    this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
+    this.uS.activeUserState.subscribe(u => this.activeUser = u);
+    this.uS.activeRecipientState.subscribe(u => this.activeRecipient = u);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
-    this.uS.leftAlignedState.subscribe(b => this.leftAligned = b);
+    this.uS.leftAlignedState.subscribe(b => this.isLeftAligned = b);
     this.messages = [];
 
-    this.showSpinnerInterval = setInterval(() => {
+    this.isSpinnerVisibleInterval = setInterval(() => {
       if (this.activeUser != '')
-        this.uS.setMsgUpdate(true)
+        this.uS.setMsgUpdate(true);
       if (this.activeRecipient === '') {
-        this.messages = []
-        this.tmp = []
-        console.log("sdassa")
+        this.messages = [];
+        this.tmp = [];
       }
-      this.showSpinner = true;
+      this.isSpinnerVisible = true;
     }, SHOW_SPINNER_INTERVAL);
 
     this.messageUpdateInterval = setInterval(() => {
@@ -76,13 +71,13 @@ export class MessagePanelComponent implements OnInit {
   updateMessages() {
     if (this.isMsgNeedToBeUpdated == false ||
       (this.activeUser === '' || this.activeRecipient === '')) {
-      this.showSpinner = false;
+      this.isSpinnerVisible = false;
       return;
     }
 
-    this.showSpinner = true;
+    this.isSpinnerVisible = true;
     this.addMessagesToTmp(this.activeUser, this.activeRecipient)
-    this.addMessagesToTmp(this.activeRecipient, this.activeUser)
+    this.addMessagesToTmp(this.activeRecipient, this.activeUser);
     this.tmp = this.tmp.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
 
     for (let i = 0; i < this.tmp.length; i++)
@@ -104,14 +99,14 @@ export class MessagePanelComponent implements OnInit {
         (m.sender === this.activeUser && m.recipient === this.activeRecipient)
         ||
         (m.sender === this.activeRecipient && m.recipient === this.activeUser)
-      )
-        this.messages.push(m)
-    this.showSpinner = false;
+      ) //TODO TO DO REFACTOR
+        this.messages.push(m);
+    this.isSpinnerVisible = false;
     this.uS.setMsgUpdate(false);
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.showSpinnerInterval);
+    clearInterval(this.isSpinnerVisibleInterval);
     clearInterval(this.messageUpdateInterval);
   }
 }

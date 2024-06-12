@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { DbService } from 'src/services/db.service';
 import { UserService } from 'src/services/user.service';
 import { user } from 'src/user';
@@ -13,26 +13,21 @@ import { FRIEND_LIST_UPDATE_INTERVAL } from 'src/constants';
 export class FriendListComponent implements OnInit {
   activeUser: string = '';
   activeRecipient: string = '';
+  ctxMenuUsername: string = '';
+  errorTxt: string = '';
   friends: user[] = [];
   isMsgNeedToBeUpdated: boolean = false;
-
   @Input() isFriendListNeedToBeUpdated: boolean;
-
-  ctxMenuVisible: boolean = false;
-  ctxMenuUsername: string = '';
-
-  errorTxt: string = '';
-  showSpinner: boolean = false;
-
+  isCtxMenuVisible: boolean = false;
+  isSpinnerVisible: boolean = false;
   friendUpdateInterval: any;
 
-  constructor(private uS: UserService,
-    private db: DbService) { }
+  constructor(private uS: UserService, private db: DbService) { }
 
   ngOnInit(): void {
     console.log("Friend list component inited, xD...")
-    this.uS.activeUserState.subscribe(username => this.activeUser = username);
-    this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
+    this.uS.activeUserState.subscribe(u => this.activeUser = u);
+    this.uS.activeRecipientState.subscribe(u => this.activeRecipient = u);
     this.uS.friendUpdateState.subscribe(b => this.isFriendListNeedToBeUpdated = b);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
 
@@ -40,8 +35,8 @@ export class FriendListComponent implements OnInit {
       if (this.activeUser != '' && this.isFriendListNeedToBeUpdated) {
         this.friends = [];
         this.updateFriendList();
-        this.ctxMenuVisible = false;
-        this.showSpinner = true;
+        this.isCtxMenuVisible = false;
+        this.isSpinnerVisible = true;
       }
     }, FRIEND_LIST_UPDATE_INTERVAL);
   }
@@ -77,7 +72,8 @@ export class FriendListComponent implements OnInit {
 
   selectRecipient(username: string): void {
     for (let i = 0; i < this.friends.length; i++)
-      if (username != this.activeRecipient && this.friends[i].username === username) {
+      if (username != this.activeRecipient
+        && this.friends[i].username === username) {
         this.uS.setActiveRecipient(this.friends[i].username);
         this.uS.setMsgUpdate(true);
         return;
@@ -86,11 +82,11 @@ export class FriendListComponent implements OnInit {
 
   onRightButtonClick(event: any): boolean {
     if (event.which === 3) { //if rmb was clicked
-      this.ctxMenuVisible = true;
+      this.isCtxMenuVisible = true;
       this.ctxMenuUsername = event.target.innerHTML;
     }
     else {
-      this.ctxMenuVisible = false;
+      this.isCtxMenuVisible = false;
       this.ctxMenuUsername = '';
     }
     return false;

@@ -18,24 +18,25 @@ export class FriendPanelComponent implements OnInit {
   host: string = HOSTNAME;
   FRIENDS_STRING: string = FRIENDS_STRING;
   ADD_FRIEND_STRING: string = ADD_FRIEND_STRING;
+
   activeUser: string = '';
   activeRecipient: string = '';
-  friends: user[] = [];
-  isMsgNeedToBeUpdated: boolean = false;
-  isFriendListNeedToBeUpdated: boolean = true;
-  ctxMenuVisible: boolean = false;
   ctxMenuUsername: string = '';
   newFriendUsername: string = '';
   errorTxt: string = '';
-  showSpinner: boolean = false;
+
+  friends: user[] = [];
+
+  isMsgNeedToBeUpdated: boolean = false;
+  isFriendListNeedToBeUpdated: boolean = true;
 
   constructor(private uS: UserService,
     private db: DbService) { }
 
   ngOnInit(): void {
     console.log("Friend list component inited, xD...")
-    this.uS.activeUserState.subscribe(username => this.activeUser = username);
-    this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
+    this.uS.activeUserState.subscribe(u => this.activeUser = u);
+    this.uS.activeRecipientState.subscribe(u => this.activeRecipient = u);
     this.uS.friendUpdateState.subscribe(b => this.isFriendListNeedToBeUpdated = b);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
   }
@@ -51,7 +52,7 @@ export class FriendPanelComponent implements OnInit {
       complete: () => {
         let isAlreadyFriends = false;
         this.db.getFriendship(this.activeUser, this.newFriendUsername).subscribe({
-          next: (data) => {
+          next: (data: any) => {
             if (data.length != 0) {
               console.log("Frienship already exist, xD...");
               isAlreadyFriends = true;
@@ -60,11 +61,24 @@ export class FriendPanelComponent implements OnInit {
           error: (err: any) => console.error(`Error: ${err} `),
           complete: () => {
             if (!isAlreadyFriends) {
-              this.db.sendNotification(this.activeUser, this.newFriendUsername).subscribe({ //could send duplicate notifications TODO
+              let isFriendRequestAlreadySent = false;
+              this.db.getNotification(this.activeUser, "FRIEND_REQUEST").subscribe({
+                next: (data: any) => {
+                  if (data.length != 0) {
+                    console.log("Friend request already exist, xD...");
+                    isFriendRequestAlreadySent = true;
+                  }
+                },
                 error: (err: any) => console.error(`Error: ${err} `),
                 complete: () => {
-                  console.log("Notification was added successfully, :D");
-                  this.uS.setMsgUpdate(true);
+                  if (!isFriendRequestAlreadySent)
+                    this.db.sendNotification(this.activeUser, this.newFriendUsername).subscribe({
+                      error: (err: any) => console.error(`Error: ${err} `),
+                      complete: () => {
+                        console.log("Notification was added successfully, :D");
+                        this.uS.setMsgUpdate(true);
+                      }
+                    })
                 }
               })
             }

@@ -1,10 +1,10 @@
 <div *ngFor="let msg of messages;" class="row">
   <app-message [sender]="msg.sender" [content]="msg.content" [timeSince]="msg.timeSince"
-    [olderThan8Hours]="msg.olderThan8Hours" [leftAligned]="leftAligned">
+    [olderThan8Hours]="msg.olderThan8Hours" [leftAligned]="isLeftAligned">
   </app-message>
 </div>
 <div class="row">
-  <div *ngIf="showSpinner === true" class="spinner-border text-success m-3" role="status">
+  <div *ngIf="isSpinnerVisible === true" class="spinner-border text-success m-3" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
 </div>

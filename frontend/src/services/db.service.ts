@@ -38,6 +38,10 @@ export class DbService {
     return this.http.get(`${this.host}/code?username=${username}&type=r&code=${code}`);
   }
 
+  getNotification(username: string='', type: string = "FRIEND_REQUEST"): Observable<any> {
+    return this.http.get(`${this.host}/notification?to=${username}&type=${type}`);
+  }
+
   getNotifications(username: string=''): Observable<any> {
     return this.http.get(`${this.host}/notifications?to=${username}`);
   }

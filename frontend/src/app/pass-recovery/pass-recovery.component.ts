@@ -4,7 +4,8 @@ import { UserService } from 'src/services/user.service';
 import {
   HOSTNAME,
   RESET_PASSWORD_STRING,
-  REMIND_PASSWORD_BTN_STRING
+  REMIND_PASSWORD_BTN_STRING,
+  ACCOUNT_IS_NOT_ACTIVATED
 } from 'src/constants';
 import { DbService } from 'src/services/db.service';
 
@@ -19,10 +20,9 @@ export class PassRecoveryComponent implements OnInit {
   RESET_PASSWORD_STRING: string = RESET_PASSWORD_STRING;
   REMIND_PASSWORD_BTN_STRING: string = REMIND_PASSWORD_BTN_STRING;
 
-  email: string;
-  username: string;
-  recoveryCode: string;
-
+  email: string = '';
+  username: string = '';
+  recoveryCode: string = '';
   errorTxt: string = '';
 
   constructor(private uS: UserService,
@@ -69,7 +69,7 @@ export class PassRecoveryComponent implements OnInit {
             }
           })
         else {
-          this.errorTxt = "BAD PLACEHOLDER";
+          this.errorTxt = ACCOUNT_IS_NOT_ACTIVATED;
           setTimeout(() => { this.errorTxt = '' }, 3000);
         }
       }

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
 import {
-  RESET_PASSWORD_STRING
+  RESET_PASSWORD_STRING,
+  BAD_CREDENTIALS_2_STRING,
+  OK_STRING
 } from 'src/constants';
 import { DbService } from 'src/services/db.service';
 import { UserService } from 'src/services/user.service';
@@ -14,13 +15,13 @@ import { UserService } from 'src/services/user.service';
 })
 
 export class PassRecovery2Component implements OnInit {
+  RESET_PASSWORD_STRING = RESET_PASSWORD_STRING;
+
   password: string;
   password_1: string;
-  recoveryUsername: string;
-
-  errorTxt: string = ''
-
-  RESET_PASSWORD_STRING = RESET_PASSWORD_STRING;
+  recoveryUsername: string = '';
+  errorTxt: string = '';
+  goodTxt: string = '';
 
   constructor(private uS: UserService,
     private db: DbService,
@@ -43,8 +44,8 @@ export class PassRecovery2Component implements OnInit {
     if (!this.isTwoPasswordsMatch()
       || !this.isPasswordValid()) {
 
-      this.errorTxt = 'BAD PLACEHOLDER'
-      setTimeout(() => { this.errorTxt = '' }, 3000)
+      this.errorTxt = BAD_CREDENTIALS_2_STRING;
+      setTimeout(() => { this.errorTxt = '' }, 3000);
       return
     }
 
@@ -55,6 +56,10 @@ export class PassRecovery2Component implements OnInit {
         this.uS.setRecoveryUsername('');
       }
     })
-    this.router.navigate(["login"]);
+    setTimeout(() => { this.goodTxt = OK_STRING; }, 3000);
+    setTimeout(() => {
+      this.goodTxt = OK_STRING;
+      this.router.navigate(["login"]);
+    }, 5000);
   }
 }

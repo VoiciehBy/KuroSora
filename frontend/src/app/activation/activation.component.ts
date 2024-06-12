@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { DbService } from 'src/services/db.service';
 import { UserService } from 'src/services/user.service';
-
 import {
   ACCOUNT_ACTIVATION_STRING,
-  ACTIVATE_ACCCOUNT_STRING
+  ACTIVATE_ACCCOUNT_STRING,
+  OK_STRING
 } from 'src/constants';
 
 @Component({
@@ -17,7 +17,8 @@ import {
 export class ActivationComponent {
   activeUser: string = '';
   code: string = '';
-  errorTxt: string = ''
+  errorTxt: string = '';
+  goodTxt: string = '';
 
   ACCOUNT_ACTIVATION_STRING = ACCOUNT_ACTIVATION_STRING;
   ACTIVATE_ACCCOUNT_STRING = ACTIVATE_ACCCOUNT_STRING;
@@ -27,8 +28,8 @@ export class ActivationComponent {
     private router: Router) { }
 
   ngOnInit(): void {
-    console.log("Activation component inited, xdd....");
-    this.uS.activeUserState.subscribe(username => this.activeUser = username);
+    console.log("Activation component inited...");
+    this.uS.activeUserState.subscribe(u => this.activeUser = u);
   }
 
   onActivateButtonClick(): void {
@@ -46,7 +47,7 @@ export class ActivationComponent {
             this.db.delCode(this.code).subscribe({
               error: (err: any) => console.error(`Error: ${err} `),
               complete: () => {
-                console.log("Temporary verification code has been deleted, :D...")
+                console.log("Temp verification code has been deleted...");
                 this.uS.setActiveUserActivationState(true);
                 this.uS.setFriendListUpdate(true);
               }
@@ -55,6 +56,10 @@ export class ActivationComponent {
         })
       }
     })
-    this.router.navigate([""]);
+    setTimeout(() => { this.goodTxt = OK_STRING; }, 3000);
+    setTimeout(() => {
+      this.goodTxt = OK_STRING;
+      this.router.navigate([""]);
+    }, 5000);
   }
 }

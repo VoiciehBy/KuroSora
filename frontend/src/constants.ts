@@ -27,6 +27,11 @@ export const NO_NOTIFICATION_STRING: string = "Brak powiadomień";
 export const ADD_FRIEND_STRING: string = "Wyślij zaproszenie do znajomych";
 export const FRIEND_REQUEST_STRING: string = "Zaproszenie do znajomych od użytkownika ";
 
+export const BAD_CREDENTIALS_2_STRING = "Podane dane są nieprawidłowe, xD...";
+export const OK_STRING = "Ok";
+
+export const CONFIRM_STRING = "Potwierdź zmianę hasła kodem weryfikacyjnym";
+
 /*
 export const FRIENDS_STRING : string = "Friends";
 export const WELCOME_BACK_STRING :string = "Welcome back!";
@@ -55,9 +60,12 @@ export const NOTIFICATIONS_STRING : string = "Notifications";
 export const NO_NOTIFICATION_STRING : string = "No new notifications";
 export const ADD_FRIEND_STRING: string = "Send friend request";
 export const FRIEND_REQUEST_STRING: string = "Friend request from ";
+export const BAD_CREDENTIALS_2_STRING = "Given data is invalid, xD...";
+export const OK_STRING = "Ok";
+export const CONFIRM_STRING = "Confirm password change using verification code";
 */
 
 export const FRIEND_LIST_UPDATE_INTERVAL = 3200;
 export const SHOW_SPINNER_INTERVAL = FRIEND_LIST_UPDATE_INTERVAL;
-export const MESSAGE_LIST_UPDATE_INTERVAL = FRIEND_LIST_UPDATE_INTERVAL * 10000;
+export const MESSAGE_LIST_UPDATE_INTERVAL = FRIEND_LIST_UPDATE_INTERVAL;
 export const NOTIFICATION_LIST_UPDATE_INTERVAL = FRIEND_LIST_UPDATE_INTERVAL;

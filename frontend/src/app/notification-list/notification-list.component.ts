@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { notification } from "../../notification";
 import {
   HOSTNAME,
@@ -21,23 +21,21 @@ export class NotificationListComponent implements OnInit {
   NOTIFICATIONS_STRING: string = NOTIFICATIONS_STRING;
   NO_NOTIFICATION_STRING: string = NO_NOTIFICATION_STRING;
   FRIEND_REQUEST_STRING: string = FRIEND_REQUEST_STRING;
+  
   activeUser: string = '';
   activeRecipient: string = '';
+
   notifications: notification[] = [];
-
   isNotificationsNeedToBeUpdated: boolean = false;
-
   notificationListUpdate: any;
 
-  constructor(private uS: UserService,
-    private db: DbService) { }
+  constructor(private uS: UserService, private db: DbService) { }
 
   ngOnInit(): void {
     console.log("Notfication list component inited, xD...")
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
     this.uS.notificationUpdateState.subscribe(b => this.isNotificationsNeedToBeUpdated = b);
-    
     this.uS.setNotificationListUpdate(true);
 
     this.notificationListUpdate = setInterval(() => {
@@ -60,8 +58,7 @@ export class NotificationListComponent implements OnInit {
                 this.notifications.push(n);
             },
             error: (err: any) => console.error(`Error: ${err} `),
-            complete: () =>
-              console.log("Notification list updated successfully, :D...")
+            complete: () => console.log("Notification list updated successfully, :D...")
           });
         }
       },
@@ -74,8 +71,7 @@ export class NotificationListComponent implements OnInit {
   }
 
   onAcceptButtonClicked(i: number): void {
-    this.db.addFriend(this.notifications[0].from, this.activeUser).subscribe({
-      next: (data) => { },
+    this.db.addFriend(this.notifications[i].from, this.activeUser).subscribe({
       error: (err: any) => console.error(err),
       complete: () => {
         console.log("Friend request successfull...");
@@ -93,13 +89,12 @@ export class NotificationListComponent implements OnInit {
 
   onDeclineButtonClicked(i: number): void {
     this.db.delNotification(this.notifications[0].from, this.activeUser).subscribe({
-      next: () => { },
       error: (err: any) => console.error(`Error: ${err}`),
       complete: () => console.log("Deleting friend request successfull...")
     })
   }
-  
-  ngOnDestroy() : void{
+
+  ngOnDestroy(): void {
     clearInterval(this.notificationListUpdate);
   }
 }

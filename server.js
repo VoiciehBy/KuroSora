@@ -157,19 +157,42 @@ httpServer.on("request", (req, res) => {
                     })
                 }
             }
+            else if (pathname === "/notification") {
+                if (params.has("to") && params.has("type")) {
+                    let username = params.get("to");
+                    let type = params.get("type");
+                    db.getNotification(username, type).then(result => {
+                        if (result.length != 0) {
+                            console.log("Got notification...");
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(JSON.stringify(result));
+                        }
+                        else {
+                            console.error(`Notification not found...`);
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(JSON.stringify({}));
+                        }
+                    }).catch((err) => {
+                        console.error("Getting notification failed...");
+                        res.writeHead(500, http.STATUS_CODES[500]);
+                        res.end(`{"error": "${err}"}`);
+                    })
+                }
+            }
             else if (pathname === "/notifications") {
                 if (params.has("to")) {
                     let username = params.get("to");
                     db.getNotifications(username).then(result => {
-                        if (result[0].length != 0) {
+                        if (result.length != 0) {
                             console.log("Got notifications...");
                             res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(JSON.stringify(result));
                         }
                         else {
                             console.error(`No new notifications...`)
-                            res.writeHead(404, http.STATUS_CODES[404]);
+                            res.writeHead(200, http.STATUS_CODES[204]);
+                            res.end(JSON.stringify({}));
                         }
-                        res.end(JSON.stringify(result));
                     }).catch((err) => {
                         console.error("Getting notifications failed...");
                         res.writeHead(500, http.STATUS_CODES[500]);
@@ -202,9 +225,16 @@ httpServer.on("request", (req, res) => {
                     let username = params.get("u");
                     let username_1 = params.get("uu");
                     db.getFriendship(username, username_1).then(result => {
-                        console.log("Got friendship, :D...");
-                        res.writeHead(200, http.STATUS_CODES[200]);
-                        res.end(JSON.stringify(result));
+                        if (result.length != 0) {
+                            console.log("Got friendship, :D...");
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(JSON.stringify(result));
+                        }
+                        else {
+                            console.log("Friendship not found, :(...");
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(JSON.stringify({}));
+                        }
                     }).catch((err) => {
                         console.error("Getting frienship failed, :(...");
                         res.writeHead(500, http.STATUS_CODES[500]);
@@ -412,7 +442,7 @@ httpServer.on("request", (req, res) => {
                     db.deleteCode(code).then(() => {
                         console.log(`Verification code deletion was successful...`)
                         res.writeHead(204, http.STATUS_CODES[204]);
-                        res.end(`{}`);
+                        res.end(JSON.stringify({}));
                     }).catch((err) => {
                         console.error(`Verification code deletion failed...`);
                         res.writeHead(500, http.STATUS_CODES[500]);
@@ -427,7 +457,7 @@ httpServer.on("request", (req, res) => {
                     db.deleteNotification(username, username_1).then(() => {
                         console.log("Deleteting notification...");
                         res.writeHead(204, http.STATUS_CODES[204]);
-                        res.end(`{}`);
+                        res.end(JSON.stringify({}));
                     }).catch((err) => {
                         console.error("Deleteting notification failed...");
                         res.writeHead(500, http.STATUS_CODES[500]);
@@ -444,7 +474,7 @@ httpServer.on("request", (req, res) => {
                             db.deleteFriend(username, username1).then(() => {
                                 console.log(`Friendship was ended...`);
                                 res.writeHead(204, http.STATUS_CODES[204]);
-                                res.end(`{}`);
+                                res.end(JSON.stringify({}));
                             }).catch((err) => {
                                 console.error(`Ending friendship failed...`);
                                 res.writeHead(500, http.STATUS_CODES[500]);

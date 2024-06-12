@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 import {
   SENT_MESSAGE_TO_STRING,
@@ -29,20 +28,22 @@ export class MsgSendComponent implements OnInit {
   errorTxt: string = ''
 
   isUserActivated: boolean = false;
+  isLeftAligned: boolean = false;
 
-  leftAligned: boolean;
-
-  constructor(private uS: UserService,
-    private db: DbService) { }
+  constructor(private uS: UserService, private db: DbService) { }
 
   ngOnInit(): void {
     console.log("Message Send component inited, xdd....");
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
-    this.uS.leftAlignedState.subscribe(b => this.leftAligned = b);
+    this.uS.leftAlignedState.subscribe(b => this.isLeftAligned = b);
     this.isUserActivated = false;
 
     this.updateTemplates();
+  }
+
+  onRightButtonClick(event: any): boolean {
+    return false;
   }
 
   updateTemplates() {
@@ -55,20 +56,15 @@ export class MsgSendComponent implements OnInit {
         }
         else {
           for (let i = 0; i < data.length; i++) {
-            let t: template = new template(data[i].id, data[i].owner_id, data[i].content);
+            let t: template = new template(data[i].id,
+              data[i].owner_id, data[i].content);
             this.templates.push(t);
           }
         }
       },
       error: (err: any) => console.error(`Error: ${err} `),
-      complete: () => {
-        console.log("Template list updated, :D...")
-      }
+      complete: () => console.log("Template list updated, :D...")
     })
-  }
-
-  sendMessage(): Observable<any> {
-    return this.db.sendMessage(this.activeUser, this.activeRecipient, this.msgTxt);
   }
 
   selectTemplate(t: template): void {
@@ -99,29 +95,21 @@ export class MsgSendComponent implements OnInit {
         if (data)
           this.isUserActivated = (data[0].activated) === 'T' ? true : false;
       },
-      error: (err) => console.error(`Error: ${err} `),
+      error: (err) => console.error(`Error: ${err}`),
       complete: () => {
         if (this.isUserActivated && this.msgTxt.length != 0)
-          this.sendMessage().subscribe({
+          this.db.sendMessage(this.activeUser, this.activeRecipient, this.msgTxt).subscribe({
             next: (data) => console.log(data),
             error: (err) => console.error(`Error: ${err} `),
-            complete: () => {
-              console.log("Message send completed...");
-            }
+            complete: () => console.log("Message send completed...")
           })
-        else {
-          if (this.isUserActivated == false)
-            this.errorTxt = this.ACCOUNT_IS_NOT_ACTIVE;
-          else if (this.msgTxt.length == 0)//REFACTOR TODO
-            this.errorTxt = MESSAGE_EMPTY_STRING;
-          setTimeout(() => { this.errorTxt = '' }, 3000);
-        }
+        else if (this.isUserActivated == false)
+          this.errorTxt = this.ACCOUNT_IS_NOT_ACTIVE;
+        else if (this.msgTxt.length == 0)
+          this.errorTxt = MESSAGE_EMPTY_STRING;
+        setTimeout(() => { this.errorTxt = '' }, 3000);
         this.msgTxt = '';
       }
     })
-  }
-
-  onRightButtonClick(event: any): boolean {
-    return false;
   }
 }

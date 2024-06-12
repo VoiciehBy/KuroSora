@@ -12,10 +12,10 @@
         </a>
     </ng-template>
 </div>
-<div *ngIf="showSpinner === true" class="spinner-border text-success m-3" role="status">
+<div *ngIf="isSpinnerVisible === true" class="spinner-border text-success m-3" role="status">
     <span class="visually-hidden">Loading...</span>
 </div>
 <div>
-    <app-context-menu [visible]="ctxMenuVisible" [ctxMenuUsername]="ctxMenuUsername"
+    <app-context-menu [visible]="isCtxMenuVisible" [ctxMenuUsername]="ctxMenuUsername"
         [activeUser]="activeUser"></app-context-menu>
 </div>

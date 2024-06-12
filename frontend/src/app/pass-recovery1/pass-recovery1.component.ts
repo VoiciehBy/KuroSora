@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CONFIRM_STRING } from 'src/constants';
 import { Router } from '@angular/router';
 import { DbService } from 'src/services/db.service';
 import { UserService } from 'src/services/user.service';
@@ -10,15 +11,14 @@ import { UserService } from 'src/services/user.service';
 })
 
 export class PassRecovery1Component implements OnInit {
-  recoveryUsername: string;
+  CONFIRM_STRING: string = CONFIRM_STRING;
+  recoveryUsername: string = '';
   code: string = '';
   errorTxt: string = '';
 
   constructor(private uS: UserService,
     private db: DbService,
     private router: Router) { }
-
-  //TO DO TRANSLATIONS STRINGS
 
   ngOnInit(): void {
     console.log("Regen verification(Regen Password Phase #2) component inited, xdd....");

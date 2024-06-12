@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserService } from 'src/services/user.service';
-
 import {
   trigger, style, animate, transition
 } from "@angular/animations";

@@ -16,10 +16,31 @@
   ],
   "author": "VoiciehBy",
   "license": "GPL-3.0-or-later",
+  "build": {
+    "appId": "kurosora",
+    "files": [
+      "**/*",
+      "!**/*.ts",
+      "!*.map",
+      "!package.json",
+      "!package-lock.json",
+      {
+        "from": "dist",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "frontend/dist/assets/img/logo.png"
+    }
+  },
   "devDependencies": {
     "@types/node": "^20.8.7",
     "dotenv": "^16.4.5",
-    "electron": "^27.0.0"
+    "electron": "^27.0.0",
+    "electron-builder": "^24.13.3"
   },
   "private": true,
   "dependencies": {

@@ -71,6 +71,25 @@ function getMessagePromise(sender, recipient) {
     })
 }
 
+function getNotificationPromise(u, t) {
+    return new Promise((resolve, reject) => {
+        doQuery(`SELECT id FROM ${config.users_table} WHERE username='${u}';`)
+            .then(result => {
+                if (result[0] === undefined) {
+                    reject("Given user or type not found...")
+                    return
+                }
+                doQuery(`SELECT * FROM ${config.notifications_table} WHERE (user_1_id=${result[0].id} OR user_2_id=${result[0].id}) AND type='${t}';`)
+                    .then((rows) => {
+                        resolve(rows)
+                    }).catch((err) => {
+                        console.error(err)
+                        reject(err)
+                    })
+            })
+    })
+}
+
 function getNotificationsPromise(u) {
     return new Promise((resolve, reject) => {
         doQuery(`SELECT id FROM ${config.users_table} WHERE username='${u}'`)
@@ -178,6 +197,7 @@ module.exports = {
     getUserById: (i) => doQuery(`SELECT username FROM ${config.users_table} WHERE id=${i};`),
     getMessages: (sender, recipient) => getMessagePromise(sender, recipient),
     getCode: (u_id, t = 'T') => doQuery(`SELECT code FROM ${config.codes_table} WHERE user_id=${u_id} AND temporary='${t}';`),
+    getNotification: (u,t) => getNotificationPromise(u,t),
     getNotifications: (u) => getNotificationsPromise(u),
     getFriends: (u) => getFriendsPromise(u),
     getFriendship: (u, uu) => getFriendshipPromise(u, uu),

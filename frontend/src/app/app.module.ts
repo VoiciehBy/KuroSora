@@ -24,7 +24,7 @@ import { ActivationComponent } from './activation/activation.component';
 import { PassRecoveryComponent } from './pass-recovery/pass-recovery.component';
 import { PassRecovery1Component } from './pass-recovery1/pass-recovery1.component';
 import { PassRecovery2Component } from './pass-recovery2/pass-recovery2.component';
-import { NotificationListComponent } from './notification/notification-list.component';
+import { NotificationListComponent } from './notification-list/notification-list.component';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { FriendListComponent } from './friend-list/friend-list.component';
 

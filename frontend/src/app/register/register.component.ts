@@ -6,7 +6,8 @@ import {
   REGISTER_BTN_STRING,
   ALREADY_HAVE_ACCOUNT_STRING,
   HOSTNAME,
-  BAD_REGISTRATION_FORM_STRING
+  BAD_REGISTRATION_FORM_STRING,
+  OK_STRING
 } from 'src/constants';
 import { DbService } from 'src/services/db.service';
 
@@ -83,17 +84,16 @@ export class RegisterComponent implements OnInit {
             console.log("Activation code generation completed, :D .");
             this.db.genRecCode(this.username).subscribe({
               error: (err) => console.error(`Error: ${err}`),
-              complete: () => {
-                console.log("Recovery code generation completed, :D .");
-              }
+              complete: () => console.log("Recovery code generation completed, :D .")
             })
           }
         })
         console.log("Signing up completed, :D .");
-        setTimeout(() => { this.goodTxt = "GOOD PLACEHOLDER"; }, 3000);
-        setTimeout(() => { 
-          this.goodTxt = "GOOD PLACEHOLDER";
-          this.router.navigate(["login"]);}, 5000);
+        setTimeout(() => { this.goodTxt = OK_STRING; }, 3000);
+        setTimeout(() => {
+          this.goodTxt = OK_STRING;
+          this.router.navigate(["login"]);
+        }, 5000);
       }
     })
   }

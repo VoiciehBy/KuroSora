@@ -11,7 +11,7 @@ import { UserService } from 'src/services/user.service';
 export class NavbarComponent implements OnInit {
   activeUser: string;
   isActiveUserAccountActivated: boolean;
-  leftAligned: boolean;
+  isLeftAligned: boolean;
 
   constructor(public router: Router,
     private uS: UserService) { }
@@ -20,7 +20,7 @@ export class NavbarComponent implements OnInit {
     console.log("Navbar component inited, xdd....");
     this.uS.activeUserState.subscribe(username => this.activeUser = username);
     this.uS.activeUserActivationState.subscribe(b => this.isActiveUserAccountActivated = b);
-    this.uS.leftAlignedState.subscribe(b => this.leftAligned = b);
+    this.uS.leftAlignedState.subscribe(b => this.isLeftAligned = b);
     this.router.navigate(["login"], {});
   }
 
@@ -61,6 +61,6 @@ export class NavbarComponent implements OnInit {
   }
 
   onToggleAligmentButtonClick(): void {
-    this.uS.setLeftAlignedState(!this.leftAligned);
+    this.uS.setLeftAlignedState(!this.isLeftAligned);
   }
 }

@@ -16,10 +16,10 @@ const createConnection = (timeout = 1000) => {
                 database: config.db_name,
             }).then((connection) => {
                 console.log("Database connection established, :D...")
-                resolve(connection)
+                resolve(connection);
             }).catch((err) => {
                 console.error("Database connection refused :( ...")
-                reject(err)
+                reject(err);
             })
         })
     }, timeout)
@@ -197,7 +197,7 @@ module.exports = {
     getUserById: (i) => doQuery(`SELECT username FROM ${config.users_table} WHERE id=${i};`),
     getMessages: (sender, recipient) => getMessagePromise(sender, recipient),
     getCode: (u_id, t = 'T') => doQuery(`SELECT code FROM ${config.codes_table} WHERE user_id=${u_id} AND temporary='${t}';`),
-    getNotification: (u,t) => getNotificationPromise(u,t),
+    getNotification: (u, t) => getNotificationPromise(u, t),
     getNotifications: (u) => getNotificationsPromise(u),
     getFriends: (u) => getFriendsPromise(u),
     getFriendship: (u, uu) => getFriendshipPromise(u, uu),

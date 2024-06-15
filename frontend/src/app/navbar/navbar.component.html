@@ -13,49 +13,57 @@
       <ul class="navbar-nav ms-auto gap-2">
         <li class="nav-item active">
           <button class="btn badge bg-success" (click)="onToggleAligmentButtonClick();">
-            <img src="../../node_modules/bootstrap-icons/icons/chevron-compact-left.svg" width="30" height="30"
-              alt="Chevron Compact Left Icon">
+            <h3>
+              <i class="bi bi-chevron-compact-left"></i>
+            </h3>
           </button>
         </li>
         <li class="nav-item active">
           <div *ngIf="activeUser != ''">
             <button class="btn badge bg-success" (click)="onHomeButtonClick();">
-              <img src="../../node_modules/bootstrap-icons/icons/house-fill.svg" width="30" height="30"
-                alt="Filled Home Icon">
+              <h3>
+                <i class="bi bi-house-fill"></i>
+              </h3>
             </button>
           </div>
         </li>
         <li class="nav-item active">
           <div *ngIf="activeUser != ''">
             <button class="btn badge bg-success" (click)="onNotificationButtonClick();">
-              <img src="../../node_modules/bootstrap-icons/icons/bell-fill.svg" width="30" height="30"
-                alt="Bell Fill Icon">
+              <h3>
+                <i class="bi bi-bell-fill"></i>
+              </h3>
             </button>
           </div>
         </li>
         <li class="nav-item active">
           <div *ngIf="activeUser != ''" class="badge text-wrap text-bg-success">
-            <img src="../../node_modules/bootstrap-icons/icons/person-fill.svg" width="30" height="19"
-              alt="Filled Person Icon">
-            {{activeUser}}
+            <h6>
+              <i class="bi bi-person-fill">
+                {{activeUser}}
+              </i>
+            </h6>
           </div>
         </li>
         <li *ngIf="activeUser != '' && !isActiveUserAccountActivated" class="nav-item active">
           <button class="btn badge bg-success" (click)="onActivationButtonClick();">
-            <img src="../../node_modules/bootstrap-icons/icons/check-circle-fill.svg" width="30" height="30"
-              alt="Filled Check Circle Icon">
+            <h3>
+              <i class="bi bi-check-circle-fill"></i>
+            </h3>
           </button>
         </li>
         <li class="nav-item active">
           <button *ngIf="activeUser === '';else logoutBlock" class="btn badge bg-success"
             (click)="onLoginButtonClick();">
-            <img src="../../node_modules/bootstrap-icons/icons/pen-fill.svg" width="30" height="30"
-              alt="Filled Pen Icon">
+            <h3>
+              <i class="bi bi-pen-fill"></i>
+            </h3>
           </button>
           <ng-template #logoutBlock>
             <button class="btn badge bg-success" (click)="onSignOutButtonClick();">
-              <img src="../../node_modules/bootstrap-icons/icons/box-arrow-right.svg" width="30" height="30"
-                alt="Box Arrow Right Icon">
+              <h3>
+                <i class="bi bi-box-arrow-right"></i>
+              </h3>
             </button>
           </ng-template>
         </li>
@@ -74,49 +82,57 @@
         <li class="nav-item active">
           <div *ngIf="activeUser != ''">
             <button class="btn badge bg-success" (click)="onHomeButtonClick();">
-              <img src="../../node_modules/bootstrap-icons/icons/house-fill.svg" width="30" height="30"
-                alt="Filled Home Icon">
+              <h3>
+                <i class="bi bi-house-fill"></i>
+              </h3>
             </button>
           </div>
         </li>
         <li class="nav-item active">
           <div *ngIf="activeUser != ''">
             <button class="btn badge bg-success" (click)="onNotificationButtonClick();">
-              <img src="../../node_modules/bootstrap-icons/icons/bell-fill.svg" width="30" height="30"
-                alt="Bell Fill Icon">
+              <h3>
+                <i class="bi bi-bell-fill"></i>
+              </h3>
             </button>
           </div>
         </li>
         <li class="nav-item active">
           <div *ngIf="activeUser != ''" class="badge text-wrap text-bg-success">
-            <img src="../../node_modules/bootstrap-icons/icons/person-fill.svg" width="30" height="19"
-              alt="Filled Person Icon">
-            {{activeUser}}
+            <h6>
+              <i class="bi bi-person-fill">
+                {{activeUser}}
+              </i>
+            </h6>
           </div>
         </li>
         <li *ngIf="activeUser != '' && !isActiveUserAccountActivated" class="nav-item active">
           <button class="btn badge bg-success" (click)="onActivationButtonClick();">
-            <img src="../../node_modules/bootstrap-icons/icons/check-circle-fill.svg" width="30" height="30"
-              alt="Filled Check Circle Icon">
+            <h3>
+              <i class="bi bi-check-circle-fill"></i>
+            </h3>
           </button>
         </li>
         <li class="nav-item active">
           <button *ngIf="activeUser === '';else logoutBlock" class="btn badge bg-success"
             (click)="onLoginButtonClick();">
-            <img src="../../node_modules/bootstrap-icons/icons/pen-fill.svg" width="30" height="30"
-              alt="Filled Pen Icon">
+            <h3>
+              <i class="bi bi-pen-fill"></i>
+            </h3>
           </button>
           <ng-template #logoutBlock>
             <button class="btn badge bg-success" (click)="onSignOutButtonClick();">
-              <img src="../../node_modules/bootstrap-icons/icons/box-arrow-right.svg" width="30" height="30"
-                alt="Box Arrow Right Icon">
+              <h3>
+                <i class="bi bi-box-arrow-right"></i>
+              </h3>
             </button>
           </ng-template>
         </li>
         <li class="nav-item active">
           <button class="btn badge bg-success" (click)="onToggleAligmentButtonClick();">
-            <img src="../../node_modules/bootstrap-icons/icons/chevron-compact-right.svg" width="30" height="30"
-              alt="Chevron Compact Right Icon">
+            <h3>
+              <i class="bi bi-chevron-compact-right"></i>
+            </h3>
           </button>
         </li>
       </ul>

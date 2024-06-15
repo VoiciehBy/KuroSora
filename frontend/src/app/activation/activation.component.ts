@@ -15,13 +15,13 @@ import {
 })
 
 export class ActivationComponent {
+  ACCOUNT_ACTIVATION_STRING: string = ACCOUNT_ACTIVATION_STRING;
+  ACTIVATE_ACCCOUNT_STRING: string = ACTIVATE_ACCCOUNT_STRING;
+
   activeUser: string = '';
   code: string = '';
   errorTxt: string = '';
   goodTxt: string = '';
-
-  ACCOUNT_ACTIVATION_STRING = ACCOUNT_ACTIVATION_STRING;
-  ACTIVATE_ACCCOUNT_STRING = ACTIVATE_ACCCOUNT_STRING;
 
   constructor(private uS: UserService,
     private db: DbService,

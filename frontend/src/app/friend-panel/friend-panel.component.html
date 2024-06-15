@@ -3,8 +3,11 @@
         {{FRIENDS_STRING}}:
         <div class="btn-group" role="group" aria-label="Button Group">
             <button class="btn btn-success bg-gradient rounded" type="button" value="add" data-bs-toggle="modal"
-            data-bs-target="#addFriendModal"><img src="../../node_modules/bootstrap-icons/icons/person-plus-fill.svg"
-                width="15" height="15" alt="Filled Plus Person Icon"></button>
+                data-bs-target="#addFriendModal">
+                <h3>
+                    <i class="bi bi-person-plus-fill"></i>
+                </h3>
+            </button>
         </div>
     </h6>
     <div *ngIf="activeUser != ''" class="nav-item active">

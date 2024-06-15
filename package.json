@@ -33,7 +33,7 @@
     ],
     "win": {
       "target": "portable",
-      "icon": "frontend/dist/assets/img/logo.png"
+      "icon": "frontend/dist/frontend/assets/logo.png"
     }
   },
   "devDependencies": {

@@ -12,6 +12,7 @@ import { UserService } from 'src/services/user.service';
 
 export class PassRecovery1Component implements OnInit {
   CONFIRM_STRING: string = CONFIRM_STRING;
+
   recoveryUsername: string = '';
   code: string = '';
   errorTxt: string = '';
@@ -22,7 +23,7 @@ export class PassRecovery1Component implements OnInit {
 
   ngOnInit(): void {
     console.log("Regen verification(Regen Password Phase #2) component inited, xdd....");
-    this.uS.recoveryUsernameState.subscribe(username => this.recoveryUsername = username);//ACTIVE USER ERROR
+    this.uS.recoveryUsernameState.subscribe(username => this.recoveryUsername = username);
   }
 
   onConfirmActivationButtonClick(): void {

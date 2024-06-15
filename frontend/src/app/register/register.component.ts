@@ -18,7 +18,6 @@ import { DbService } from 'src/services/db.service';
 })
 
 export class RegisterComponent implements OnInit {
-  host: string = HOSTNAME;
   CREATE_USER_STRING: string = CREATE_USER_STRING;
   REGISTER_BTN_STRING: string = REGISTER_BTN_STRING;
   LOGIN_STRING: string = LOGIN_STRING;

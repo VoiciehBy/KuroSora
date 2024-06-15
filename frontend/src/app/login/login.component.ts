@@ -3,7 +3,6 @@ import { Router } from "@angular/router";
 import * as CryptoJS from 'crypto-js';
 import { UserService } from 'src/services/user.service';
 import {
-  HOSTNAME,
   WELCOME_BACK_STRING,
   DONT_HAVE_ACCOUNT_STRING,
   CREATE_ACCOUNT_STRING,
@@ -20,7 +19,6 @@ import { DbService } from 'src/services/db.service';
 })
 
 export class LoginComponent implements OnInit {
-  host: string = HOSTNAME;
   WELCOME_BACK_STRING: string = WELCOME_BACK_STRING;
   DONT_HAVE_ACCOUNT_STRING: string = DONT_HAVE_ACCOUNT_STRING;
   CREATE_ACCOUNT_STRING: string = CREATE_ACCOUNT_STRING;

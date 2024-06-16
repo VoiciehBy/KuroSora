@@ -45,8 +45,12 @@ function doQuery(query = "", timeout = 1000) {
     })
 }
 
-function getMessagePromise(sender, recipient) {
-    return new Promise((resolve, reject) => {
+module.exports = {
+    test: () => doQuery(`SELECT id FROM ${config.users_table} WHERE id='1';`),
+    getUser: (u) => doQuery(`SELECT id, username, activated FROM ${config.users_table} WHERE username='${u}';`),
+    getUserByHS: (l, p) => doQuery(`SELECT username, activated FROM ${config.users_table} WHERE login='${l}' AND password='${p}';`),
+    getUserById: (i) => doQuery(`SELECT username FROM ${config.users_table} WHERE id=${i};`),
+    getMessages: (sender, recipient) => new Promise((resolve, reject) => {
         doQuery(`SELECT id FROM ${config.users_table} WHERE username='${sender}'`)
             .then(sender_id => {
                 if (sender_id[0] === undefined) {
@@ -68,11 +72,9 @@ function getMessagePromise(sender, recipient) {
                             })
                     })
             })
-    })
-}
-
-function getNotificationPromise(u, t) {
-    return new Promise((resolve, reject) => {
+    }),
+    getCode: (u_id, t = 'T') => doQuery(`SELECT code FROM ${config.codes_table} WHERE user_id=${u_id} AND temporary='${t}';`),
+    getNotification: (u, t) => new Promise((resolve, reject) => { //TODO TO DO SYMETRIC, BUT MUSTN'T HAVE
         doQuery(`SELECT id FROM ${config.users_table} WHERE username='${u}';`)
             .then(result => {
                 if (result[0] === undefined) {
@@ -87,11 +89,8 @@ function getNotificationPromise(u, t) {
                         reject(err)
                     })
             })
-    })
-}
-
-function getNotificationsPromise(u) {
-    return new Promise((resolve, reject) => {
+    }),
+    getNotifications: (u) => new Promise((resolve, reject) => {
         doQuery(`SELECT id FROM ${config.users_table} WHERE username='${u}'`)
             .then(result => {
                 if (result[0] === undefined) {
@@ -106,11 +105,8 @@ function getNotificationsPromise(u) {
                         reject(err)
                     })
             })
-    })
-}
-
-function getFriendsPromise(u) {
-    return new Promise((resolve, reject) => {
+    }),
+    getFriends: (u) => new Promise((resolve, reject) => {
         doQuery(`SELECT id FROM ${config.users_table} WHERE username='${u}';`)
             .then(result => {
                 if (result[0] === undefined) {
@@ -131,11 +127,8 @@ function getFriendsPromise(u) {
                                 })
                     })
             })
-    })
-}
-
-function getFriendshipPromise(u, uu) {
-    return new Promise((resolve, reject) => {
+    }),
+    getFriendship: (u, uu) => new Promise((resolve, reject) => {
         doQuery(`SELECT id FROM ${config.users_table} WHERE username='${u}';`)
             .then(r => {
                 if (r[0] === undefined) {
@@ -168,11 +161,8 @@ function getFriendshipPromise(u, uu) {
                                 })
                     })
             })
-    })
-}
-
-function getTemplatesPromise(u) {
-    return new Promise((resolve, reject) => {
+    }),
+    getTemplates: (u) => new Promise((resolve, reject) => {
         doQuery(`SELECT id FROM ${config.users_table} WHERE username='${u}';`)
             .then(result => {
                 if (result[0] === undefined) {
@@ -187,21 +177,7 @@ function getTemplatesPromise(u) {
                         reject(err)
                     })
             })
-    })
-}
-
-module.exports = {
-    test: () => doQuery(`SELECT id FROM ${config.users_table} WHERE id='1';`),
-    getUser: (u) => doQuery(`SELECT id, username, activated FROM ${config.users_table} WHERE username='${u}';`),
-    getUserByHS: (l, p) => doQuery(`SELECT username, activated FROM ${config.users_table} WHERE login='${l}' AND password='${p}';`),
-    getUserById: (i) => doQuery(`SELECT username FROM ${config.users_table} WHERE id=${i};`),
-    getMessages: (sender, recipient) => getMessagePromise(sender, recipient),
-    getCode: (u_id, t = 'T') => doQuery(`SELECT code FROM ${config.codes_table} WHERE user_id=${u_id} AND temporary='${t}';`),
-    getNotification: (u, t) => getNotificationPromise(u, t),
-    getNotifications: (u) => getNotificationsPromise(u),
-    getFriends: (u) => getFriendsPromise(u),
-    getFriendship: (u, uu) => getFriendshipPromise(u, uu),
-    getTemplates: (u) => getTemplatesPromise(u),
+    }),
     addUser: (l, p, u) => doQuery(`INSERT INTO ${config.users_table} (login, password, username, activated) VALUES('${l}','${p}','${u}','F');`),
     addMessage: (sender, recipient, c, d) => {
         return doQuery(`SELECT id FROM ${config.users_table} WHERE username='${sender}'`).then(sender_id => {
@@ -249,6 +225,7 @@ module.exports = {
             })
         })
     },
+    deleteNotificationById: (i) => doQuery(`DELETE FROM ${config.notifications_table} WHERE id=${i};`),
     deleteNotification: (u, uu) => {
         return doQuery(`SELECT id FROM ${config.users_table} WHERE username='${u}'`).then(user_1_id => {
             doQuery(`SELECT id FROM ${config.users_table} WHERE username='${uu}'`).then(user_2_id => {

@@ -27,6 +27,7 @@ export class FriendPanelComponent implements OnInit {
 
   friends: user[] = [];
 
+  isActiveUserActivated: boolean = false;
   isMsgNeedToBeUpdated: boolean = false;
   isFriendListNeedToBeUpdated: boolean = true;
 
@@ -37,12 +38,21 @@ export class FriendPanelComponent implements OnInit {
     console.log("Friend list component inited, xD...")
     this.uS.activeUserState.subscribe(u => this.activeUser = u);
     this.uS.activeRecipientState.subscribe(u => this.activeRecipient = u);
+    this.uS.activeUserActivationState.subscribe(b => this.isActiveUserActivated = b);
     this.uS.friendUpdateState.subscribe(b => this.isFriendListNeedToBeUpdated = b);
     this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
   }
 
   onAddFriendButtonClick(): void {
     this.uS.setMsgUpdate(false);
+
+    if (!this.isActiveUserActivated) {
+      console.error("The account is not activated...");
+      this.errorTxt = "BAD PLACEHOLDER";
+      setTimeout(() => { this.errorTxt = '' }, 3000);
+      return;
+    }
+
     this.db.getUser(this.newFriendUsername).subscribe({
       error: (err: any) => {
         console.error(`Error: ${err} `);
@@ -53,7 +63,7 @@ export class FriendPanelComponent implements OnInit {
         let isAlreadyFriends = false;
         this.db.getFriendship(this.activeUser, this.newFriendUsername).subscribe({
           next: (data: any) => {
-            if (data.length != 0) {
+            if (JSON.stringify(data) != '{}') {
               console.log("Frienship already exist, xD...");
               isAlreadyFriends = true;
             }
@@ -64,7 +74,7 @@ export class FriendPanelComponent implements OnInit {
               let isFriendRequestAlreadySent = false;
               this.db.getNotification(this.activeUser, "FRIEND_REQUEST").subscribe({
                 next: (data: any) => {
-                  if (data.length != 0) {
+                  if (JSON.stringify(data) != '{}') {
                     console.log("Friend request already exist, xD...");
                     isFriendRequestAlreadySent = true;
                   }

@@ -62,5 +62,6 @@ export class NavbarComponent implements OnInit {
 
   onToggleAligmentButtonClick(): void {
     this.uS.setLeftAlignedState(!this.isLeftAligned);
+    this.uS.setFriendListUpdate(true);
   }
 }

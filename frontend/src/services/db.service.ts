@@ -111,6 +111,10 @@ export class DbService {
     return this.http.delete(`${this.host}/code?v=${code}`);
   }
 
+  delNotificationById(id: number): Observable<any> {
+    return this.http.delete(`${this.host}/notification?id=${id}`, {});
+  }
+
   delNotification(username: string, username_1: string): Observable<any> {
     return this.http.delete(`${this.host}/notification?from=${username}&to=${username_1}`, {});
   }

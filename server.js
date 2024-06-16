@@ -94,12 +94,13 @@ httpServer.on("request", (req, res) => {
                         if (result.length != 0) {
                             console.log(`'${recipient}' got ${result.length} messages from '${sender}'...`)
                             res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(JSON.stringify(result));
                         }
                         else {
                             console.log(`'${sender}' got no messages from '${recipient}'...`)
-                            res.writeHead(404, http.STATUS_CODES[404]);
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(JSON.stringify({}));
                         }
-                        res.end(JSON.stringify(result));
                     }).catch((err) => {
                         console.error(`Getting messages failed :( ...`);
                         res.writeHead(500, http.STATUS_CODES[500]);
@@ -207,12 +208,13 @@ httpServer.on("request", (req, res) => {
                         if (result.length != 0) {
                             console.log(`Got friends of '${username}', :D...`);
                             res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(JSON.stringify(result));
                         }
                         else {
                             console.log(`User '${username}' has no friends, :(...`);
-                            res.writeHead(404, http.STATUS_CODES[404]);
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(JSON.stringify({}));
                         }
-                        res.end(JSON.stringify(result));
                     }).catch((err) => {
                         console.error("Getting friends failed, :(...");
                         res.writeHead(500, http.STATUS_CODES[500]);
@@ -249,12 +251,13 @@ httpServer.on("request", (req, res) => {
                         if (result.length != 0) {
                             console.log(`Got templates of '${username}', :D...`);
                             res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(JSON.stringify(result));
                         }
                         else {
                             console.log(`User '${username}' has no templates, :(...`);
-                            res.writeHead(404, http.STATUS_CODES[404]);
+                            res.writeHead(200, http.STATUS_CODES[200]);
+                            res.end(JSON.stringify({}));
                         }
-                        res.end(JSON.stringify(result));
                     }).catch((err) => {
                         console.error("Getting templates failed, :(...");
                         res.writeHead(500, http.STATUS_CODES[500]);
@@ -451,7 +454,19 @@ httpServer.on("request", (req, res) => {
                 }
             }
             else if (pathname === "/notification") {
-                if (params.has("from") && params.has("to")) {
+                if(params.has("id")){
+                    let id = params.get("id");
+                    db.deleteNotificationById(id).then(() => {
+                        console.log("Deleteting notification...");
+                        res.writeHead(204, http.STATUS_CODES[204]);
+                        res.end(JSON.stringify({}));
+                    }).catch((err) => {
+                        console.error("Deleteting notification failed...");
+                        res.writeHead(500, http.STATUS_CODES[500]);
+                        res.end(`{"error": "${err}"}`);
+                    })
+                }
+                else if (params.has("from") && params.has("to")) {
                     let username = params.get("from");
                     let username_1 = params.get("to");
                     db.deleteNotification(username, username_1).then(() => {

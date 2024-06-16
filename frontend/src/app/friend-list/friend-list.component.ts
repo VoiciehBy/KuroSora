@@ -37,6 +37,8 @@ export class FriendListComponent implements OnInit {
         this.updateFriendList();
         this.isCtxMenuVisible = false;
         this.isSpinnerVisible = true;
+        setTimeout(() => { this.isSpinnerVisible = false; }, 2000);
+        this.uS.setFriendListUpdate(false);
       }
     }, FRIEND_LIST_UPDATE_INTERVAL);
   }

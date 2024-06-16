@@ -25,7 +25,7 @@ export class MsgSendComponent implements OnInit {
   activeUser: string = '';
   activeRecipient: string = '';
   msgTxt: string = '';
-  errorTxt: string = ''
+  errorTxt: string = '';
 
   isUserActivated: boolean = false;
   isLeftAligned: boolean = false;
@@ -99,7 +99,6 @@ export class MsgSendComponent implements OnInit {
       complete: () => {
         if (this.isUserActivated && this.msgTxt.length != 0)
           this.db.sendMessage(this.activeUser, this.activeRecipient, this.msgTxt).subscribe({
-            next: (data) => console.log(data),
             error: (err) => console.error(`Error: ${err} `),
             complete: () => console.log("Message send completed...")
           })

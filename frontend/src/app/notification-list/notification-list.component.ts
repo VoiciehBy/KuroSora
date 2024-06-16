@@ -21,7 +21,7 @@ export class NotificationListComponent implements OnInit {
   NOTIFICATIONS_STRING: string = NOTIFICATIONS_STRING;
   NO_NOTIFICATION_STRING: string = NO_NOTIFICATION_STRING;
   FRIEND_REQUEST_STRING: string = FRIEND_REQUEST_STRING;
-  
+
   activeUser: string = '';
   activeRecipient: string = '';
 
@@ -75,8 +75,7 @@ export class NotificationListComponent implements OnInit {
       error: (err: any) => console.error(err),
       complete: () => {
         console.log("Friend request successfull...");
-        this.db.delNotification(this.notifications[0].from, this.activeUser).subscribe({
-          next: () => { },
+        this.db.delNotificationById(this.notifications[0].id).subscribe({
           error: (err: any) => console.error(`Error: ${err}`),
           complete: () => {
             console.log("Deleting friend request successfull...");
@@ -88,7 +87,7 @@ export class NotificationListComponent implements OnInit {
   }
 
   onDeclineButtonClicked(i: number): void {
-    this.db.delNotification(this.notifications[0].from, this.activeUser).subscribe({
+    this.db.delNotificationById(this.notifications[0].id).subscribe({
       error: (err: any) => console.error(`Error: ${err}`),
       complete: () => console.log("Deleting friend request successfull...")
     })

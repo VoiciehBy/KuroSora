@@ -5,48 +5,36 @@ const dotenv = require("dotenv")
 
 dotenv.config()
 
-const createConnection = (timeout = 1000) => {
+function doQuery(query = "") {
     return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            mysql.createConnection({
-                host: config.hostname,
-                port: config.port,
-                user: config.user,
-                password: process.env.DB_PASSWORD,
-                database: config.db_name,
-            }).then((connection) => {
-                console.log("Database connection established, :D...")
-                resolve(connection);
-            }).catch((err) => {
-                console.error("Database connection refused :( ...")
-                reject(err);
-            })
-        })
-    }, timeout)
-}
-
-const connection = createConnection();
-
-function doQuery(query = "", timeout = 1000) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            connection.then(con => con.query(query))
-                .catch((err) => {
-                    console.error("Cannot do the query :( ...")
-                    reject(err)
-                })
-                .then(([rows, fields]) => {
-                    resolve(rows)
+        mysql.createConnection({
+            host: config.hostname,
+            port: config.port,
+            user: config.user,
+            password: process.env.DB_PASSWORD,
+            database: config.db_name,
+        }).catch((err) => {
+            console.error("Cannot create connection :( ...");
+            reject(err);
+        }).then((connection) => {
+            if (connection) {
+                console.log("Database connection established, :D...");
+                connection.query(query).then(([rows, fields]) => {
+                    resolve(rows);
                 }).catch((err) => {
-                    console.error("Cannot fetch data :( ...")
-                    reject(err)
+                    console.error("Cannot do the query :( ...");
+                    reject(err);
                 })
-        }, timeout)
+            }
+        }).catch((err) => {
+            console.error("Cannot fetch data :( ...");
+            reject(err);
+        })
     })
 }
 
 module.exports = {
-    test: () => doQuery(`SELECT id FROM ${config.users_table} WHERE id='1';`),
+    test: () => doQuery(`SELECT NOW();`),
     getUser: (u) => doQuery(`SELECT id, username, activated FROM ${config.users_table} WHERE username='${u}';`),
     getUserByHS: (l, p) => doQuery(`SELECT username, activated FROM ${config.users_table} WHERE login='${l}' AND password='${p}';`),
     getUserById: (i) => doQuery(`SELECT username FROM ${config.users_table} WHERE id=${i};`),

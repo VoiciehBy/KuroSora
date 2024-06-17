@@ -454,7 +454,7 @@ httpServer.on("request", (req, res) => {
                 }
             }
             else if (pathname === "/notification") {
-                if(params.has("id")){
+                if (params.has("id")) {
                     let id = params.get("id");
                     db.deleteNotificationById(id).then(() => {
                         console.log("Deleteting notification...");
@@ -527,9 +527,10 @@ httpServer.listen(config.port, config.hostname, () => {
             })
         }
         else if (res.statusCode === 503) {
-            console.error(res.statusMessage); //TODO more info
+            res.on("data", data => {
+                console.log(JSON.parse(data).error, res.statusCode);
+            })
         }
-        else
-            console.log('?', res.statusCode);
+        else console.log('?', res.statusCode);
     })
 });

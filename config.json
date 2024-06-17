@@ -19,5 +19,5 @@
         "port": 587,
         "test_email": "laurel57@ethereal.email"
     },
-    "devMode": true
+    "devMode": false
 }

@@ -1,6 +1,7 @@
 {
     "db": {
         "hostname": "localhost",
+        "port": 3306,
         "user": "root",
         "db_name": "dev",
         "users_table": "Users",

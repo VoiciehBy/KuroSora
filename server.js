@@ -1,6 +1,7 @@
 const http = require("http");
 const db = require("./db");
 const config = require("./config").http;
+const mail_config = require("./config").mail;
 const crypto = require("./crypto");
 const mail = require("./mail");
 
@@ -36,6 +37,11 @@ httpServer.on("request", (req, res) => {
                     })
                 })
             }
+            else {
+                console.error("Bad parameters...");
+                res.writeHead(422, http.STATUS_CODES[422]);
+                res.end(`{"error": "Bad parameters 422"}`);
+            }
             break;
         case "GET":
             if (pathname === "/") {
@@ -45,7 +51,7 @@ httpServer.on("request", (req, res) => {
                 }).catch((err) => {
                     console.error("Establishing database connection failed, :(...");
                     res.writeHead(503, http.STATUS_CODES[503]);
-                    res.end(`{"error" : "DB unavailable..."}`); //TODO
+                    res.end(`{"error" : "DB unavailable..."}`);
                 })
             }
             else if (pathname === "/user") {
@@ -85,6 +91,11 @@ httpServer.on("request", (req, res) => {
                         res.end(`{"error": "${err}"}`);
                     })
                 }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
+                }
             }
             else if (pathname === "/user_messages") {
                 if (params.has("sender") && params.has("recipient")) {
@@ -106,6 +117,11 @@ httpServer.on("request", (req, res) => {
                         res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
+                }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
                 }
             }
             else if (pathname === "/code") {
@@ -157,6 +173,11 @@ httpServer.on("request", (req, res) => {
                         res.end(`{"error": "${err}"}`)
                     })
                 }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
+                }
             }
             else if (pathname === "/notification") {
                 if (params.has("to") && params.has("type")) {
@@ -179,6 +200,11 @@ httpServer.on("request", (req, res) => {
                         res.end(`{"error": "${err}"}`);
                     })
                 }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
+                }
             }
             else if (pathname === "/notifications") {
                 if (params.has("to")) {
@@ -200,6 +226,11 @@ httpServer.on("request", (req, res) => {
                         res.end(`{"error": "${err}"}`);
                     })
                 }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
+                }
             }
             else if (pathname === "/friends") {
                 if (params.has("of")) {
@@ -220,6 +251,11 @@ httpServer.on("request", (req, res) => {
                         res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
+                }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
                 }
             }
             else if (pathname === "/friendship") {
@@ -243,6 +279,11 @@ httpServer.on("request", (req, res) => {
                         res.end(`{"error": "${err}"}`);
                     })
                 }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
+                }
             }
             else if (pathname === "/templates") {
                 if (params.has("of")) {
@@ -264,11 +305,16 @@ httpServer.on("request", (req, res) => {
                         res.end(`{"error": "${err}"}`);
                     })
                 }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
+                }
             }
             else {
-                console.error("Bad request...")
-                res.writeHead(400, http.STATUS_CODES[400])
-                res.end(`{"error": "Bad request 400"}`)
+                console.error("Bad request...");
+                res.writeHead(400, http.STATUS_CODES[400]);
+                res.end(`{"error": "Bad request 400"}`);
             }
             break;
         case "PUT":
@@ -299,23 +345,46 @@ httpServer.on("request", (req, res) => {
             }
             else if (pathname === "/new_message") {
                 req.on("data", (data) => {
-                    let msgObj = JSON.parse(data)
+                    let msgObj = JSON.parse(data);
                     let current_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-                    db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date)
-                    console.log(`${msgObj.sender}' sent message to '${msgObj.recipient}...`)
-                    res.writeHead(201, http.STATUS_CODES[201])
-                    res.end(`{"info":"'${msgObj.sender}' sent message to '${msgObj.recipient}'..."}`);
+                    db.getUser(msgObj.sender).then((result) => {
+                        if (result.length != 0)
+                            db.getUser(msgObj.recipient).then((result) => {
+                                if (result.length != 0)
+                                    db.addMessage(msgObj.sender, msgObj.recipient, msgObj.content, current_date).then(() => {
+                                        console.log(`${msgObj.sender}' sent message to '${msgObj.recipient}...`)
+                                        res.writeHead(201, http.STATUS_CODES[201])
+                                        res.end(`{"info":"'${msgObj.sender}' sent message to '${msgObj.recipient}'..."}`);
+                                    });
+                                else {
+                                    console.error(`User '${msgObj.recipient}' not found...`);
+                                    res.writeHead(404, http.STATUS_CODES[404]);
+                                    res.end(JSON.stringify(result));
+                                }
+                            })
+                        else {
+                            console.error(`User '${msgObj.sender}' not found...`);
+                            res.writeHead(404, http.STATUS_CODES[404]);
+                            res.end(JSON.stringify(result));
+                        }
+                    })
+
+
                 })
             }
             else if (pathname === "/new_code") {
-                if (params.has("username") && params.has("type")) {
+                if (params.has("username") && params.has("type") && params.has("email")) {
                     let username = params.get("username");
                     let type = params.get("type");
+                    let email = params.get("email");
                     if (type === 'a') {
                         let aCode = crypto.genCode();
                         db.addCode(aCode, username).then(() => {
                             console.log(`Activation code was generated successfully...`);
-                            mail.sendAuthMail(aCode, username);
+                            if (config.devMode)
+                                mail.sendAuthMail(mail_config.test_recipient.address, aCode, username);
+                            else
+                                mail.sendAuthMail(email, aCode, username);
                             res.writeHead(200, http.STATUS_CODES[200]);
                             res.end(`{"res": "Activation code was generated successfully..."}`);
                         }).catch((err) => {
@@ -328,7 +397,10 @@ httpServer.on("request", (req, res) => {
                         let rCode = crypto.genRecoveryCode();
                         db.addCode(rCode, username, 'F').then(() => {
                             console.log(`Recovery code was generated successfully...`);
-                            mail.sendAuth_2Mail(rCode, username);
+                            if (config.devMode)
+                                mail.sendAuth_2Mail(mail_config.test_recipient.address, rCode, username);
+                            else
+                                mail.sendAuth_2Mail(email, rCode, username);
                             res.writeHead(200, http.STATUS_CODES[200]);
                             res.end(`{"res": "Recovery code was generated successfully..."}`);
                         }).catch((err) => {
@@ -341,7 +413,10 @@ httpServer.on("request", (req, res) => {
                         let code = crypto.genCode();
                         db.addCode(code, username).then(() => {
                             console.log(`Verfication code was generated successfully...`);
-                            mail.sendAuth_1Mail(code, username);
+                            if (config.devMode)
+                                mail.sendAuth_1Mail(mail_config.test_recipient.address, code, username);
+                            else
+                                mail.sendAuth_1Mail(email, code, username);
                             res.writeHead(200, http.STATUS_CODES[201]);
                             res.end(`{"res": "Verfication code was generated successfully..."}`);
                         }).catch((err) => {
@@ -350,6 +425,11 @@ httpServer.on("request", (req, res) => {
                             res.end(`{"error": "${err}"}`);
                         })
                     }
+                }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
                 }
             }
             else if (pathname === "/new_notification") {
@@ -375,6 +455,11 @@ httpServer.on("request", (req, res) => {
                         }
                     })
                 }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
+                }
             }
             else if (pathname === "/new_friend") {
                 if (params.has("u") && params.has("uu")) {
@@ -398,6 +483,11 @@ httpServer.on("request", (req, res) => {
                             res.end(`{"res": "User '${username}' and user '${username1}' failed to form friendship..."}`); //TODO REFACTOR
                         }
                     })
+                }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
                 }
             }
             else {
@@ -431,6 +521,11 @@ httpServer.on("request", (req, res) => {
                         }
                     })
                 }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
+                }
             }
             else {
                 console.error("Bad request...")
@@ -452,6 +547,11 @@ httpServer.on("request", (req, res) => {
                         res.end(`{"error": "${err}"}`);
                     })
                 }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
+                }
             }
             else if (pathname === "/notification") {
                 if (params.has("id")) {
@@ -465,6 +565,7 @@ httpServer.on("request", (req, res) => {
                         res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
+
                 }
                 else if (params.has("from") && params.has("to")) {
                     let username = params.get("from");
@@ -478,6 +579,11 @@ httpServer.on("request", (req, res) => {
                         res.writeHead(500, http.STATUS_CODES[500]);
                         res.end(`{"error": "${err}"}`);
                     })
+                }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
                 }
             }
             else if (pathname === "/friend") {
@@ -502,6 +608,11 @@ httpServer.on("request", (req, res) => {
                             res.end(JSON.stringify(result));
                         }
                     })
+                }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
                 }
             }
             else {

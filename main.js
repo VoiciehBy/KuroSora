@@ -1,6 +1,6 @@
-const { app, BrowserWindow } = require("electron")
-const path = require(`node:path`)
-const config = require("./config")
+const { app, BrowserWindow } = require("electron");
+const path = require(`node:path`);
+const config = require("./config");
 
 
 const createWindow = () => {

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { user } from "../../user";
 import { UserService } from 'src/services/user.service';
 import {
-  HOSTNAME,
   FRIENDS_STRING,
   ADD_FRIEND_STRING
 } from "../../constants";
@@ -15,7 +14,6 @@ import { DbService } from 'src/services/db.service';
 })
 
 export class FriendPanelComponent implements OnInit {
-  host: string = HOSTNAME;
   FRIENDS_STRING: string = FRIENDS_STRING;
   ADD_FRIEND_STRING: string = ADD_FRIEND_STRING;
 

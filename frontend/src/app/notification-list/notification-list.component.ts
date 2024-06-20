@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { notification } from "../../notification";
 import {
-  HOSTNAME,
   NOTIFICATIONS_STRING,
   NO_NOTIFICATION_STRING,
   FRIEND_REQUEST_STRING,
@@ -17,7 +16,6 @@ import { DbService } from 'src/services/db.service';
 })
 
 export class NotificationListComponent implements OnInit {
-  host: string = HOSTNAME;
   NOTIFICATIONS_STRING: string = NOTIFICATIONS_STRING;
   NO_NOTIFICATION_STRING: string = NO_NOTIFICATION_STRING;
   FRIEND_REQUEST_STRING: string = FRIEND_REQUEST_STRING;

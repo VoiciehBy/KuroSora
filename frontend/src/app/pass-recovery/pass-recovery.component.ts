@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { UserService } from 'src/services/user.service';
 import {
-  HOSTNAME,
   RESET_PASSWORD_STRING,
   REMIND_PASSWORD_BTN_STRING,
   ACCOUNT_IS_NOT_ACTIVATED
@@ -16,7 +15,6 @@ import { DbService } from 'src/services/db.service';
 })
 
 export class PassRecoveryComponent implements OnInit {
-  host: string = HOSTNAME;
   RESET_PASSWORD_STRING: string = RESET_PASSWORD_STRING;
   REMIND_PASSWORD_BTN_STRING: string = REMIND_PASSWORD_BTN_STRING;
 
@@ -54,8 +52,8 @@ export class PassRecoveryComponent implements OnInit {
               setTimeout(() => { this.errorTxt = '' }, 3000);
             },
             complete: () => {
-              console.log("Recovery code was valid, :D...")
-              this.db.genCode(this.username).subscribe({
+              console.log("Recovery code was valid, :D...");
+              this.db.genCode(this.username, this.email).subscribe({
                 error: (err: any) => {
                   console.error(`Error: ${err}`);
                   this.errorTxt = "BAD PLACEHOLDER";

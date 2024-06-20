@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+
 .formContainer {
     margin-top: 5%;
     width: fit-content;
@@ -13,27 +14,6 @@
 .title {
     margin-top: 5%;
     margin-bottom: 5%;
-}
-
-.scrollBox {
-    height: 400pt;
-    overflow: hidden;
-}
-
-.scrollBoxContent {
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: 100%;
-}
-
-.messageReceived {
-    color: black;
-    background-color: lightgreen;
-}
-
-.messageSent {
-    color: white;
-    background-color: forestgreen;
 }
 
 .errorTxt {

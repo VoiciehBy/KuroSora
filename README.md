@@ -32,6 +32,6 @@
  ### Create .env file inside root directory.
  #### Copy following text and paste it inside the file:
  ```properties
- TEST_MAIL_PASSWORD = "REPLACE_IT_WITH_YOUR_TEST_MAIL_PASS"
+ NOREPLY_MAIL_PASSWORD = "REPLACE_IT_WITH_YOUR_NOREPLY_MAIL_PASS"
  DB_PASSWORD = "REPLACE_IT_WITH_YOUR_DB_PASS"
  ```

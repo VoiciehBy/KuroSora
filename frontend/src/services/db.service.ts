@@ -76,16 +76,16 @@ export class DbService {
       });
   }
 
-  genActCode(username: string = ''): Observable<any> {
-    return this.http.put(`${this.host}/new_code?username=${username}&type=a`, {});
+  genActCode(username: string = '', email: string): Observable<any> {
+    return this.http.put(`${this.host}/new_code?username=${username}&type=a&email=${email}`, {});
   }
 
-  genCode(username: string = ''): Observable<any> {
-    return this.http.put(`${this.host}/new_code?username=${username}&type=d`, {});
+  genCode(username: string = '', email: string): Observable<any> {
+    return this.http.put(`${this.host}/new_code?username=${username}&type=d&email=${email}`, {});
   }
 
-  genRecCode(username: string = ''): Observable<any> {
-    return this.http.put(`${this.host}/new_code?username=${username}&type=r`, {});
+  genRecCode(username: string = '', email: string): Observable<any> {
+    return this.http.put(`${this.host}/new_code?username=${username}&type=r&email=${email}`, {});
   }
 
   sendNotification(username: string = '', username_1: string = ''): Observable<any> {

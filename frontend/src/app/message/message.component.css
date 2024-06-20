@@ -8,3 +8,13 @@
     margin-bottom: 1%;
     margin-top: 1%;
 }
+
+.messageReceived {
+    color: black;
+    background-color: lightgreen;
+}
+
+.messageSent {
+    color: white;
+    background-color: forestgreen;
+}

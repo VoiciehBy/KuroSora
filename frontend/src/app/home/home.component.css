@@ -1,0 +1,10 @@
+.scrollBox {
+    height: 400pt;
+    overflow: hidden;
+}
+
+.scrollBoxContent {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+}

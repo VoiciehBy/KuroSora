@@ -16,9 +16,9 @@ import {
 export class MessagePanelComponent implements OnInit {
   activeUser: string = '';
   activeRecipient: string = '';
-  msgTxt: string = '';
   messages: message[] = [];
   tmp: message[] = [];
+  
   isMsgNeedToBeUpdated: boolean = false;
   isSpinnerVisible: boolean = false;
   isLeftAligned: boolean = false;
@@ -96,10 +96,18 @@ export class MessagePanelComponent implements OnInit {
 
     for (let m of this.tmp)
       if (
-        (m.sender === this.activeUser && m.recipient === this.activeRecipient)
+        (
+          m.sender === this.activeUser
+          &&
+          m.recipient === this.activeRecipient
+        )
         ||
-        (m.sender === this.activeRecipient && m.recipient === this.activeUser)
-      ) //TODO TO DO REFACTOR
+        (
+          m.sender === this.activeRecipient
+          &&
+          m.recipient === this.activeUser
+        )
+      )
         this.messages.push(m);
     this.isSpinnerVisible = false;
     this.uS.setMsgUpdate(false);

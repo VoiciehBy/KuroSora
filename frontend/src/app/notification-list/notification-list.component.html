@@ -6,7 +6,7 @@
         {{NO_NOTIFICATION_STRING}}
     </div>
     <div *ngFor="let notification of notifications;index as i;">
-        <div class="btn-group" role="group" aria-label="Button Group"> <!--PROBABLY TODO-->
+        <div class="btn-group" role="group" aria-label="Button Group">
             <div class="list-group-item list-group-item-warning rounded">
                 <div *ngIf="notification.type === 'FRIEND_REQUEST'">
                     {{FRIEND_REQUEST_STRING}} {{notification.from}}

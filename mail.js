@@ -5,15 +5,15 @@ const nodemailer = require("nodemailer");
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-    host: config.hostname,
-    port: config.port,
+    host: config.noreply.address,
+    port: config.noreply.address,
     secure: false,
     auth: {
-        user: config.test_email,
-        pass: process.env.TEST_MAIL_PASSWORD
+        user: config.noreply.address,
+        pass: process.env.NOREPLY_MAIL_PASSWORD
     },
     tls: { rejectUnauthorized: false }
-})
+});
 
 async function sendMail(email = "", subject = "", text = "", html = "<h1>XD</h1>") {
     await transporter.sendMail({
@@ -39,7 +39,7 @@ async function sendRecoveryMail(email = "", code = "12345", username = "") {
 }
 
 module.exports = {
-    sendAuthMail: (c, u) => sendActivationMail(config.test_email, c, u),
-    sendAuth_1Mail: (c, u) => sendVerifcationMail(config.test_email, c, u),
-    sendAuth_2Mail: (c, u) => sendRecoveryMail(config.test_email, c, u),
+    sendAuthMail: (e, c, u) => sendActivationMail(e, c, u),
+    sendAuth_1Mail: (e, c, u) => sendVerifcationMail(e, c, u),
+    sendAuth_2Mail: (e, c, u) => sendRecoveryMail(e, c, u)
 }

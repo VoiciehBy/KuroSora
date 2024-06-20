@@ -15,9 +15,14 @@
         "port": 3000
     },
     "mail": {
-        "hostname": "smtp.ethereal.email",
-        "port": 587,
-        "test_email": "laurel57@ethereal.email"
+        "noreply": {
+            "hostname": "smtp.ethereal.email",
+            "port": 587,
+            "address": "laurel57@ethereal.email"
+        },
+        "test_recipient": {
+            "address": "laurel57@ethereal.email"
+        }
     },
     "devMode": false
 }

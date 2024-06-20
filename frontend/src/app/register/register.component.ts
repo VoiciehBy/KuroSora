@@ -5,7 +5,6 @@ import {
   LOGIN_STRING,
   REGISTER_BTN_STRING,
   ALREADY_HAVE_ACCOUNT_STRING,
-  HOSTNAME,
   BAD_REGISTRATION_FORM_STRING,
   OK_STRING
 } from 'src/constants';
@@ -77,11 +76,11 @@ export class RegisterComponent implements OnInit {
       error: (err) => console.error(`Error: ${err}`),
       complete: () => {
         console.log("Adding user completed, :D .");
-        this.db.genActCode(this.username).subscribe({
+        this.db.genActCode(this.username, this.email).subscribe({
           error: (err) => console.error(`Error: ${err}`),
           complete: () => {
             console.log("Activation code generation completed, :D .");
-            this.db.genRecCode(this.username).subscribe({
+            this.db.genRecCode(this.username, this.email).subscribe({
               error: (err) => console.error(`Error: ${err}`),
               complete: () => console.log("Recovery code generation completed, :D .")
             })

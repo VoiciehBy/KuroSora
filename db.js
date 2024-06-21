@@ -3,33 +3,34 @@ const mysql = require("mysql2/promise");
 
 const dotenv = require("dotenv")
 
-dotenv.config()
+dotenv.config();
 
-function doQuery(query = "") {
-    return new Promise((resolve, reject) => {
-        mysql.createConnection({
-            host: config.hostname,
-            port: config.port,
-            user: config.user,
-            password: process.env.DB_PASSWORD,
-            database: config.db_name,
+const pool = mysql.createPool({
+    host: config.hostname,
+    port: config.port,
+    user: config.user,
+    password: process.env.DB_PASSWORD,
+    database: config.db_name,
+    waitForConnections: true,
+    connectionLimit: 2,
+    queueLimit: 0,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0,
+});
+
+async function doQuery(query = "") {
+    return new Promise(async (resolve, reject) => {
+        const connection = await pool.getConnection();
+        await connection.query(query).then(([rows, fields]) => {
+            resolve(rows);
         }).catch((err) => {
-            console.error("Cannot create connection :( ...");
-            reject(err);
-        }).then((connection) => {
-            if (connection) {
-                console.log("Database connection established, :D...");
-                connection.query(query).then(([rows, fields]) => {
-                    resolve(rows);
-                }).catch((err) => {
-                    console.error("Cannot do the query :( ...");
-                    reject(err);
-                })
-            }
-        }).catch((err) => {
-            console.error("Cannot fetch data :( ...");
+            console.error("Cannot do the query :( ...");
             reject(err);
         })
+        pool.releaseConnection(connection);
+    }).catch((err) => {
+        console.error("Cannot fetch data :( ...");
+        reject(err);
     })
 }
 

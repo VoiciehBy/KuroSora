@@ -19,7 +19,7 @@ httpServer.on("request", (req, res) => {
                 req.on("data", (data) => {
                     let credentialsObj = JSON.parse(data);
                     let login = credentialsObj.login;
-                    let hash = credentialsObj.password;
+                    let hash = crypto.genHash(credentialsObj.password);
                     db.getUserByHS(login, hash).then(result => {
                         if (result.length != 0) {
                             console.log(`User '${login}' found...\n`);

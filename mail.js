@@ -5,7 +5,7 @@ const nodemailer = require("nodemailer");
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-    host: config.noreply.host,
+    host: config.noreply.hostname,
     port: config.noreply.port,
     secure: false,
     auth: {

@@ -2,14 +2,8 @@
     "db": {
         "hostname": "localhost",
         "port": 3306,
-        "user": "root",
         "db_name": "dev",
-        "users_table": "Users",
-        "messages_table": "Messages",
-        "friendships_table": "Friendships",
-        "notifications_table": "Notifications",
-        "codes_table": "Codes",
-        "templates_table": "Templates"
+        "user": "root"
     },
     "http": {
         "hostname": "127.0.0.1",

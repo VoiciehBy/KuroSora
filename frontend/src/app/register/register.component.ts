@@ -9,6 +9,7 @@ import {
   OK_STRING
 } from 'src/constants';
 import { DbService } from 'src/services/db.service';
+import config from 'src/config.json';
 
 @Component({
   selector: 'app-registration',
@@ -82,7 +83,15 @@ export class RegisterComponent implements OnInit {
             console.log("Activation code generation completed, :D .");
             this.db.genRecCode(this.username, this.email).subscribe({
               error: (err) => console.error(`Error: ${err}`),
-              complete: () => console.log("Recovery code generation completed, :D .")
+              complete: () => {
+                console.log("Recovery code generation completed, :D .");
+                this.db.addTemplatesTo(this.username, config.default_templates).subscribe({
+                  error: (err) => console.error(`Error: ${err}`),
+                  complete: () => {
+                    console.log("The default templates was added to the new user...");
+                  }
+                })
+              }
             })
           }
         })

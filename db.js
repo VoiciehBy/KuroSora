@@ -39,7 +39,6 @@ async function doQuery(query = "") {
         pool.releaseConnection(connection);
     }).catch((err) => {
         console.error("Cannot fetch data :( ...");
-        reject(err);
     })
 }
 
@@ -206,6 +205,7 @@ module.exports = {
             })
         })
     },
+    addTemplate: (i, c) => doQuery(`INSERT INTO Templates (owner_id,content) VALUES(${i}, '${c}');`),
     activateUser: (u) => doQuery(`UPDATE ${tables_names.users_table} SET activated='T' WHERE username='${u}';`),
     changePass: (u, p) => doQuery(`SELECT id FROM ${tables_names.users_table} WHERE username='${u}';`).then((u_id) => {
         doQuery(`UPDATE ${tables_names.users_table} SET password='${p}' WHERE id=${u_id[0].id};`)

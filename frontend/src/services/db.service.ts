@@ -96,6 +96,10 @@ export class DbService {
     return this.http.put(`${this.host}/new_friend?u=${username}&uu=${username_1}`, {});
   }
 
+  addTemplatesTo(username: string = '', templates: Object): Observable<any> {
+    return this.http.put(`${this.host}/new_templates?u=${username}`, templates);
+  }
+
   activateAccount(username: string): Observable<any> {
     return this.http.patch(`${this.host}/user?username=${username}`, {});
   }

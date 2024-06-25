@@ -490,6 +490,33 @@ httpServer.on("request", (req, res) => {
                     res.end(`{"error": "Bad parameters 422"}`);
                 }
             }
+            else if (pathname === "/new_templates") {
+                if (params.has("u")) {
+                    let username = params.get("u");
+                    req.on("data", (data) => {
+                        let templates = JSON.parse(data).templates;
+                        db.getUser(username).then((result) => {
+                            if (result.length != 0) {
+                                for (i = 0; i < templates.length; i++)
+                                    db.addTemplate(result[0].id, templates[i]);
+                                console.log(`Templates was added successfully...`);
+                                res.writeHead(201, http.STATUS_CODES[201]);
+                                res.end(`{"res": "Templates was added successfully..."}`);
+                            }
+                            else {
+                                console.error(`User '${username}' not found...`);
+                                res.writeHead(404, http.STATUS_CODES[404]);
+                                res.end(JSON.stringify(result));
+                            }
+                        })
+                    })
+                }
+                else {
+                    console.error("Bad parameters...");
+                    res.writeHead(422, http.STATUS_CODES[422]);
+                    res.end(`{"error": "Bad parameters 422"}`);
+                }
+            }
             else {
                 console.error("Bad request...")
                 res.writeHead(400, http.STATUS_CODES[400])

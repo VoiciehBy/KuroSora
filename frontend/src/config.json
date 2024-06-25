@@ -1,0 +1,10 @@
+{
+    "default_templates": {
+        "templates": [
+            "Ok",
+            "Dobranoc",
+            "Nie jestem zainteresowany/a",
+            "Zaiste"
+        ]
+    }
+}

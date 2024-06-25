@@ -53,15 +53,29 @@ export class PassRecoveryComponent implements OnInit {
             },
             complete: () => {
               console.log("Recovery code was valid, :D...");
-              this.db.genCode(this.username, this.email).subscribe({
-                error: (err: any) => {
-                  console.error(`Error: ${err}`);
-                  this.errorTxt = "BAD PLACEHOLDER";
-                  setTimeout(() => { this.errorTxt = '' }, 3000);
-                },
+              this.db.delCode(this.recoveryCode).subscribe({
+                error: (err: any) => console.error(`Error: ${err} `),
                 complete: () => {
-                  this.uS.setRecoveryUsername(this.username);
-                  this.router.navigate(["/password_recovery_1"]);
+                  this.db.genRecCode(this.username, this.email).subscribe({
+                    error: (err: any) => {
+                      console.error(`Error: ${err}`);
+                      this.errorTxt = "BAD PLACEHOLDER";
+                      setTimeout(() => { this.errorTxt = '' }, 3000);
+                    },
+                    complete: () => {
+                      this.db.genCode(this.username, this.email).subscribe({
+                        error: (err: any) => {
+                          console.error(`Error: ${err}`);
+                          this.errorTxt = "BAD PLACEHOLDER";
+                          setTimeout(() => { this.errorTxt = '' }, 3000);
+                        },
+                        complete: () => {
+                          this.uS.setRecoveryUsername(this.username);
+                          this.router.navigate(["/password_recovery_1"]);
+                        }
+                      })
+                    }
+                  })
                 }
               })
             }

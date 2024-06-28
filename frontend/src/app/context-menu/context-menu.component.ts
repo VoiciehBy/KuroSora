@@ -13,7 +13,8 @@ export class ContextMenuComponent implements OnInit {
   @Input() ctxMenuUsername: string;
   @Input() activeUser: string;
 
-  constructor(private uS: UserService, private db: DbService) { }
+  constructor(private uS: UserService,
+    private db: DbService) { }
 
   ngOnInit(): void {
     console.log("Context menu component inited, xdd....");
@@ -23,9 +24,10 @@ export class ContextMenuComponent implements OnInit {
     this.uS.setMsgUpdate(false);
     if (this.activeUser != '')
       this.db.delFriendship(this.activeUser, this.ctxMenuUsername).subscribe({
+        next: () => { },
         error: (err: any) => console.error(`Error: ${err}`),
         complete: () => {
-          console.log("Ending friendship was successfull...");
+          console.log("Ending friendship was successful...");
           this.uS.setFriendListUpdate(true);
           this.uS.setActiveRecipient('');
         }

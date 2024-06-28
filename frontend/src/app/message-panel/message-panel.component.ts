@@ -3,8 +3,7 @@ import { message } from 'src/message';
 import { UserService } from 'src/services/user.service';
 import { DbService } from 'src/services/db.service';
 import {
-  SHOW_SPINNER_INTERVAL,
-  MESSAGE_LIST_UPDATE_INTERVAL
+  SHOW_SPINNER_INTERVAL, MESSAGE_LIST_UPDATE_INTERVAL
 } from 'src/constants';
 
 @Component({
@@ -16,9 +15,10 @@ import {
 export class MessagePanelComponent implements OnInit {
   activeUser: string = '';
   activeRecipient: string = '';
+  errorTxt: string = '';
   messages: message[] = [];
   tmp: message[] = [];
-  
+
   isMsgNeedToBeUpdated: boolean = false;
   isSpinnerVisible: boolean = false;
   isLeftAligned: boolean = false;
@@ -47,70 +47,64 @@ export class MessagePanelComponent implements OnInit {
 
     this.messageUpdateInterval = setInterval(() => {
       if (this.activeUser != '')
-        this.updateMessages()
+        this.updateMessages();
     }, MESSAGE_LIST_UPDATE_INTERVAL);
   }
 
-  addMessagesToTmp(A: string, B: string) {
+  showError(err: any, txt: string, duration: number): void {
+    console.error(`Error: ${err} `);
+    this.errorTxt = txt;
+    setTimeout(() => { this.errorTxt = '' }, duration);
+  }
+
+  addMessagesToTmp(A: string, B: string): void {
     this.db.getMessages(A, B).subscribe({
-      next: (data) => {
-        for (let i = 0; i < data.length; i++) {
-          let content = data[i].content.replace('"', '').replace('"', '');
-          let m = new message(data[i].id, A, B, content, data[i].m_date);
+      next: (data: any) => {
+        for (let c of data) {
+          let content = c.content.replace('"', '').replace('"', '');
+          let m = new message(c.id, A, B, content, c.m_date);
           this.tmp.push(m);
         }
       },
-      error: (err) => console.error(`Error: ${err} `),
+      error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
       complete: () => {
-        console.log(`Getting messages from ${A} to ${B}...`)
+        console.log(`Getting messages from ${A} to ${B}...`);
         this.tmp = this.tmp.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
       }
     })
   }
 
-  updateMessages() {
-    if (this.isMsgNeedToBeUpdated == false ||
-      (this.activeUser === '' || this.activeRecipient === '')) {
+  updateMessages(): void {
+    if (this.isMsgNeedToBeUpdated == false
+      || this.activeUser === '' || this.activeRecipient === '')
       this.isSpinnerVisible = false;
-      return;
+    else {
+      this.isSpinnerVisible = true;
+      this.addMessagesToTmp(this.activeUser, this.activeRecipient);
+      this.addMessagesToTmp(this.activeRecipient, this.activeUser);
+      this.tmp = this.tmp.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
+
+      for (let m of this.tmp)
+        if (!message.includes(m.id, this.messages))
+          this.messages.push(m);
+
+      for (let m of this.messages) {
+        m.timeSince = message.updateTimeSince(m.m_date);
+        if (m.timeSince == m.m_date.slice(0, 10))
+          m.olderThan8Hours = true;
+      }
+      this.tmp = structuredClone(this.messages);
+      this.messages = [];
+
+      for (let m of this.tmp)
+        if ((m.sender === this.activeUser && m.recipient === this.activeRecipient)
+          ||
+          (m.sender === this.activeRecipient && m.recipient === this.activeUser))
+          this.messages.push(m);
+
+      this.isSpinnerVisible = false;
+      this.uS.setMsgUpdate(false);
     }
-
-    this.isSpinnerVisible = true;
-    this.addMessagesToTmp(this.activeUser, this.activeRecipient)
-    this.addMessagesToTmp(this.activeRecipient, this.activeUser);
-    this.tmp = this.tmp.sort((a, b) => (a.m_date < b.m_date ? -1 : 1));
-
-    for (let i = 0; i < this.tmp.length; i++)
-      if (message.includes(this.tmp[i].id, this.messages) === false)
-        this.messages.push(this.tmp[i]);
-    this.tmp = [];
-
-    for (let m of this.messages) {
-      m.timeSince = message.updateTimeSince(m.m_date)
-      if (m.timeSince == m.m_date.slice(0, 10))
-        m.olderThan8Hours = true;
-    }
-
-    this.tmp = structuredClone(this.messages);
-    this.messages = [];
-
-    for (let m of this.tmp)
-      if (
-        (
-          m.sender === this.activeUser
-          &&
-          m.recipient === this.activeRecipient
-        )
-        ||
-        (
-          m.sender === this.activeRecipient
-          &&
-          m.recipient === this.activeUser
-        )
-      )
-        this.messages.push(m);
-    this.isSpinnerVisible = false;
-    this.uS.setMsgUpdate(false);
   }
 
   ngOnDestroy(): void {

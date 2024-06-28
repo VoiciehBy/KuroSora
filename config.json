@@ -19,5 +19,8 @@
             "address": "laurel57@ethereal.email"
         }
     },
-    "devMode": false
+    "devMode": {
+        "client": true,
+        "server": true
+    }
 }

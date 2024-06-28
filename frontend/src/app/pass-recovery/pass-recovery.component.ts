@@ -31,6 +31,12 @@ export class PassRecoveryComponent implements OnInit {
     console.log("Password Recovery component inited, xdd....");
   }
 
+  showError(err: any, txt: string, duration: number) {
+    console.error(`Error: ${err} `);
+    this.errorTxt = txt;
+    setTimeout(() => { this.errorTxt = '' }, duration);
+  }
+
   onRegenPassBtnClick(): void {
     let isAccountActivated = true;
     this.db.getUser(this.username).subscribe({
@@ -38,37 +44,21 @@ export class PassRecoveryComponent implements OnInit {
         if (data[0].activated === 'F')
           isAccountActivated = isAccountActivated && false;
       },
-      error: (err: any) => {
-        console.error(`Error: ${err}`);
-        this.errorTxt = "BAD PLACEHOLDER";
-        setTimeout(() => { this.errorTxt = '' }, 3000);
-      },
+      error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
       complete: () => {
         if (isAccountActivated)
           this.db.getRecoveryCode(this.username, this.recoveryCode).subscribe({
-            error: (err: any) => {
-              console.error(`Error: ${err}`);
-              this.errorTxt = "BAD PLACEHOLDER";
-              setTimeout(() => { this.errorTxt = '' }, 3000);
-            },
+            error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
             complete: () => {
               console.log("Recovery code was valid, :D...");
               this.db.delCode(this.recoveryCode).subscribe({
-                error: (err: any) => console.error(`Error: ${err} `),
+                error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
                 complete: () => {
                   this.db.genRecCode(this.username, this.email).subscribe({
-                    error: (err: any) => {
-                      console.error(`Error: ${err}`);
-                      this.errorTxt = "BAD PLACEHOLDER";
-                      setTimeout(() => { this.errorTxt = '' }, 3000);
-                    },
+                    error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
                     complete: () => {
                       this.db.genCode(this.username, this.email).subscribe({
-                        error: (err: any) => {
-                          console.error(`Error: ${err}`);
-                          this.errorTxt = "BAD PLACEHOLDER";
-                          setTimeout(() => { this.errorTxt = '' }, 3000);
-                        },
+                        error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
                         complete: () => {
                           this.uS.setRecoveryUsername(this.username);
                           this.router.navigate(["/password_recovery_1"]);
@@ -80,10 +70,8 @@ export class PassRecoveryComponent implements OnInit {
               })
             }
           })
-        else {
-          this.errorTxt = ACCOUNT_IS_NOT_ACTIVATED;
-          setTimeout(() => { this.errorTxt = '' }, 3000);
-        }
+        else
+          this.showError(ACCOUNT_IS_NOT_ACTIVATED, "BAD PLACEHOLDER", 3000)
       }
     })
   }

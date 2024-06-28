@@ -23,24 +23,22 @@ export class PassRecovery1Component implements OnInit {
 
   ngOnInit(): void {
     console.log("Regen verification(Regen Password Phase #2) component inited, xdd....");
-    this.uS.recoveryUsernameState.subscribe(username => this.recoveryUsername = username);
+    this.uS.recoveryUsernameState.subscribe(u => this.recoveryUsername = u);
+  }
+
+  showError(err: any, txt: string, duration: number) {
+    console.error(`Error: ${err} `);
+    this.errorTxt = txt;
+    setTimeout(() => { this.errorTxt = '' }, duration);
   }
 
   onConfirmActivationButtonClick(): void {
     this.db.getCode(this.recoveryUsername, this.code).subscribe({
-      error: (err: any) => {
-        console.error(`Error: ${err}`);
-        this.errorTxt = "BAD PLACEHOLDER";
-        setTimeout(() => { this.errorTxt = '' }, 3000);
-      },
+      error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
       complete: () => {
         console.log("Verfication has been completed, :D")
         this.db.delCode(this.code).subscribe({
-          error: (err: any) => {
-            console.error(`Error: ${err}`);
-            this.errorTxt = "BAD PLACEHOLDER";
-            setTimeout(() => { this.errorTxt = '' }, 3000);
-          },
+          error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
           complete: () => {
             console.log("Code deletion has been completed, :D");
             this.router.navigate(["password_recovery_2"]);

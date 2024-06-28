@@ -20,6 +20,7 @@ export class PassRecovery2Component implements OnInit {
   password: string;
   password_1: string;
   recoveryUsername: string = '';
+  
   errorTxt: string = '';
   goodTxt: string = '';
 
@@ -29,7 +30,18 @@ export class PassRecovery2Component implements OnInit {
 
   ngOnInit(): void {
     console.log("Password reset(Regen Password Phase #3) component inited, xdd....");
-    this.uS.recoveryUsernameState.subscribe(username => this.recoveryUsername = username);
+    this.uS.recoveryUsernameState.subscribe(u => this.recoveryUsername = u);
+  }
+
+  showError(err: any, txt: string, duration: number) {
+    console.error(`Error: ${err} `);
+    this.errorTxt = txt;
+    setTimeout(() => { this.errorTxt = '' }, duration);
+  }
+
+  showOk(txt: string = OK_STRING, duration: number = 3000) {
+    this.goodTxt = txt;
+    setTimeout(() => { this.goodTxt = '' }, duration);
   }
 
   isPasswordValid(): boolean {
@@ -41,25 +53,22 @@ export class PassRecovery2Component implements OnInit {
   }
 
   onConfirmButtonClick(): void {
-    if (!this.isTwoPasswordsMatch()
-      || !this.isPasswordValid()) {
+    if (!this.isTwoPasswordsMatch() || !this.isPasswordValid()) {
 
       this.errorTxt = BAD_CREDENTIALS_2_STRING;
       setTimeout(() => { this.errorTxt = '' }, 3000);
-      return
+      return;
     }
 
     this.db.changePassword(this.recoveryUsername, this.password).subscribe({
-      error: (err: any) => console.error(`Error: ${err} `),
+      next: (data: any) => { },
+      error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
       complete: () => {
         console.log("Password change has been completed, :D");
         this.uS.setRecoveryUsername('');
+        this.showOk();
+        setTimeout(() => { this.router.navigate(["login"]); }, 1000);
       }
     })
-    setTimeout(() => { this.goodTxt = OK_STRING; }, 3000);
-    setTimeout(() => {
-      this.goodTxt = OK_STRING;
-      this.router.navigate(["login"]);
-    }, 5000);
   }
 }

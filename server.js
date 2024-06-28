@@ -1,10 +1,12 @@
 const http = require("http");
 const db = require("./db");
-const config = require("./config").http;
-const mail_config = require("./config").mail;
+const conf = require("./config");
+const config = conf.http;
+const mail_config = conf.mail;
 const crypto = require("./crypto");
 const mail = require("./mail");
 
+const devMode = conf.devMode.server;
 const httpServer = http.createServer();
 
 httpServer.on("request", (req, res) => {
@@ -381,7 +383,7 @@ httpServer.on("request", (req, res) => {
                         let aCode = crypto.genCode();
                         db.addCode(aCode, username).then(() => {
                             console.log(`Activation code was generated successfully...`);
-                            if (config.devMode)
+                            if (devMode)
                                 mail.sendAuthMail(mail_config.test_recipient.address, aCode, username);
                             else
                                 mail.sendAuthMail(email, aCode, username);
@@ -397,7 +399,7 @@ httpServer.on("request", (req, res) => {
                         let rCode = crypto.genRecoveryCode();
                         db.addCode(rCode, username, 'F').then(() => {
                             console.log(`Recovery code was generated successfully...`);
-                            if (config.devMode)
+                            if (devMode)
                                 mail.sendAuth_2Mail(mail_config.test_recipient.address, rCode, username);
                             else
                                 mail.sendAuth_2Mail(email, rCode, username);
@@ -413,7 +415,7 @@ httpServer.on("request", (req, res) => {
                         let code = crypto.genCode();
                         db.addCode(code, username).then(() => {
                             console.log(`Verfication code was generated successfully...`);
-                            if (config.devMode)
+                            if (devMode)
                                 mail.sendAuth_1Mail(mail_config.test_recipient.address, code, username);
                             else
                                 mail.sendAuth_1Mail(email, code, username);

@@ -18,28 +18,29 @@ export class MsgSendComponent implements OnInit {
   SENT_MESSAGE_TO_STRING: string = SENT_MESSAGE_TO_STRING;
   ACCOUNT_IS_NOT_ACTIVE: string = ACCOUNT_IS_NOT_ACTIVATED;
   MESSAGE_EMPTY_STRING: string = MESSAGE_EMPTY_STRING;
-
   templates: template[] = [];
   currentTemplateId: number = 0;
-
   activeUser: string = '';
   activeRecipient: string = '';
   msgTxt: string = '';
   errorTxt: string = '';
-
   isUserActivated: boolean = false;
-  isLeftAligned: boolean = false;
 
   constructor(private uS: UserService, private db: DbService) { }
 
   ngOnInit(): void {
     console.log("Message Send component inited, xdd....");
-    this.uS.activeUserState.subscribe(username => this.activeUser = username);
-    this.uS.activeRecipientState.subscribe(username => this.activeRecipient = username);
-    this.uS.leftAlignedState.subscribe(b => this.isLeftAligned = b);
-    this.isUserActivated = false;
-
+    this.uS.activeUserState.subscribe(u => this.activeUser = u);
+    this.uS.activeRecipientState.subscribe(u => this.activeRecipient = u);
+    this.uS.activeUserActivationState.subscribe(b => this.isUserActivated = b);
+    this.templates = [];
     this.updateTemplates();
+  }
+
+  showError(err: any, txt: string, duration: number) {
+    console.error(`Error: ${err} `);
+    this.errorTxt = txt;
+    setTimeout(() => { this.errorTxt = '' }, duration);
   }
 
   onRightButtonClick(event: any): boolean {
@@ -49,11 +50,8 @@ export class MsgSendComponent implements OnInit {
   updateTemplates() {
     this.db.getTemplates(this.activeUser).subscribe({
       next: (data: any) => {
-        this.templates = [];
-        if (data.length === 0) {
-          console.log("User has no templates, :(...");
-          return;
-        }
+        if (data.length === 0)
+          console.log(`User '${this.activeUser}' has no templates, :(...`);
         else {
           for (let i = 0; i < data.length; i++) {
             let t: template = new template(data[i].id,
@@ -62,7 +60,7 @@ export class MsgSendComponent implements OnInit {
           }
         }
       },
-      error: (err: any) => console.error(`Error: ${err} `),
+      error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
       complete: () => console.log("Template list updated, :D...")
     })
   }
@@ -72,12 +70,9 @@ export class MsgSendComponent implements OnInit {
   }
 
   insertTemplate(): void {
-    for (let i = 0; i < this.templates.length; i++) {
-      if (this.templates[i].id == this.currentTemplateId) {
-        this.msgTxt += ' ';
-        this.msgTxt += this.templates[i].content;
-      }
-    }
+    for (let t of this.templates)
+      if (t.id == this.currentTemplateId)
+        this.msgTxt = this.msgTxt + ' ' + t.content;
   }
 
   sendTemplate(): void {
@@ -90,25 +85,16 @@ export class MsgSendComponent implements OnInit {
   }
 
   onSendButtonClick(): void {
-    this.db.getUser(this.activeUser).subscribe({
-      next: (data) => {
-        if (data)
-          this.isUserActivated = (data[0].activated) === 'T' ? true : false;
-      },
-      error: (err) => console.error(`Error: ${err}`),
-      complete: () => {
-        if (this.isUserActivated && this.msgTxt.length != 0)
-          this.db.sendMessage(this.activeUser, this.activeRecipient, this.msgTxt).subscribe({
-            error: (err) => console.error(`Error: ${err} `),
-            complete: () => console.log("Message send completed...")
-          })
-        else if (this.isUserActivated == false)
-          this.errorTxt = this.ACCOUNT_IS_NOT_ACTIVE;
-        else if (this.msgTxt.length == 0)
-          this.errorTxt = MESSAGE_EMPTY_STRING;
-        setTimeout(() => { this.errorTxt = '' }, 3000);
-        this.msgTxt = '';
-      }
-    })
+    if (this.isUserActivated && this.msgTxt.length != 0)
+      this.db.sendMessage(this.activeUser, this.activeRecipient, this.msgTxt).subscribe({
+        next: (data: any) => { },
+        error: (err) => this.showError(err, "BAD PLACEHOLDER", 3000),
+        complete: () => console.log("Message send completed...")
+      })
+    else if (!this.isUserActivated)
+      this.showError(this.ACCOUNT_IS_NOT_ACTIVE, this.ACCOUNT_IS_NOT_ACTIVE, 3000);
+    else if (this.msgTxt.length == 0)
+      this.showError(MESSAGE_EMPTY_STRING, MESSAGE_EMPTY_STRING, 3000);
+    this.msgTxt = '';
   }
 }

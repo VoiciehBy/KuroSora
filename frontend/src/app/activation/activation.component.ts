@@ -20,6 +20,7 @@ export class ActivationComponent {
 
   activeUser: string = '';
   code: string = '';
+
   errorTxt: string = '';
   goodTxt: string = '';
 
@@ -32,34 +33,41 @@ export class ActivationComponent {
     this.uS.activeUserState.subscribe(u => this.activeUser = u);
   }
 
+  showError(err: any, txt: string, duration: number) {
+    console.error(`Error: ${err} `);
+    this.errorTxt = txt;
+    setTimeout(() => { this.errorTxt = '' }, duration);
+  }
+
+  showOk(txt: string = OK_STRING, duration: number = 3000) {
+    this.goodTxt = txt;
+    setTimeout(() => { this.goodTxt = '' }, duration);
+  }
+
   onActivateButtonClick(): void {
     this.db.getCode(this.activeUser, this.code).subscribe({
-      error: (err: any) => console.error(`Error: ${err} `),
+      next: () => { },
+      error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
       complete: () => {
         this.db.activateAccount(this.activeUser).subscribe({
-          error: (err: any) => {
-            console.error(`Error: ${err} `);
-            this.errorTxt = "BAD PLACEHOLDER";
-            setTimeout(() => { this.errorTxt = '' }, 3000);
-          },
+          next: () => { },
+          error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
           complete: () => {
             console.log("Account activation has been completed, :D");
             this.db.delCode(this.code).subscribe({
-              error: (err: any) => console.error(`Error: ${err} `),
+              next: () => { },
+              error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
               complete: () => {
                 console.log("Temp verification code has been deleted...");
                 this.uS.setActiveUserActivationState(true);
                 this.uS.setFriendListUpdate(true);
+                this.showOk();
               }
             })
           }
         })
       }
     })
-    setTimeout(() => { this.goodTxt = OK_STRING; }, 3000);
-    setTimeout(() => {
-      this.goodTxt = OK_STRING;
-      this.router.navigate([""]);
-    }, 5000);
+    setTimeout(() => { this.router.navigate([""]); }, 1000);
   }
 }

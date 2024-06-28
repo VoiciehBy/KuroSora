@@ -1,6 +1,7 @@
 const { app, BrowserWindow } = require("electron");
 const path = require(`node:path`);
 const config = require("./config");
+const devMode = config.devMode.client;
 
 
 const createWindow = () => {
@@ -18,7 +19,7 @@ const createWindow = () => {
     let p = path.join(__dirname, "frontend/dist/frontend/index.html")
     window.loadURL(p)
 
-    if (config.devMode == false)
+    if (devMode == false)
         window.setMenu(null)
 
     window.webContents.on("did-fail-load", () => window.loadURL(p))

@@ -26,19 +26,22 @@ export class FriendPanelComponent implements OnInit {
   friends: user[] = [];
 
   isActiveUserActivated: boolean = false;
-  isMsgNeedToBeUpdated: boolean = false;
   isFriendListNeedToBeUpdated: boolean = true;
 
-  constructor(private uS: UserService,
-    private db: DbService) { }
+  constructor(private uS: UserService, private db: DbService) { }
 
   ngOnInit(): void {
-    console.log("Friend list component inited, xD...")
+    console.log("Friend list component inited, xD...");
     this.uS.activeUserState.subscribe(u => this.activeUser = u);
     this.uS.activeRecipientState.subscribe(u => this.activeRecipient = u);
     this.uS.activeUserActivationState.subscribe(b => this.isActiveUserActivated = b);
     this.uS.friendUpdateState.subscribe(b => this.isFriendListNeedToBeUpdated = b);
-    this.uS.messageUpdateState.subscribe(b => this.isMsgNeedToBeUpdated = b);
+  }
+
+  showError(err: any, txt: string, duration: number) {
+    console.error(`Error: ${err} `);
+    this.errorTxt = txt;
+    setTimeout(() => { this.errorTxt = '' }, duration);
   }
 
   onAddFriendButtonClick(): void {
@@ -46,17 +49,13 @@ export class FriendPanelComponent implements OnInit {
 
     if (!this.isActiveUserActivated) {
       console.error("The account is not activated...");
-      this.errorTxt = "BAD PLACEHOLDER";
-      setTimeout(() => { this.errorTxt = '' }, 3000);
+      this.showError("The account is not activated...", "The account is not activated...", 3000);
       return;
     }
 
     this.db.getUser(this.newFriendUsername).subscribe({
-      error: (err: any) => {
-        console.error(`Error: ${err} `);
-        this.errorTxt = "BAD PLACEHOLDER";
-        setTimeout(() => { this.errorTxt = '' }, 3000);
-      },
+      next: (data: any) => { },
+      error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
       complete: () => {
         let isAlreadyFriends = false;
         this.db.getFriendship(this.activeUser, this.newFriendUsername).subscribe({
@@ -66,7 +65,7 @@ export class FriendPanelComponent implements OnInit {
               isAlreadyFriends = true;
             }
           },
-          error: (err: any) => console.error(`Error: ${err} `),
+          error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
           complete: () => {
             if (!isAlreadyFriends) {
               let isFriendRequestAlreadySent = false;
@@ -77,11 +76,12 @@ export class FriendPanelComponent implements OnInit {
                     isFriendRequestAlreadySent = true;
                   }
                 },
-                error: (err: any) => console.error(`Error: ${err} `),
+                error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
                 complete: () => {
                   if (!isFriendRequestAlreadySent)
                     this.db.sendNotification(this.activeUser, this.newFriendUsername).subscribe({
-                      error: (err: any) => console.error(`Error: ${err} `),
+                      next: (data: any) => { },
+                      error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
                       complete: () => {
                         console.log("Notification was added successfully, :D");
                         this.uS.setMsgUpdate(true);

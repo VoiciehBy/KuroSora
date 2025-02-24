@@ -34,6 +34,7 @@ export class PassRecovery1Component implements OnInit {
 
   onConfirmActivationButtonClick(): void {
     this.db.getCode(this.recoveryUsername, this.code).subscribe({
+      next: (data: any) => { },
       error: (err: any) => this.showError(err, "BAD PLACEHOLDER", 3000),
       complete: () => {
         console.log("Verfication has been completed, :D")

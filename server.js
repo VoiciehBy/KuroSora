@@ -3,6 +3,7 @@ const db = require("./db");
 const conf = require("./config");
 const config = conf.http;
 const mail_config = conf.mail;
+const test_mail_config = conf.mail;
 const crypto = require("./crypto");
 const mail = require("./mail");
 
@@ -370,8 +371,6 @@ httpServer.on("request", (req, res) => {
                             res.end(JSON.stringify(result));
                         }
                     })
-
-
                 })
             }
             else if (pathname === "/new_code") {
@@ -379,12 +378,13 @@ httpServer.on("request", (req, res) => {
                     let username = params.get("username");
                     let type = params.get("type");
                     let email = params.get("email");
+                    console.log(email);
                     if (type === 'a') {
                         let aCode = crypto.genCode();
                         db.addCode(aCode, username).then(() => {
                             console.log(`Activation code was generated successfully...`);
                             if (devMode)
-                                mail.sendAuthMail(mail_config.test_recipient.address, aCode, username);
+                                mail.sendAuthMail(test_mail_config.test_recipient.address, aCode, username);
                             else
                                 mail.sendAuthMail(email, aCode, username);
                             res.writeHead(200, http.STATUS_CODES[200]);
@@ -400,7 +400,7 @@ httpServer.on("request", (req, res) => {
                         db.addCode(rCode, username, 'F').then(() => {
                             console.log(`Recovery code was generated successfully...`);
                             if (devMode)
-                                mail.sendAuth_2Mail(mail_config.test_recipient.address, rCode, username);
+                                mail.sendAuth_2Mail(test_mail_config.test_recipient.address, rCode, username);
                             else
                                 mail.sendAuth_2Mail(email, rCode, username);
                             res.writeHead(200, http.STATUS_CODES[200]);
@@ -416,7 +416,7 @@ httpServer.on("request", (req, res) => {
                         db.addCode(code, username).then(() => {
                             console.log(`Verfication code was generated successfully...`);
                             if (devMode)
-                                mail.sendAuth_1Mail(mail_config.test_recipient.address, code, username);
+                                mail.sendAuth_1Mail(test_mail_config.test_recipient.address, code, username);
                             else
                                 mail.sendAuth_1Mail(email, code, username);
                             res.writeHead(200, http.STATUS_CODES[201]);
@@ -565,7 +565,7 @@ httpServer.on("request", (req, res) => {
         case "DELETE":
             if (pathname === "/code") {
                 if (params.has("v")) {
-                    let code = params.get("v");
+                    let code = params.get("v");	
                     db.deleteCode(code).then(() => {
                         console.log(`Verification code deletion was successful...`)
                         res.writeHead(204, http.STATUS_CODES[204]);

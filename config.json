@@ -1,5 +1,11 @@
 {
     "db": {
+        "hostname": "xxx",
+        "port": 3306,
+        "db_name": "dev",
+        "user": "xxx"
+    },
+    "test_db": {
         "hostname": "localhost",
         "port": 3306,
         "db_name": "dev",
@@ -11,12 +17,21 @@
     },
     "mail": {
         "noreply": {
-            "hostname": "smtp.ethereal.email",
+            "hostname": "smtp.xxx.xxx",
+            "port": 465,
+            "secure": true,
+            "address": "xxx@xxx.xxx"
+        }
+    },
+    "test_mail": {
+        "noreply": {
+            "hostname": "smtp.xxx.xxx",
             "port": 587,
-            "address": "laurel57@ethereal.email"
+            "secure": false,
+            "address": "xxx@xxx.xxx"
         },
         "test_recipient": {
-            "address": "laurel57@ethereal.email"
+            "address": "xxx@xxx.xxx"
         }
     },
     "devMode": {

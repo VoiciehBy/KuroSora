@@ -1,4 +1,6 @@
 const config = require("./config").db;
+const test_config = require("./config").test_db;
+const devMode = require("./config").devMode;
 const mysql = require("mysql2/promise");
 
 const dotenv = require("dotenv")
@@ -18,6 +20,18 @@ const pool = mysql.createPool({
     keepAliveInitialDelay: 0,
 });
 
+const test_pool = mysql.createPool({
+    host: test_config.hostname,
+    port: test_config.port,
+    user: test_config.user,
+    database: test_config.db_name,
+    waitForConnections: true,
+    connectionLimit: 2,
+    queueLimit: 0,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0,
+});
+
 const tables_names = {
     "users_table": "Users",
     "messages_table": "Messages",
@@ -29,14 +43,26 @@ const tables_names = {
 
 async function doQuery(query = "") {
     return new Promise(async (resolve, reject) => {
-        const connection = await pool.getConnection();
-        await connection.query(query).then(([rows, fields]) => {
-            resolve(rows);
-        }).catch((err) => {
-            console.error("Cannot do the query :( ...");
-            reject(err);
-        })
-        pool.releaseConnection(connection);
+        if (devMode.server) {
+            const test_connection = await test_pool.getConnection();
+            await test_connection.query(query).then(([rows, fields]) => {
+                resolve(rows);
+            }).catch((err) => {
+                console.error("Cannot do the query :( ...");
+                reject(err);
+            })
+            test_pool.releaseConnection(test_connection);
+        }
+        else {
+            const connection = await pool.getConnection();
+            await connection.query(query).then(([rows, fields]) => {
+                resolve(rows);
+            }).catch((err) => {
+                console.error("Cannot do the query :( ...");
+                reject(err);
+            })
+            pool.releaseConnection(connection);
+        }
     }).catch((err) => {
         console.error("Cannot fetch data :( ...");
     })

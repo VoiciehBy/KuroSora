@@ -1,13 +1,15 @@
 const dotenv = require("dotenv");
 const config = require("./config").mail;
+const test_config = require("./config").test_mail;
 const nodemailer = require("nodemailer");
+const devMode = require("./config").devMode;
 
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
     host: config.noreply.hostname,
     port: config.noreply.port,
-    secure: false,
+    secure: config.noreply.secure,
     auth: {
         user: config.noreply.address,
         pass: process.env.NOREPLY_MAIL_PASSWORD
@@ -15,14 +17,34 @@ const transporter = nodemailer.createTransport({
     tls: { rejectUnauthorized: false }
 });
 
+const test_transporter = nodemailer.createTransport({
+    host: test_config.noreply.hostname,
+    port: test_config.noreply.port,
+    secure: test_config.noreply.secure,
+    auth: {
+        user: test_config.noreply.address,
+        pass: process.env.NOREPLY_TEST_MAIL_PASSWORD
+    },
+    tls: { rejectUnauthorized: false }
+});
+
 async function sendMail(email = "", subject = "", text = "", html = "<h1>XD</h1>") {
-    await transporter.sendMail({
-        from: '"KuroSora Team" <noreply@kurosora.edu>',
-        to: `${email}`,
-        subject: `${subject}`,
-        text: `${text}`,
-        html: `${html}`
-    });
+    if (devMode.server)
+        await transporter.sendMail({
+            from: '"KuroSora Team" <noreply@kurosora.edu>',
+            to: `${email}`,
+            subject: `${subject}`,
+            text: `${text}`,
+            html: `${html}`
+        });
+    else
+        await test_transporter.sendMail({
+            from: '"KuroSora Team" <noreply@kurosora.edu>',
+            to: `${email}`,
+            subject: `${subject}`,
+            text: `${text}`,
+            html: `${html}`
+        });
     console.log("The E-mail message sent...");
 }
 

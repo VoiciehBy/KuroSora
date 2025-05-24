@@ -36,6 +36,6 @@
     },
     "devMode": {
         "client": true,
-        "server": true
+        "server": false
     }
 }

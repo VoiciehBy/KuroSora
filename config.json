@@ -1,9 +1,9 @@
 {
     "db": {
-        "hostname": "xxx",
-        "port": 3306,
+        "hostname": "mysql-23f911f5-kurosora.h.aivencloud.com",
+        "port": 16713,
         "db_name": "dev",
-        "user": "xxx"
+        "user": "avnadmin"
     },
     "test_db": {
         "hostname": "localhost",

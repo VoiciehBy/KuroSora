@@ -654,6 +654,10 @@ httpServer.on("request", (req, res) => {
                 res.end(`{"error": "Bad request 400"}`)
             }
             break;
+        case "OPTIONS":
+                res.writeHead(204, http.STATUS_CODES[204])
+                res.end(`{"res": "No Content 204:}`)
+        break;
         default:
             console.error("Not implemented...")
             res.writeHead(501, http.STATUS_CODES[501])

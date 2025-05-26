@@ -18,7 +18,7 @@ httpServer.on("request", (req, res) => {
     res.setHeader("Access-Control-Allow-Orgin", "*");
     res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    res.setHeader("Access-Control-Max-Age", "Content-Type");
+    res.setHeader("Access-Control-Max-Age", 2592000);
 
     switch (req.method) {
         case "POST":

@@ -12,14 +12,15 @@
             <div class="input-group justify-content-center">
                 <span class="input-group-text">
                     <input class="form-control" type="text" placeholder="Login" aria-label="Login Field Addon"
-                        aria-describedby="loginFieldAddon" [(ngModel)]="login" required>
+                        aria-describedby="loginFieldAddon" [(ngModel)]="login" 
+                        [ngModelOptions]="{standalone: true}" required>
                 </span>
             </div>
             <div class="input-group justify-content-center">
                 <span class="input-group-text">
                     <input class="form-control" type="password" placeholder="Hasło" aria-label="Password Field Addon"
-                        aria-describedby="passwordFieldAddon" [(ngModel)]="password" (keydown.enter)="signIn()"
-                        required>
+                        aria-describedby="passwordFieldAddon" [(ngModel)]="password"
+                        [ngModelOptions]="{standalone: true}" (keydown.enter)="signIn()" required>
                 </span>
             </div>
             <button class="btn btn-success bg-gradient submitButton" type="button" (click)="signIn();">

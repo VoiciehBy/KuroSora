@@ -15,6 +15,10 @@ httpServer.on("request", (req, res) => {
     const pathname = request_url.pathname;
     const params = new URLSearchParams(request_url.search);
     res.setHeader("Content-Type", "application/json");
+    res.setHeader("Access-Control-Allow-Orgin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Max-Age", "Content-Type");
 
     switch (req.method) {
         case "POST":

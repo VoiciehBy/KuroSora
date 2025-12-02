@@ -1,9 +1,9 @@
 {
     "db": {
-        "hostname": "mysql-23f911f5-kurosora.h.aivencloud.com",
-        "port": 16713,
-        "db_name": "dev",
-        "user": "avnadmin"
+        "hostname": "217.17.41.136",
+        "port": 3306,
+        "db_name": "ns32125_kurosora",
+        "user": "ns32125_voiciehb"
     },
     "test_db": {
         "hostname": "localhost",
@@ -17,21 +17,21 @@
     },
     "mail": {
         "noreply": {
-            "hostname": "smtp.mailgun.org",
+            "hostname": "s8.netstrefa.pl",
             "port": 465,
             "secure": true,
-            "address": "postmaster@sandboxc73594c8a9f7435383c7343aed25fe3e.mailgun.org"
+            "address": "noreply@kurosora.pl"
         }
     },
     "test_mail": {
         "noreply": {
-            "hostname": "smtp.ethereal.email",
-            "port": 587,
-            "secure": false,
-            "address": "laurel57@ethereal.email"
+            "hostname": "s8.netstrefa.pl",
+            "port": 465,
+            "secure": true,
+            "address": "noreply@kurosora.pl"
         },
         "test_recipient": {
-            "address": "laurel57@ethereal.email"
+            "address": "test@kurosora.pl"
         }
     },
     "devMode": {

@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
 
   signUp(): void {
     let v: validator = new validator(this.login, this.password, this.password_1, this.username, this.email);
-    if (v.isValid())
+    if (!v.isValid())
       this.showError(BAD_REGISTRATION_FORM_STRING, BAD_REGISTRATION_FORM_STRING, 3000);
     else
       this.db.createNewAccount(this.login, this.username, this.password).subscribe({

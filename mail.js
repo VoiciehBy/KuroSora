@@ -30,16 +30,16 @@ const test_transporter = nodemailer.createTransport({
 
 async function sendMail(email = "", subject = "", text = "", html = "<h1>XD</h1>") {
     if (devMode.server)
-        await transporter.sendMail({
-            from: '"KuroSora Team" <noreply@kurosora.edu>',
+        await test_transporter.sendMail({
+            from: '"KuroSora Team" <noreply@kurosora.pl>',
             to: `${email}`,
             subject: `${subject}`,
             text: `${text}`,
             html: `${html}`
         });
     else
-        await test_transporter.sendMail({
-            from: '"KuroSora Team" <noreply@kurosora.edu>',
+        await transporter.sendMail({
+            from: '"KuroSora Team" <noreply@kurosora.pl>',
             to: `${email}`,
             subject: `${subject}`,
             text: `${text}`,

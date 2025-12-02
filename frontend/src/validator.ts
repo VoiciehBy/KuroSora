@@ -34,8 +34,8 @@ export class validator {
     }
 
     public isValid(): boolean {
-        return (!this.isTwoPasswordsMatch() || !this.isLoginValid()
-            || !this.isUsernameValid() || !this.emailValid()
-            || !this.isPasswordValid());
+        return (this.isTwoPasswordsMatch() && this.isLoginValid()
+            && this.isUsernameValid() && this.emailValid()
+            && this.isPasswordValid());
     }
 }

@@ -24,6 +24,7 @@ const test_pool = mysql.createPool({
     host: test_config.hostname,
     port: test_config.port,
     user: test_config.user,
+    password: process.env.DB_PASSWORD,
     database: test_config.db_name,
     waitForConnections: true,
     connectionLimit: 2,
@@ -33,12 +34,12 @@ const test_pool = mysql.createPool({
 });
 
 const tables_names = {
-    "users_table": "Users",
-    "messages_table": "Messages",
-    "friendships_table": "Friendships",
-    "notifications_table": "Notifications",
-    "codes_table": "Codes",
-    "templates_table": "Templates"
+    "users_table": `${config.db_name}.Users`,
+    "messages_table": `${config.db_name}.Messages`,
+    "friendships_table": `${config.db_name}.Friendships`,
+    "notifications_table": `${config.db_name}.Notifications`,
+    "codes_table": `${config.db_name}.Codes`,
+    "templates_table": `${config.db_name}.Templates`
 }
 
 async function doQuery(query = "") {

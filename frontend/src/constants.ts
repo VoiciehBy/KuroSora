@@ -1,5 +1,3 @@
-export const HOSTNAME: string = "http://0.0.0.0:3000";
-
 export const FRIENDS_STRING: string = "Znajomi";
 export const WELCOME_BACK_STRING: string = "Witaj ponownie!";
 export const LOGIN_BTN_STRING: string = "Zaloguj";

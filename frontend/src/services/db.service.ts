@@ -1,13 +1,13 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
-import { HOSTNAME } from "src/constants";
+import config from 'src/config.json';
 import { Observable } from "rxjs";
 
 @Injectable()
 export class DbService {
-  host: string = HOSTNAME;
-  
+  host: string = config.host;
+
   constructor(private http: HttpClient) { }
 
   getUser(username: string = ''): Observable<any> {

@@ -1,4 +1,5 @@
 {
+    "host": "https://kurosora.onrender.com",
     "default_templates": {
         "templates": [
             "Ok",

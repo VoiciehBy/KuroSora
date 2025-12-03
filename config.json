@@ -1,15 +1,15 @@
 {
     "db": {
-        "hostname": "217.17.41.136",
+        "hostname": "kurosora.pl",
         "port": 3306,
-        "db_name": "ns32125_kurosora",
+        "db_name": "ns32125_prod",
         "user": "ns32125_voiciehb"
     },
     "test_db": {
-        "hostname": "localhost",
+        "hostname": "kurosora.pl",
         "port": 3306,
-        "db_name": "dev",
-        "user": "root"
+        "db_name": "ns32125_dev",
+        "user": "ns32125_voiciehb"
     },
     "http": {
         "hostname": "0.0.0.0",

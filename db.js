@@ -33,14 +33,26 @@ const test_pool = mysql.createPool({
     keepAliveInitialDelay: 0,
 });
 
-const tables_names = {
-    "users_table": `${config.db_name}.Users`,
-    "messages_table": `${config.db_name}.Messages`,
-    "friendships_table": `${config.db_name}.Friendships`,
-    "notifications_table": `${config.db_name}.Notifications`,
-    "codes_table": `${config.db_name}.Codes`,
-    "templates_table": `${config.db_name}.Templates`
-}
+let tables_names = {}
+
+if (devMode)
+    tables_names = {
+        "users_table": `${test_config.db_name}.Users`,
+        "messages_table": `${test_config.db_name}.Messages`,
+        "friendships_table": `${test_config.db_name}.Friendships`,
+        "notifications_table": `${test_config.db_name}.Notifications`,
+        "codes_table": `${test_config.db_name}.Codes`,
+        "templates_table": `${test_config.db_name}.Templates`
+    }
+else
+    tables_names = {
+        "users_table": `${config.db_name}.Users`,
+        "messages_table": `${config.db_name}.Messages`,
+        "friendships_table": `${config.db_name}.Friendships`,
+        "notifications_table": `${config.db_name}.Notifications`,
+        "codes_table": `${config.db_name}.Codes`,
+        "templates_table": `${config.db_name}.Templates`
+    }
 
 async function doQuery(query = "") {
     return new Promise(async (resolve, reject) => {

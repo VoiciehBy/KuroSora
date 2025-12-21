@@ -3,7 +3,7 @@ const db = require("./db");
 const conf = require("./config");
 const config = conf.http;
 const mail_config = conf.mail;
-const test_mail_config = conf.mail;
+const test_mail_config = conf.test_mail;
 const crypto = require("./crypto");
 const mail = require("./mail");
 
